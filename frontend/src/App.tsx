@@ -17,6 +17,9 @@ const App: React.FC = () => {
         socket1.on('updated-data', (data: any) => {
           console.log('updated', data)
         })
+        socket1.on('next-refresh', (data: any) => {
+          console.log('time', data)
+        })
         socket1.on('request-error', (data: any) => {
           console.log('error', data)
         })

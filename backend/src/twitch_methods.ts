@@ -3,7 +3,6 @@ import { RandomStreamers, Stream } from './data_types/data_types'
 import fetch from 'node-fetch'
 
 export interface ITwitchMethods {
-    randomStr: string;
     getStreamData(name: string): Stream;
     fetchRandomStreams(): Promise<RandomStreamers>;
 }
@@ -15,6 +14,7 @@ TwitchMethods.prototype.getStreamData = async function (this: ITwitchMethods, na
     try {
         const fetchData = await fetch(url),
             data = await fetchData.json()
+            data['streamName'] = name
         return data
     } catch (err) {
         return { error: 'Error fetching stream data' }

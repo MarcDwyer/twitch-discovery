@@ -6,6 +6,7 @@ export interface RandomStreamers {
 
 export interface Stream {
     stream: SubStream | null;
+    streamName: string;
     _links: Links;
 }
 interface SubStream {

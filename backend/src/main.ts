@@ -10,13 +10,12 @@ const app = express(),
     io = ioSetup(server);
 // TODO 
 (async () => {
-    console.log('unused variables')
     const streams: TwitchDisc = new TwitchDiscovery(io)
     await streams.populateRandom()
 
     io.on('connection', (socket) => {
         console.log('socket connected...')
-        socket.emit('random-data', streams.randomResults)
+        socket.emit('random-data', streams.payload())
         //  socket.send('connect', (socket) => socket.send(streamers.Results))
     })
 
