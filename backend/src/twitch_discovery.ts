@@ -31,14 +31,15 @@ const structureData = (data: RandomStreamers): IStreamers[] => {
     return data.streams.map(streamData => {
         return {
             stream: streamData,
-            streamName: streamData.channel.display_name,
+            streamName: streamData.channel.name,
             channelData: streamData.channel
         }
     })
 }
-const fourHours = 60 * 60 * 60 * 4,
-    nextRefresh = () => new Date().getTime() + fourHours,
-    refreshTime = 60000
+const devTest = 60000
+const fourHours = 60000 * 60 * 4,
+    nextRefresh = () => new Date().getTime() + devTest,
+    refreshTime = 30000
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.randomResults = null
@@ -48,12 +49,12 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.intervalCopy = (func, dur) => setInterval(func, dur)
     this.payload = () => ({ streams: this.randomResults, nextRefresh: this.nextRefresh })
 
-    this.intervalRandom = this.intervalCopy(async () => await this.populateRandom(), fourHours)
+    this.intervalRandom = this.intervalCopy(async () => await this.populateRandom(), devTest)
     this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
     
     this.refreshRandom = async () => {
         console.log('ref ran')
-        const getData = await Promise.all(this.randomResults.map(async (stream) => await this.methods.getStreamData(stream)))
+        const getData = await Promise.all(this.randomResults.map(async (stream) => await this.methods.fetchStreamData(stream)))
         this.randomResults = getData
         this.io.sockets.emit('updated-data', this.randomResults)
     }

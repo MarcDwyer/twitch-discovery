@@ -1,0 +1,14 @@
+.main {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    color: #eee;
+
+    .streamer-grid {
+        display: grid;
+        width: 75%;
+        margin: auto;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 25px;
+    }
+}

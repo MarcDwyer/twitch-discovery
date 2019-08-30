@@ -1,0 +1,40 @@
+.stream-card {
+    height: 250px;
+    width: 100%;
+    margin: auto auto 20px auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: hsl(0, 0, 15%);
+
+    .center {
+        margin: auto auto 10px auto;
+
+        img {
+            border-radius: 50%;
+            width: 85px;
+            height: 85px;
+        }
+
+        .text-info {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    a {
+        margin: 0 0 10px 0;
+        text-decoration: none;
+        color: inherit;
+
+        svg {
+            width: 35px;
+            height: 35px;
+            margin: auto;
+        }
+    }
+}

@@ -13,7 +13,9 @@
     "react-compound-timer": "^1.1.4",
     "react-dom": "^16.9.0",
     "react-hot-loader": "^4.12.12",
+    "react-icons": "^3.7.0",
     "react-scripts": "3.1.1",
+    "react-spring": "^8.0.27",
     "socket.io-client": "^2.2.0",
     "typescript": "3.6.2"
   },
@@ -39,6 +41,8 @@
     ]
   },
   "babel": {
-    "plugins": ["react-hot-loader/babel"]
+    "plugins": [
+      "react-hot-loader/babel"
+    ]
   }
 }

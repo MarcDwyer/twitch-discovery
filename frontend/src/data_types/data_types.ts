@@ -9,7 +9,7 @@ export interface Stream {
     streamName: string;
     _links: Links;
 }
-interface SubStream {
+export interface SubStream {
     _id: number;
     game: string;
     viewers: number;
