@@ -1,7 +1,7 @@
 
 import { Server } from 'socket.io'
 import TwitchMethods, { ITwitchMethods } from './twitch_methods'
-import { RandomStreamers, Stream, Channel, SubStream } from './data_types/data_types'
+import { RandomStreamers, Channel, SubStream } from './data_types/data_types'
 
 type Payload = {
     nextRefresh: number;
