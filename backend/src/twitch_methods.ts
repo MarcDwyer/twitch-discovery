@@ -1,21 +1,25 @@
 
-import { RandomStreamers, Stream } from './data_types/data_types'
+import { RandomStreamers } from './data_types/data_types'
+import { IStreamers } from './twitch_discovery'
 import fetch from 'node-fetch'
 
 export interface ITwitchMethods {
-    getStreamData(name: string): Stream;
+    getStreamData(param: IStreamers): IStreamers;
     fetchRandomStreams(): Promise<RandomStreamers>;
 }
 
 function TwitchMethods(this: ITwitchMethods) {}
 
-TwitchMethods.prototype.getStreamData = async function (this: ITwitchMethods, name: string) {
-    const url = `https://api.twitch.tv/kraken/streams/${name}?client_id=${process.env.TWITCH}`
+TwitchMethods.prototype.getStreamData = async function (this: ITwitchMethods, {streamName, channelData}: IStreamers) {
+    const url = `https://api.twitch.tv/kraken/streams/${streamName}?client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),
             data = await fetchData.json()
-            data['streamName'] = name
-        return data
+        return {
+            stream: data,
+            channelData,
+            streamName
+        }
     } catch (err) {
         return { error: 'Error fetching stream data' }
     }
