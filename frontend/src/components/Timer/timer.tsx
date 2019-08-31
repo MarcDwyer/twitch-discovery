@@ -3,16 +3,14 @@ import React, { useEffect, useState, useRef } from 'react'
 interface Props {
     nextRefresh: number;
 }
-
-const useTimer = (futureReset: number): number[] => {
+const useTimer = (futureTime: number): number[] => {
     const [timer, setTimer] = useState<number[]>([])
-    const timeRef = useRef<number | null>(futureReset)
     useEffect(() => {
         let interval: number | undefined;
         clearTimeout(interval)
         interval = setInterval(() => {
-            const distance = futureReset - new Date().getTime()
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            const distance = futureTime - new Date().getTime()
+            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
                 minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
                 seconds = Math.floor((distance % (1000 * 60)) / 1000)
             setTimer([hours, minutes, seconds])
@@ -20,7 +18,7 @@ const useTimer = (futureReset: number): number[] => {
         return function () {
             if (interval) clearInterval(interval)
         }
-    }, [futureReset])
+    }, [futureTime])
     return timer
 }
 
