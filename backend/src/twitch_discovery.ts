@@ -36,9 +36,9 @@ const structureData = (data: RandomStreamers): IStreamers[] => {
         }
     })
 }
-const devTest = 60000
+// const devTest = 60000
 const fourHours = 60000 * 60 * 4,
-    nextRefresh = () => new Date().getTime() + devTest,
+    nextRefresh = () => new Date().getTime() + fourHours,
     refreshTime = 30000
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
@@ -49,7 +49,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.intervalCopy = (func, dur) => setInterval(func, dur)
     this.payload = () => ({ streams: this.randomResults, nextRefresh: this.nextRefresh })
 
-    this.intervalRandom = this.intervalCopy(async () => await this.populateRandom(), devTest)
+    this.intervalRandom = this.intervalCopy(async () => await this.populateRandom(), fourHours)
     this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
     
     this.refreshRandom = async () => {

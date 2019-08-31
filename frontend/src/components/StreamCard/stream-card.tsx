@@ -8,13 +8,15 @@ interface Props {
 // https://www.twitch.tv/
 const StreamCard = (props: Props) => {
     const { stream, channelData } = props.streamer
-
     return (
         <div className="stream-card">
             <div className="center">
                 <img src={channelData.logo} />
                 <div className="text-info">
                     <span>{channelData.display_name}</span>
+                    {stream && (
+                        <span>is playing {stream.game}</span>
+                    )}
                     <span>{stream ? `${stream.viewers} viewers` : 'Offline'}</span>
                 </div>
             </div>

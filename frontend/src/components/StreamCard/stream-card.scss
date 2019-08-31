@@ -1,6 +1,6 @@
 .stream-card {
-    height: 250px;
     width: 100%;
+    height: 100%;
     margin: auto auto 20px auto;
     display: flex;
     flex-direction: column;
@@ -8,6 +8,7 @@
     background-color: hsl(0, 0, 15%);
 
     .center {
+        padding: 15px 15px;
         margin: auto auto 10px auto;
 
         img {
@@ -22,6 +23,11 @@
 
             span {
                 margin-bottom: 10px;
+                font-size: 14px;
+                &:first-child {
+                    font-size: 22px;
+                    font-style: bold;
+                }
             }
         }
     }

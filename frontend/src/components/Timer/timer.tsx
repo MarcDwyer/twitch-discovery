@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
-
+import './timer.scss'
 interface Props {
     nextRefresh: number;
 }
-const useTimer = (futureTime: number): number[] => {
+
+const useTimer = (futureTime: number): number[]=> {
     const [timer, setTimer] = useState<number[]>([])
     useEffect(() => {
         let interval: number | undefined;
@@ -25,8 +26,10 @@ const useTimer = (futureTime: number): number[] => {
 const Timer = (props: Props) => {
     const [hours, minutes, seconds] = useTimer(props.nextRefresh)
     return (
-        <div>
-            {`hours: ${hours}, minutes ${minutes}, seconds ${seconds}`}
+        <div className="timer-parent">
+            <span>
+                {`Next refresh in ${hours} hours ${minutes} minutes and ${seconds} seconds`}
+            </span>
         </div>
     )
 }

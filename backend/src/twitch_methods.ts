@@ -24,9 +24,9 @@ TwitchMethods.prototype.fetchStreamData = async function (this: ITwitchMethods, 
         return { error: 'Error fetching stream data' }
     }
 }
-
+// `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
 TwitchMethods.prototype.fetchRandomStreams = async function (this: ITwitchMethods) {
-    const url = `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
+    const url = `https://api.twitch.tv/kraken/streams/?limit=25&client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),
             data = await fetchData.json()

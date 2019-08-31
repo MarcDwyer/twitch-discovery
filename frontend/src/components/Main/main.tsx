@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import io from 'socket.io-client'
-import { hot } from 'react-hot-loader/root';
 import { Channel, SubStream } from '../../data_types/data_types'
 import StreamCard from '../StreamCard/stream-card'
 import Timer from '../Timer/timer'
@@ -76,4 +75,4 @@ const Main = () => {
     )
 }
 
-export default hot(Main)
+export default Main
