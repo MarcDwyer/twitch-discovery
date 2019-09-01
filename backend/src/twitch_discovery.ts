@@ -15,7 +15,7 @@ export interface IStreamers {
 
 export interface TwitchDisc {
     randomResults: IStreamers[] | null;
-    intervalRandom: number;
+    intervalPopulate: number;
     intervalRefresh: number;
     io: Server;
     methods: ITwitchMethods;
@@ -37,9 +37,9 @@ const structureData = (data: RandomStreamers): IStreamers[] => {
     })
 }
 // const devTest = 60000
-const fourHours = 60000 * 60 * 4,
-    nextRefresh = () => new Date().getTime() + fourHours,
-    refreshTime = 30000
+const popRandom = 60000 * 60 * 4,
+    refresh = 60000 * 5,
+    nextRefresh = () => new Date().getTime() + popRandom
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.randomResults = null
@@ -49,9 +49,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.intervalCopy = (func, dur) => setInterval(func, dur)
     this.payload = () => ({ streams: this.randomResults, nextRefresh: this.nextRefresh })
 
-    this.intervalRandom = this.intervalCopy(async () => await this.populateRandom(), fourHours)
-    this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
-    
+    this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popRandom)
+    this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refresh)
+
     this.refreshRandom = async () => {
         console.log('ref ran')
         const getData = await Promise.all(this.randomResults.map(async (stream) => await this.methods.fetchStreamData(stream)))
@@ -60,9 +60,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     }
 
     this.populateRandom = async () => {
-        if(this.randomResults) {
+        if (this.randomResults) {
             clearInterval(this.intervalRefresh)
-            this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
+            this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refresh)
         }
         const checkData = await this.methods.fetchRandomStreams()
         this.randomResults = structureData(checkData)
