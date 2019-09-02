@@ -1,23 +1,24 @@
 import React from 'react'
 import './stream-card.scss'
-import { IStream } from '../Main/main'
+import { IStreamers } from '../Main/main'
 import { FaTwitch } from 'react-icons/fa'
+
 interface Props {
-    streamer: IStream;
+    streamer: IStreamers;
 }
 // https://www.twitch.tv/
 const StreamCard = (props: Props) => {
-    const { stream, channelData } = props.streamer
+    const { streamData, channelData } = props.streamer
     return (
         <div className="stream-card">
             <div className="center">
                 <img src={channelData.logo} />
                 <div className="text-info">
                     <span>{channelData.display_name}</span>
-                    {stream && (
-                        <span>Is playing {stream.game}</span>
+                    {streamData && (
+                        <span>Is playing {streamData.game}</span>
                     )}
-                    <span>{stream ? `${stream.viewers} viewers` : 'Offline'}</span>
+                    <span>{streamData ? `${streamData.viewers} viewers` : 'Offline'}</span>
                 </div>
             </div>
             <a
@@ -25,7 +26,7 @@ const StreamCard = (props: Props) => {
                 target="_blank"
             >
                 <FaTwitch
-                style={stream ? {color: "#6441A5"} : {color: '#eee'}}
+                    style={streamData ? { color: "#6441A5" } : { color: '#eee' }}
                 />
             </a>
         </div>

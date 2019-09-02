@@ -14,4 +14,14 @@
         column-gap: 25px;
         row-gap: 25px;
     }
+
+    .no-data {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+
+        .css-ailvj2 {
+            margin: auto;
+        }
+    }
 }

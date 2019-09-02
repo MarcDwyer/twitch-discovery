@@ -4,11 +4,6 @@ export interface RandomStreamers {
     streams: SubStream[];
 }
 
-export interface Stream {
-    stream: SubStream | null;
-    streamName: string;
-    _links: Links;
-}
 export interface SubStream {
     _id: number;
     game: string;

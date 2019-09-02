@@ -9,7 +9,7 @@ export async function fetchStreamData({ streamName, channelData }: IStreamers): 
         const fetchData = await fetch(url),
             data = await fetchData.json()
         return {
-            stream: data.stream,
+            streamData: data.stream,
             channelData,
             streamName
         }
