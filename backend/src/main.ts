@@ -5,7 +5,7 @@ import ioSetup from 'socket.io'
 import TwitchDiscovery, { TwitchDisc } from './twitch_discovery'
 
 const app = express(),
-    port = 5000,
+    port = 5005,
     server = new http.Server(app),
     io = ioSetup(server);
 // TODO 
