@@ -15,11 +15,11 @@ const app = express(),
 
     io.on('connection', (socket) => {
         console.log('socket connected...')
-        socket.emit('random-data', streams.payload())
+        socket.emit('random-data', streams.data)
         //  socket.send('connect', (socket) => socket.send(streamers.Results))
     })
 
-    app.use('/test', (req, res) => res.send(JSON.stringify(streams.randomResults)))
+    app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))
 
     server.listen(port)
 })()

@@ -9,9 +9,8 @@ export interface ITwitchMethods {
     fetchOffset(): Promise<number>;
 }
 
-function TwitchMethods(this: ITwitchMethods) { }
 
-TwitchMethods.prototype.fetchStreamData = async function (this: ITwitchMethods, { streamName, channelData }: IStreamers) {
+export async function fetchStreamData({ streamName, channelData }: IStreamers): Promise<IStreamers> {
     const url = `https://api.twitch.tv/kraken/streams/${streamName}?client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),
@@ -22,30 +21,31 @@ TwitchMethods.prototype.fetchStreamData = async function (this: ITwitchMethods, 
             streamName
         }
     } catch (err) {
-        return { error: 'Error fetching stream data' }
+        console.log(err)
     }
 }
+
 // `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
-TwitchMethods.prototype.fetchRandomStreams = async function (this: ITwitchMethods) {
+export async function fetchRandomStreams(): Promise<RandomStreamers> {
     const offsetVal = await this.fetchOffset()
-    const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(offsetVal * .33)}&language=en&client_id=${process.env.TWITCH}`
+
+    const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(offsetVal * Math.random())}&language=en&client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),
             data = await fetchData.json()
         return data
     } catch (err) {
-        return { error: 'Error fetching data' }
+        console.log(err)
     }
 }
 
-TwitchMethods.prototype.fetchOffset = async function (this: ITwitchMethods) {
+export async function fetchOffset(): Promise<number> {
     const url = `https://api.twitch.tv/kraken/streams/?limit=1&language=en&client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),
             data = await fetchData.json()
         return data._total
     } catch (err) {
-        return { error: 'Error fetching data' }
+        return .5
     }
 }
-export default TwitchMethods
