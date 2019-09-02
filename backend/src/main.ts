@@ -1,8 +1,11 @@
 import express from 'express'
 import http from 'http'
 import ioSetup from 'socket.io'
-
+import dotenv from 'dotenv'
 import TwitchDiscovery, { TwitchDisc } from './twitch_discovery'
+
+
+dotenv.config()
 
 const app = express(),
     port = 5005,
