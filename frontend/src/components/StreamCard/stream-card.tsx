@@ -15,7 +15,7 @@ const StreamCard = (props: Props) => {
                 <div className="text-info">
                     <span>{channelData.display_name}</span>
                     {stream && (
-                        <span>is playing {stream.game}</span>
+                        <span>Is playing {stream.game}</span>
                     )}
                     <span>{stream ? `${stream.viewers} viewers` : 'Offline'}</span>
                 </div>

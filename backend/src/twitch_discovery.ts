@@ -43,9 +43,9 @@ const popRandom = 60000 * 60 * 4,
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.randomResults = null
+    this.nextRefresh = null
     this.io = io
     this.methods = new TwitchMethods()
-    this.nextRefresh = null
     this.intervalCopy = (func, dur) => setInterval(func, dur)
     this.payload = () => ({ streams: this.randomResults, nextRefresh: this.nextRefresh })
 

@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import './timer.scss'
+
+
 interface Props {
     nextRefresh: number;
 }
 
-const useTimer = (futureTime: number): number[]=> {
+const useTimer = (futureTime: number): number[] => {
     const [timer, setTimer] = useState<number[]>([])
     useEffect(() => {
         let interval: number | undefined;
@@ -28,7 +30,7 @@ const Timer = (props: Props) => {
     return (
         <div className="timer-parent">
             <span>
-                {`Next refresh in ${hours} hours ${minutes} minutes and ${seconds} seconds`}
+                {`Pulling new streamers in ${hours} hours ${minutes} minutes and ${seconds} seconds`}
             </span>
         </div>
     )

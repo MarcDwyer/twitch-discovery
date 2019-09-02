@@ -6,6 +6,7 @@
     flex-direction: column;
     text-align: center;
     background-color: hsl(0, 0, 15%);
+    border-radius: 5px;
 
     .center {
         padding: 15px 15px;
@@ -23,7 +24,7 @@
 
             span {
                 margin-bottom: 10px;
-                font-size: 14px;
+                font-size: 16px;
                 &:first-child {
                     font-size: 22px;
                     font-style: bold;
