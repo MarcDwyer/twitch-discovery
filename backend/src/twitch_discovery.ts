@@ -40,7 +40,6 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.data = null
     this.io = io
     this.intervalCopy = (func, dur) => setInterval(func, dur)
-    // this.payload = () => ({ streams: this.randomResults, nextRefresh: this.nextRefresh })
 
     this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popRandom)
     this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refresh)
