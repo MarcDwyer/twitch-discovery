@@ -28,11 +28,10 @@ export interface TwitchDisc {
     refreshRandom(): void;
 }
 // const devTest = 60000
-const hours = 60000 * 60,
-    minutes = 60000,
+const minutes = 60000,
     popTime = minutes * 45,
     refreshTime = minutes * 6,
-    nextRefresh = () => new Date().getTime() + (minutes * 45)
+    nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.data = null

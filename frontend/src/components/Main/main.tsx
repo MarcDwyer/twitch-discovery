@@ -35,7 +35,7 @@ const useSocket = (url: string): SocketIOClient.Socket | null => {
     return socket
 }
 const Main = () => {
-    const socket = useSocket(`${document.location.hostname}:5005`)
+    const socket = useSocket(`${document.location.hostname}`)
     const [appData, setAppData] = useState<Payload | null>(null)
     const dataRef = useRef<Payload | null>(null)
 
