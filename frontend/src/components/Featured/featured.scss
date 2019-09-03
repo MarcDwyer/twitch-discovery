@@ -8,9 +8,18 @@
         display: flex;
 
         svg {
-            margin: auto 5px auto 15px;
+            margin: auto 25px auto 0;
             font-size: 22px;
             cursor: pointer;
+        }
+
+        .title {
+            display: flex;
+            flex-direction: column;
+            h1 {
+                margin: 0;
+                padding: 0;
+            }
         }
     }
 

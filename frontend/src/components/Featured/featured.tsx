@@ -1,18 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { IStreamers, StructureStreams } from '../Main/main'
+import { IStreamers, StructureStreams, Payload } from '../Main/main'
 import { FaSync } from 'react-icons/fa'
 import './featured.scss'
 
 interface Props {
-    streamers: StructureStreams;
+    data: Payload;
 }
 const Featured = (props: Props) => {
-    const [streamers, setStreamers] = useState<IStreamers[]>(Object.values(props.streamers))
+    const [streamers, setStreamers] = useState<IStreamers[]>(Object.values(props.data.streams))
     const [key, setKey] = useState<number>(0)
     const [featured, setFeatured] = useState<IStreamers | null>(null)
     useEffect(() => {
-        setStreamers(Object.values(props.streamers).filter(stream => stream.streamData))
-    }, [props.streamers])
+        setStreamers(Object.values(props.data.streams).filter(stream => stream.streamData))
+    }, [props.data.streams])
 
     useEffect(() => {
         if (streamers[key]) {
@@ -25,15 +25,24 @@ const Featured = (props: Props) => {
     useEffect(() => {
         if (featured && !featured.streamData) setKey(0)
     }, [featured])
+
+    useEffect(() => {
+        if (featured && streamers[key].streamName !== featured.streamName || featured && !featured.streamData) {
+            setFeatured(streamers[key])
+        }
+    }, [streamers])
     return (
         <div className="featured">
             {featured && featured.streamData && (
                 <React.Fragment>
                     <div className="header">
-                        <h1>{featured.streamData.channel.display_name}</h1>
                         <FaSync
                             onClick={() => setKey(key + 1)}
                         />
+                        <div className="title">
+                            <h1>{featured.streamData.channel.display_name}</h1>
+                            <span>{featured.streamData.viewers} viewers</span>
+                        </div>
                     </div>
                     <div className="twitch">
                         <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />

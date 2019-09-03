@@ -7,7 +7,7 @@ import Timer from '../Timer/timer'
 import Featured from '../Featured/featured'
 import './main.scss'
 
-type Payload = {
+export type Payload = {
     nextRefresh: number;
     streams: StructureStreams;
 }
@@ -22,6 +22,7 @@ export type StructureStreams = {
 
 // Use channel data for channel info. Check stream key in streamData if null because streamers can go offline. 
 // `${document.location.hostname}:5000`
+const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname  
 const useSocket = (url: string): SocketIOClient.Socket | null => {
     const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null)
     useEffect(() => {
@@ -35,7 +36,7 @@ const useSocket = (url: string): SocketIOClient.Socket | null => {
     return socket
 }
 const Main = () => {
-    const socket = useSocket(`${document.location.hostname}`)
+    const socket = useSocket(isDev())
     const [appData, setAppData] = useState<Payload | null>(null)
     const dataRef = useRef<Payload | null>(null)
 
@@ -71,7 +72,7 @@ const Main = () => {
             {appData && (
                 <React.Fragment>
                     <Timer nextRefresh={appData.nextRefresh} />
-                    <Featured streamers={appData.streams} />
+                    <Featured data={appData} />
                     <div className="streamer-grid">
                         {Object.values(appData.streams).map(stream => (
                             <StreamCard streamer={stream} key={stream.streamName} />
