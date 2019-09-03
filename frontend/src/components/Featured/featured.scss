@@ -4,6 +4,16 @@
     flex-direction: column;
     width: 75%;
 
+    .header {
+        display: flex;
+
+        svg {
+            margin: auto 5px auto 15px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+    }
+
     .twitch {
         display: flex;
         flex-wrap: nowrap;
@@ -11,8 +21,8 @@
         height: 720px;
 
         iframe:first-child {
-           width: 80%;
-           height: 100%;
+            width: 80%;
+            height: 100%;
         }
 
         .chat {

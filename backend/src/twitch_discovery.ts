@@ -28,17 +28,19 @@ export interface TwitchDisc {
     refreshRandom(): void;
 }
 // const devTest = 60000
-const popRandom = 60000 * 60 * 2,
-    refresh = 60000 * 6,
-    nextRefresh = () => new Date().getTime() + popRandom
+const hours = 60000 * 60,
+    minutes = 60000,
+    popTime = minutes * 45,
+    refreshTime = minutes * 6,
+    nextRefresh = () => new Date().getTime() + (minutes * 45)
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.data = null
     this.io = io
     this.intervalCopy = (func, dur) => setInterval(func, dur)
 
-    this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popRandom)
-    this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refresh)
+    this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popTime)
+    this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
 
     this.refreshRandom = async () => {
         console.log('ref ran')
@@ -50,7 +52,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.populateRandom = async () => {
         if (this.data) {
             clearInterval(this.intervalRefresh)
-            this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refresh)
+            this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
         }
         const checkData = await twitch.fetchRandomStreams()
         this.data = { streams: structureData(checkData), nextRefresh: nextRefresh() }

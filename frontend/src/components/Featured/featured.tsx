@@ -1,38 +1,40 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { IStreamers, StructureStreams } from '../Main/main'
-
+import { FaSync } from 'react-icons/fa'
 import './featured.scss'
 
 interface Props {
     streamers: StructureStreams;
 }
-
-const useFeatured = (data: StructureStreams) => {
-    const [feat, setFeat] = useState<IStreamers | null>(null)
+const Featured = (props: Props) => {
+    const [streamers, setStreamers] = useState<IStreamers[]>(Object.values(props.streamers))
+    const [key, setKey] = useState<number>(0)
+    const [featured, setFeatured] = useState<IStreamers | null>(null)
+    useEffect(() => {
+        setStreamers(Object.values(props.streamers).filter(stream => stream.streamData))
+    }, [props.streamers])
 
     useEffect(() => {
-        if (!feat || feat && !data[feat.streamName].streamData) {
-            const dataArray = Object.values(data)
-            for (let x = 0; x < dataArray.length; x++) {
-                const stream = dataArray[x]
-                if (stream.streamData) {
-                    setFeat(stream)
-                    break;
-                }
-            }
+        if (streamers[key]) {
+            setFeatured(streamers[key])
+        } else {
+            setKey(0)
         }
-    }, [data])
-    return feat
-}
-// `https://player.twitch.tv/?channel=${one.name}&autoplay=true`
-//https://www.twitch.tv/embed/${stream.name}/chat?darkpopout
-const Featured = (props: Props) => {
-    const featured = useFeatured(props.streamers)
+    }, [key])
+
+    useEffect(() => {
+        if (featured && !featured.streamData) setKey(0)
+    }, [featured])
     return (
         <div className="featured">
             {featured && featured.streamData && (
                 <React.Fragment>
-                    <h1>{featured.streamData.channel.display_name}</h1>
+                    <div className="header">
+                        <h1>{featured.streamData.channel.display_name}</h1>
+                        <FaSync
+                            onClick={() => setKey(key + 1)}
+                        />
+                    </div>
                     <div className="twitch">
                         <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />
                         <iframe className="chat" src={`https://www.twitch.tv/embed/${featured.streamName}/chat?darkpopout`} />
