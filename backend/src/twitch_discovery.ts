@@ -2,7 +2,7 @@
 import { Server } from 'socket.io'
 import * as twitch from './twitch_methods'
 import { Channel, SubStream } from './data_types/data_types'
-import { structureData, structureLiveData } from './structure_data'
+import structure from './structure_data'
 
 type Payload = {
     nextRefresh: number;
@@ -30,7 +30,7 @@ export interface TwitchDisc {
 // const devTest = 60000
 const minutes = 60000,
     popTime = minutes * 45,
-    refreshTime = minutes * 1,
+    refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
@@ -44,7 +44,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.refreshRandom = async () => {
         console.log('ref ran')
         const getData = await Promise.all(Object.values(this.data.streams).map(async (stream) => await twitch.fetchStreamData(stream)))
-        this.data.streams = structureLiveData(getData)
+        this.data.streams = structure.structureLiveData(getData)
         this.io.sockets.emit('updated-data', this.data.streams)
     }
 
@@ -54,7 +54,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
             this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
         }
         const checkData = await twitch.fetchRandomStreams()
-        this.data = { streams: structureData(checkData), nextRefresh: nextRefresh() }
+        this.data = { streams: structure.structureData(checkData), nextRefresh: nextRefresh() }
         this.io.sockets.emit('random-data', this.data)
     }
 }

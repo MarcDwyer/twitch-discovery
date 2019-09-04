@@ -1,7 +1,7 @@
 import { RandomStreamers } from './data_types/data_types'
 import { StructureStreams, IStreamers } from './twitch_discovery'
 
-export const structureData = (data: RandomStreamers): StructureStreams => {
+const structureData = (data: RandomStreamers): StructureStreams => {
     return data.streams.reduce((obj, streamer) => {
         const item = {
             streamData: streamer,
@@ -12,9 +12,11 @@ export const structureData = (data: RandomStreamers): StructureStreams => {
         return obj
     }, {})
 }
-export const structureLiveData = (data: IStreamers[]): StructureStreams => {
+const structureLiveData = (data: IStreamers[]): StructureStreams => {
     return data.reduce((obj, stream) => {
         obj[stream.streamName] = stream
         return obj
     }, {})
 }
+
+export default { structureData, structureLiveData }

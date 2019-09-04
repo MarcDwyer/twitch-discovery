@@ -9,6 +9,7 @@ interface Props {
 const Featured = (props: Props) => {
     const [streamers, setStreamers] = useState<IStreamers[] | null>(null)
     const [key, setKey] = useState<number>(0)
+
     useEffect(() => {
         setStreamers(Object.values(props.data.streams).filter(stream => stream.streamData))
     }, [props.data.streams])
@@ -20,15 +21,15 @@ const Featured = (props: Props) => {
     const featured = streamers ? streamers[key] : null
 
     return (
-        <div className="featured">
+        <div className="featured-parent">
             {featured && featured.streamData && (
-                <React.Fragment>
+                <div className="featured">
                     <div className="header">
                         <FaSync
                             onClick={() => setKey(key + 1)}
                         />
                         <div className="title">
-                            <h1>{featured.streamData.channel.display_name}</h1>
+                            <h2>{featured.streamData.channel.display_name}</h2>
                             <span>{featured.streamData.viewers} viewers</span>
                         </div>
                     </div>
@@ -36,7 +37,15 @@ const Featured = (props: Props) => {
                         <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />
                         <iframe className="chat" src={`https://www.twitch.tv/embed/${featured.streamName}/chat?darkpopout`} />
                     </div>
-                </React.Fragment>
+                    <a
+                        className="twitch-button"
+                        href={`https://twitch.tv/${featured.channelData.display_name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Visit Twitch channel
+                    </a>
+                </div>
             )}
         </div>
     )

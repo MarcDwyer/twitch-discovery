@@ -24,6 +24,7 @@ const StreamCard = (props: Props) => {
             <a
                 href={`https://www.twitch.tv/${channelData.name}`}
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 <FaTwitch
                     style={streamData ? { color: "#6441A5" } : { color: '#eee' }}
