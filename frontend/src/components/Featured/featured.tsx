@@ -34,17 +34,19 @@ const Featured = (props: Props) => {
                         </div>
                     </div>
                     <div className="twitch">
-                        <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />
+                        <div className="video">
+                            <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />
+                            <a
+                                className="twitch-button"
+                                href={`https://twitch.tv/${featured.channelData.display_name}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Visit Twitch channel
+                    </a>
+                        </div>
                         <iframe className="chat" src={`https://www.twitch.tv/embed/${featured.streamName}/chat?darkpopout`} />
                     </div>
-                    <a
-                        className="twitch-button"
-                        href={`https://twitch.tv/${featured.channelData.display_name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Visit Twitch channel
-                    </a>
                 </div>
             )}
         </div>
