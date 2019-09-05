@@ -1,7 +1,8 @@
 import React from 'react'
-import './stream-card.scss'
 import { IStreamers } from '../Main/main'
 import { FaTwitch } from 'react-icons/fa'
+
+import './stream-card.scss'
 
 interface Props {
     streamer: IStreamers;
@@ -9,6 +10,7 @@ interface Props {
 // https://www.twitch.tv/
 const StreamCard = (props: Props) => {
     const { streamData, channelData } = props.streamer
+
     return (
         <div className="stream-card">
             <div className="center">

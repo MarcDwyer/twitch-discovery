@@ -1,0 +1,23 @@
+.diagnostic {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    opacity: .85;
+    color: #eee;
+    background-color: transparent;
+    z-index: 1000;
+    overflow: hidden;
+
+    .innertext {
+        z-index: 1001;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        background-color: black;
+        opacity: .85;
+        height: 100vh;
+        text-align: center;
+    }
+}

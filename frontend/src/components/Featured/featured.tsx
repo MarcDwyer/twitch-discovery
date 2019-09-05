@@ -31,7 +31,7 @@ const Featured = (props: Props) => {
     useEffect(() => {
         if (!featData) return
         const { live, keys } = featData
-        const selected = live[keys[key]] ? live[keys[key]] : null
+        const selected = live[keys[key]]
         if (!selected && featData.keys.length >= 1) {
             setKey(0)
         } else if (featData.keys.length === 0) {
@@ -40,7 +40,7 @@ const Featured = (props: Props) => {
             setFeatured(live[keys[key]])
         }
     }, [featData, key])
-    
+
     return (
         <div className="featured-parent">
             {featured && featured.streamData && (

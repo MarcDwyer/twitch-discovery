@@ -2,11 +2,16 @@
 import { Server } from 'socket.io'
 import * as twitch from './twitch_methods'
 import { Channel, SubStream } from './data_types/data_types'
-import structure from './structure_data'
+import { structureLiveData } from './structure_data'
 
-type Payload = {
-    nextRefresh: number;
+export type Payload = {
+    nextRefresh?: number;
     streams: StructureStreams;
+    diagnostic: Diag;
+}
+type Diag = {
+    offset: number;
+    total: number;
 }
 export interface IStreamers {
     streamData: SubStream;
@@ -44,7 +49,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.refreshRandom = async () => {
         console.log('ref ran')
         const getData = await Promise.all(Object.values(this.data.streams).map(async (stream) => await twitch.fetchStreamData(stream)))
-        this.data.streams = structure.structureLiveData(getData)
+        this.data.streams = structureLiveData(getData)
         this.io.sockets.emit('updated-data', this.data.streams)
     }
 
@@ -54,7 +59,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
             this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), refreshTime)
         }
         const checkData = await twitch.fetchRandomStreams()
-        this.data = { streams: structure.structureData(checkData), nextRefresh: nextRefresh() }
+        this.data = { ...checkData, nextRefresh: nextRefresh() }
         this.io.sockets.emit('random-data', this.data)
     }
 }

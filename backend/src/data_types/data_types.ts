@@ -2,7 +2,8 @@
 
 
 export interface RandomStreamers {
-    _total: number;
+    total: number;
+    offset: number;
     streams: SubStream[];
 }
 
