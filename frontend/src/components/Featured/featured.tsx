@@ -51,6 +51,7 @@ const Featured = (props: Props) => {
                         />
                         <div className="title">
                             <h2>{featured.streamData.channel.display_name}</h2>
+                            <span>is playing {featured.streamData.game}</span>
                             <span>{featured.streamData.viewers} viewers</span>
                         </div>
                     </div>

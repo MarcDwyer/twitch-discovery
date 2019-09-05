@@ -21,3 +21,11 @@
         text-align: center;
     }
 }
+.show-diag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 33px;
+    z-index: 2000;
+    color: #eee;
+}

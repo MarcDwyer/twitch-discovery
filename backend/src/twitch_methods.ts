@@ -35,6 +35,7 @@ async function fetchOffset(): Promise<number> {
 export async function fetchRandomStreams(): Promise<Payload> {
     const total = await fetchOffset(),
         offset = Math.random()
+        // Math.floor(total * .012)
 
     const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(total * offset)}&language=en&client_id=${process.env.TWITCH}`
     try {

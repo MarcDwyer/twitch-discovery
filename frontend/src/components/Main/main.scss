@@ -1,61 +1,62 @@
 .main {
+    overflow-y: auto;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-    color: #eee;
-    max-width: 1920px;
-    margin: auto;
 
-    .streamer-grid {
-        display: grid;
-        width: 100%;
-        grid-auto-rows: 1fr;
-        margin: 0 auto auto auto;
-        grid-template-columns: repeat(4, 1fr);
-        column-gap: 25px;
-        row-gap: 25px;
-    }
-
-    .no-data {
-        margin: auto;
+    .loaded {
+        max-width: 1920px;
         display: flex;
         flex-direction: column;
+        color: #eee;
+        width: 100%;
+        margin: auto;
 
-        .css-ailvj2 {
+        .streamer-grid {
+            display: grid;
+            width: 100%;
+            grid-auto-rows: 1fr;
+            margin: 0 auto auto auto;
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: 25px;
+            row-gap: 25px;
+        }
+
+        .no-data {
             margin: auto;
-        }
-    }
+            display: flex;
+            flex-direction: column;
 
-    .show-diag {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        font-size: 33px;
-        z-index: 2000;
-    }
-    @media (max-width: 1919px) {
-        width: 95%;
-    }
+            .css-ailvj2 {
+                margin: auto;
+            }
+        }
 
-    @media (max-width: 1550px) {
+        @media (max-width: 1919px) {
+            width: 95%;
+        }
 
-        .streamer-grid {
-            grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 1550px) {
+
+            .streamer-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
-    }
-    @media(max-width: 1000px) {
-        .streamer-grid {
-            grid-template-columns: repeat(2, 1fr);
-            width: 100%;
+
+        @media(max-width: 1000px) {
+            .streamer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+            }
         }
-    }
-    @media(max-width: 750px) {
-        .featured-parent {
-            display: none;
-        }
-        .streamer-grid {
-            grid-template-columns: repeat(1, 1fr);
-            width: 100%;
+
+        @media(max-width: 750px) {
+            .featured-parent {
+                display: none;
+            }
+
+            .streamer-grid {
+                grid-template-columns: repeat(1, 1fr);
+                width: 100%;
+            }
         }
     }
 }

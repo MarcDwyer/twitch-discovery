@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
 import io from 'socket.io-client'
 import { BounceLoader } from 'react-spinners'
+
 import { Channel, SubStream } from '../../data_types/data_types'
 import StreamCard from '../StreamCard/stream-card'
 import Timer from '../Timer/timer'
 import Featured from '../Featured/featured'
 import Diag from '../Diagnostic/diag'
-import { FaHamburger } from 'react-icons/fa'
+
 import './main.scss'
 
 export type Payload = {
@@ -44,7 +45,6 @@ const useSocket = (url: string): SocketIOClient.Socket | null => {
 const Main = () => {
     const socket = useSocket(isDev())
     const [appData, setAppData] = useState<Payload | null>(null)
-    const [showDiag, setShowDiag] = useState<boolean>(false)
     const dataRef = useRef<Payload | null>(null)
 
     const updateData = (refresh: StructureStreams) => {
@@ -77,13 +77,9 @@ const Main = () => {
 
     console.log(appData)
     return (
-        <div className="main" style={showDiag ? { overflow: 'hidden' } : {}}>
-            {appData && (
-                <React.Fragment>
-                    <FaHamburger
-                        className="show-diag"
-                        onClick={() => setShowDiag(!showDiag)}
-                    />
+        <div className="main">
+            { appData && (
+                <div className="loaded">
                     <Timer nextRefresh={appData.nextRefresh} />
                     <Featured data={appData} />
                     <div className="streamer-grid">
@@ -91,20 +87,20 @@ const Main = () => {
                             <StreamCard streamer={stream} key={stream.streamName} />
                         ))}
                     </div>
-                    {showDiag && (
-                        <Diag diag={appData.diagnostic} setShowDiag={setShowDiag} />
-                    )}
-                </React.Fragment>
-            )}
-            {!appData && (
-                <div className="no-data">
-                    <h1>Looking for streams...</h1>
-                    <BounceLoader
-                        color="#eee"
-                    />
+                    <Diag diag={appData.diagnostic} />
                 </div>
             )}
-        </div>
+{
+!appData && (
+    <div className="no-data">
+        <h1>Looking for streams...</h1>
+        <BounceLoader
+            color="#eee"
+        />
+    </div>
+)
+}
+        </div >
     )
 }
 
