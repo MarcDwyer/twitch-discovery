@@ -33,7 +33,7 @@ async function fetchOffset(): Promise<number> {
 // `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
 export async function fetchRandomStreams(): Promise<RandomStreamers> {
     const offsetVal = await fetchOffset()   
-
+    console.log(offsetVal)
     const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(offsetVal * Math.random())}&language=en&client_id=${process.env.TWITCH}`
     try {
         const fetchData = await fetch(url),

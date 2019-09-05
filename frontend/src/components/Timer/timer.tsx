@@ -10,7 +10,7 @@ type Time = {
     minutes: number;
     seconds: number;
 }
-interface ITimer extends Array<Time | null | boolean>{0: Time | null; 1:boolean}
+interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
 const useTimer = (futureTime: number): ITimer => {
     const [timer, setTimer] = useState<Time | null>(null)
     const [waiting, setWaiting] = useState<boolean>(false)
@@ -43,6 +43,7 @@ const useTimer = (futureTime: number): ITimer => {
 
 const Timer = (props: Props) => {
     const [time, waiting] = useTimer(props.nextRefresh)
+
     return (
         <div className="timer-parent">
             {!waiting && time ? (
