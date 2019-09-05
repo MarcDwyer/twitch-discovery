@@ -11,7 +11,12 @@ const Featured = (props: Props) => {
     const [key, setKey] = useState<number>(0)
 
     useEffect(() => {
-        setStreamers(Object.values(props.data.streams).filter(stream => stream.streamData))
+        const filtered = Object.values(props.data.streams).filter(stream => stream.streamData)
+        if (filtered.length <= 1) {
+            setStreamers(null)
+        } else {
+            setStreamers(filtered)
+        }
     }, [props.data.streams])
 
     useEffect(() => {
