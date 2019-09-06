@@ -76,7 +76,7 @@ const Main = () => {
     console.log(appData)
     return (
         <div className="main">
-            { appData && (
+            {appData && (
                 <div className="loaded">
                     <Navbar appData={appData} />
                     <Featured data={appData} />
@@ -87,16 +87,16 @@ const Main = () => {
                     </div>
                 </div>
             )}
-{
-!appData && (
-    <div className="no-data">
-        <h1>Looking for streams...</h1>
-        <BounceLoader
-            color="#eee"
-        />
-    </div>
-)
-}
+            {
+                !appData && (
+                    <div className="no-data">
+                        <h1>Looking for streams...</h1>
+                        <BounceLoader
+                            color="#eee"
+                        />
+                    </div>
+                )
+            }
         </div >
     )
 }
