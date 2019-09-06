@@ -55,10 +55,7 @@ const Main = () => {
     useEffect(() => {
         if (socket) {
             socket.on('connect', () => {
-                socket.on('random-data', (data: Payload) => {
-                    console.log(data)
-                    setAppData(data)
-                })
+                socket.on('random-data', (data: Payload) => setAppData(data))
                 socket.on('updated-data', (data: StructureStreams) => updateData(data))
                 socket.on('request-error', (data: any) => {
                     console.log('error', data)
@@ -73,7 +70,6 @@ const Main = () => {
         dataRef.current = appData
     }, [appData])
 
-    console.log(appData)
     return (
         <div className="main">
             {appData && (

@@ -9,8 +9,6 @@ interface Props {
 
 const Timer = (props: Props) => {
     const [time, waiting] = props.time
-
-    console.log(waiting)
     return (
         <div className="timer-parent">
             {time && (

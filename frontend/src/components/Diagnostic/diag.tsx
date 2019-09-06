@@ -30,11 +30,15 @@ const Diag = (props: Props) => {
                     onClick={() => setShowDiag(!showDiag)}
                 />
                 <div className="diagnostic"
-                    style={!showDiag ? {transform: 'translateX(-100%)'} : {transform: 'translateX(0)'}}
-                    onClick={() => setShowDiag(false)}
+                    style={!showDiag ? { transform: 'translateX(-100%)' } : { transform: 'translateX(0)' }}
+                    onClick={(e) => {
+                        //@ts-ignore
+                        if (e.target.classList.value !== 'diagnostic') return
+                        setShowDiag(false)
+                    }}
                 >
                     <animated.div className="innertext" style={diagAnim}>
-                        <h2>Diagnostic Data</h2>
+                        <h2>Twitch Data</h2>
                         <span>Total Streams: {total}</span>
                         <span>Offset Value: {offset}</span>
                         <span>Skipped over: {skippedOver}</span>

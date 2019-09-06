@@ -14,7 +14,7 @@ export type Time = {
 }
 export interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
 
-export const useTimer = (futureTime: number): ITimer => {
+const useTimer = (futureTime: number): ITimer => {
     const [timer, setTimer] = useState<Time | null>(null)
     const [waiting, setWaiting] = useState<boolean>(false)
 
@@ -28,7 +28,7 @@ export const useTimer = (futureTime: number): ITimer => {
                 setWaiting(true)
                 return
             }
-             setWaiting(false)
+            setWaiting(false)
             const distance = futureTime - now
 
             let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
