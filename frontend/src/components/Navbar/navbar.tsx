@@ -7,7 +7,7 @@ import './navbar.scss'
 interface Props {
     appData: Payload;
 }
-type Time = {
+export type Time = {
     hours: number;
     minutes: number;
     seconds: number;
@@ -28,7 +28,7 @@ export const useTimer = (futureTime: number): ITimer => {
                 setWaiting(true)
                 return
             }
-            if (waiting) setWaiting(false)
+             setWaiting(false)
             const distance = futureTime - now
 
             let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
