@@ -2,13 +2,13 @@ import { SubStream } from './data_types/data_types'
 import { StructureStreams, IStreamers } from './twitch_discovery'
 
 export const structureData = (data: SubStream[]): StructureStreams => {
-    console.log(data)
     //@ts-ignore
-    return data.streams.reduce((obj, streamer) => {
+    return data.reduce((obj, streamer) => {
         const item = {
             streamData: streamer,
             streamName: streamer.channel.name,
-            channelData: streamer.channel
+            channelData: streamer.channel,
+            id: streamer._id
         }
         obj[item.streamName] = item
         return obj

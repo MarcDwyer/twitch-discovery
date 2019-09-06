@@ -17,6 +17,7 @@ export interface IStreamers {
     streamData: SubStream;
     streamName: string;
     channelData: Channel;
+    id?: number;
 }
 
 export type StructureStreams = {
@@ -34,8 +35,8 @@ export interface TwitchDisc {
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 52,
-    refreshTime = minutes * 4,
+    popTime = 45000,
+    refreshTime = 15000,
     nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
