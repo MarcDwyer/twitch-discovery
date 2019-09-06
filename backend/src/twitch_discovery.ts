@@ -35,8 +35,8 @@ export interface TwitchDisc {
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = 45000,
-    refreshTime = 15000,
+    popTime = minutes * 58,
+    refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
