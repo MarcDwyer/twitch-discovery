@@ -1,6 +1,8 @@
 .main {
     overflow-y: auto;
     height: 100vh;
+    display: flex;
+    color: #eee;
 
     .loaded {
         max-width: 1920px;
@@ -20,15 +22,7 @@
             row-gap: 25px;
         }
 
-        .no-data {
-            margin: auto;
-            display: flex;
-            flex-direction: column;
 
-            .css-ailvj2 {
-                margin: auto;
-            }
-        }
 
         @media (max-width: 1919px) {
             width: 95%;
@@ -58,5 +52,15 @@
                 width: 100%;
             }
         }
+    }
+}
+
+.no-data {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+    .css-ailvj2 {
+        margin: auto;
     }
 }
