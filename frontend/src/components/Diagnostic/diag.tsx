@@ -3,18 +3,23 @@ import { createPortal } from 'react-dom'
 import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaHamburger } from 'react-icons/fa'
-
+import { ITimer } from '../Navbar/navbar'
 import './diag.scss'
+
 type Props = {
     diag: IDiag;
+    time: ITimer;
 }
 const Diag = (props: Props) => {
     const { total, offset } = props.diag
+    const [time, waiting] = props.time
     const [showDiag, setShowDiag] = useState<boolean>(false)
 
     const diagAnim = useSpring({
         opacity: 1,
-        from: { opacity: 0 }
+        transform: 'translateX(0)',
+        from: { opacity: 0, transform: 'translateX(-100%)' },
+        reverse: !showDiag
     })
     const skippedOver = Math.floor(total * offset)
     return (
@@ -24,19 +29,21 @@ const Diag = (props: Props) => {
                     className="show-diag"
                     onClick={() => setShowDiag(!showDiag)}
                 />
-                {showDiag && (
-                    <div className="diagnostic"
-                        onClick={() => setShowDiag(false)}
-                    >
-                        <animated.div className="innertext" style={diagAnim}>
-                            <h2>Diagnostic Data</h2>
-                            <span>Total: {total}</span>
-                            <span>Offset: {offset}</span>
-                            <span>Skipped over: {skippedOver}</span>
-                            <span>Streamers left: {total - skippedOver}</span>
-                        </animated.div>
-                    </div>
-                )}
+                <div className="diagnostic"
+                    style={!showDiag ? {transform: 'translateX(-100%)'} : {transform: 'translateX(0)'}}
+                    onClick={() => setShowDiag(false)}
+                >
+                    <animated.div className="innertext" style={diagAnim}>
+                        <h2>Diagnostic Data</h2>
+                        <span>Total Streams: {total}</span>
+                        <span>Offset Value: {offset}</span>
+                        <span>Skipped over: {skippedOver}</span>
+                        <span>Streamers left: {total - skippedOver}</span>
+                        {time && (
+                            <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
+                        )}
+                    </animated.div>
+                </div>
             </React.Fragment>,
             //@ts-ignore
             document.querySelector('#root')

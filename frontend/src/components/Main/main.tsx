@@ -4,10 +4,8 @@ import { BounceLoader } from 'react-spinners'
 
 import { Channel, SubStream } from '../../data_types/data_types'
 import StreamCard from '../StreamCard/stream-card'
-import Timer from '../Timer/timer'
 import Featured from '../Featured/featured'
-import Diag from '../Diagnostic/diag'
-
+import Navbar from '../Navbar/navbar'
 import './main.scss'
 
 export type Payload = {
@@ -80,14 +78,13 @@ const Main = () => {
         <div className="main">
             { appData && (
                 <div className="loaded">
-                    <Timer nextRefresh={appData.nextRefresh} />
+                    <Navbar appData={appData} />
                     <Featured data={appData} />
                     <div className="streamer-grid">
                         {Object.values(appData.streams).map(stream => (
                             <StreamCard streamer={stream} key={stream.streamName} />
                         ))}
                     </div>
-                    <Diag diag={appData.diagnostic} />
                 </div>
             )}
 {

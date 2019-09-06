@@ -1,9 +1,13 @@
 .timer-parent {
     text-align: center;
-    margin: 25px auto 25px auto;
-    
+    margin: auto;
+
     span {
         color: hsl(0,0,85%);   
         font-size: 22px;
+    }
+
+    @media (max-width: 950px) {
+        display: none;
     }
 }
