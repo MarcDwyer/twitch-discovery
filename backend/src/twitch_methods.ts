@@ -6,9 +6,9 @@ import { structureData } from './structure_data'
 import { SubStream } from './data_types/data_types'
 
 type IData = {
-    _total: number;
-    streams: SubStream[];
-    stream: SubStream;
+    _total?: number;
+    streams?: SubStream[];
+    stream?: SubStream;
 }
 
 async function fetchTwitch(url: string): Promise<IData> {
@@ -22,22 +22,20 @@ async function fetchTwitch(url: string): Promise<IData> {
         })
         const data = await fetchThis.json()
         return data
-    } catch(err) {
+    } catch (err) {
         console.log(err)
     }
 }
 
-export async function fetchStreamData({ streamName, channelData, id }: IStreamers): Promise<IStreamers> {
-    const url = `https://api.twitch.tv/kraken/streams/${id}`
+export async function fetchStreamData({ streamName, channelData }: IStreamers): Promise<IStreamers> {
+    const url = `https://api.twitch.tv/kraken/streams/${channelData._id}`
     try {
         const data = await fetchTwitch(url)
-        console.log(data)
         if (data['error']) throw new Error(`error at fetchstreamdata`)
         return {
             streamData: data.stream,
-            channelData,
-            id,
-            streamName
+            streamName,
+            channelData
         }
     } catch (err) {
         console.log(err)
@@ -56,9 +54,10 @@ async function fetchTotal(): Promise<number> {
 
 
 // `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
- export async function fetchRandomStreams(): Promise<Payload> {
+export async function fetchRandomStreams(): Promise<Payload> {
     const total = await fetchTotal(),
         offset = Math.random()
+
     const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(total * offset)}&language=en`
     try {
         const data = await fetchTwitch(url)

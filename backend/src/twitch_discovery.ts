@@ -32,10 +32,11 @@ export interface TwitchDisc {
     populateRandom(): void;
     intervalCopy(func: Function, dur: number): number;
     refreshRandom(): void;
+    setNewStreams(data: SubStream[]): void;
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 45,
+    popTime = minutes * 48,
     refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
@@ -49,8 +50,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
 
     this.refreshRandom = async () => {
         console.log('ref ran')
-        const getData = await Promise.all(Object.values(this.data.streams).map(async (stream) => await twitch.fetchStreamData(stream)))
-        this.data.streams = structureLiveData(getData)
+        const streams = Object.values(this.data.streams)
+        const newStream = await Promise.all(streams.map(async (stream) => await twitch.fetchStreamData(stream)))
+        this.data.streams = structureLiveData(newStream)
         this.io.sockets.emit('updated-data', this.data.streams)
     }
 

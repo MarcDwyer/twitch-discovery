@@ -75,7 +75,7 @@ const Main = () => {
             {appData && (
                 <div className="loaded">
                     <Navbar appData={appData} />
-                    <Featured data={appData} />
+                    <Featured streamers={appData.streams} />
                     <div className="streamer-grid">
                         {Object.values(appData.streams).map(stream => (
                             <StreamCard streamer={stream} key={stream.streamName} />
