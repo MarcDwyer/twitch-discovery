@@ -43,7 +43,9 @@ const Diag = (props: Props) => {
                 >
                     <animated.div className="innertext" style={diagAnim}>
                         <h2>Twitch Data</h2>
-                        <span className="top">Top {percent}% of streamers</span>
+                        <span className="top">
+                            Top {percent.toString().length >= 4 ? percent.toFixed(2) : percent}% of streamers
+                            </span>
                         <span>Total Streams: {total}</span>
                         <span>Average viewership: {Math.round(totalViewers / streams.length)}</span>
                         <span>Skipped over: {offset}</span>

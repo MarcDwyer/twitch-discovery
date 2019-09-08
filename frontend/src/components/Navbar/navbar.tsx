@@ -28,12 +28,12 @@ const useTimer = (futureTime: number): ITimer => {
                 setWaiting(true)
                 return
             }
-            setWaiting(false)
             const distance = futureTime - now
 
             let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
                 minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
                 seconds = Math.floor((distance % (1000 * 60)) / 1000)
+            setWaiting(false)
             setTimer({ hours, minutes, seconds })
         }, 1000)
         return function () {

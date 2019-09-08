@@ -70,7 +70,6 @@ const Main = () => {
         if (!appData) return
         dataRef.current = appData
     }, [appData])
-    console.log(appData)
     return (
         <div className="main">
             {appData && (
@@ -84,15 +83,14 @@ const Main = () => {
                     </div>
                 </div>
             )}
-            {
-                !appData && (
-                    <div className="no-data">
-                        <h1>Looking for streams...</h1>
-                        <BounceLoader
-                            color="#eee"
-                        />
-                    </div>
-                )
+            {!appData && (
+                <div className="no-data">
+                    <h1>Looking for streams...</h1>
+                    <BounceLoader
+                        color="#eee"
+                    />
+                </div>
+            )
             }
         </div >
     )
