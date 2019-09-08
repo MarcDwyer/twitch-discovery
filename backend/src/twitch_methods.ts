@@ -27,7 +27,7 @@ async function fetchTwitch(url: string): Promise<IData> {
     }
 }
 
-export async function fetchStreamData({ streamName, channelData }: IStreamers): Promise<IStreamers> {
+async function fetchStreamData({ streamName, channelData }: IStreamers): Promise<IStreamers> {
     const url = `https://api.twitch.tv/kraken/streams/${channelData._id}`
     try {
         const data = await fetchTwitch(url)
@@ -54,15 +54,16 @@ async function fetchTotal(): Promise<number> {
 
 
 // `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
-export async function fetchRandomStreams(): Promise<Payload> {
-    const total = await fetchTotal(),
-        offset = Math.random()
-
-    const url = `https://api.twitch.tv/kraken/streams/?limit=15&offset=${Math.floor(total * offset)}&language=en`
+async function fetchRandomStreams(totalOffset: number[]): Promise<Payload> {
+    const [offset, total, pullPercent] = totalOffset
+    const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${offset}&language=en`
     try {
         const data = await fetchTwitch(url)
-        return { streams: structureData(data.streams), diagnostic: { total, offset } }
+        return { streams: structureData(data.streams), diagnostic: { total, offset, pullPercent } }
     } catch (err) {
         console.log(err)
     }
 }
+
+
+export default { fetchRandomStreams, fetchTotal, fetchStreamData, fetchTwitch }

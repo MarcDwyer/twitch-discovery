@@ -69,7 +69,7 @@ const Main = () => {
         if (!appData) return
         dataRef.current = appData
     }, [appData])
-
+    console.log(appData)
     return (
         <div className="main">
             {appData && (
