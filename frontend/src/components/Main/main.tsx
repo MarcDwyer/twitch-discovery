@@ -48,18 +48,10 @@ const Main = () => {
     const [ifeatured, setFeatured] = useState<number | null>(null)
     const dataRef = useRef<Payload | null>(null)
 
-    const updateData = (refresh: StructureStreams) => {
-        if (!dataRef.current) return
-        dataRef.current.streams = refresh
-        const shallow = { ...dataRef.current }
-        setAppData(shallow)
-    }
-
     useEffect(() => {
         if (socket) {
             socket.on('connect', () => {
                 socket.on('random-data', (data: Payload) => setAppData(data))
-                socket.on('updated-data', (data: StructureStreams) => updateData(data))
             })
         }
     }, [socket])
@@ -71,7 +63,6 @@ const Main = () => {
         }
         dataRef.current = appData
     }, [appData])
-    
     const getFeatured = (name: string) => {
         if (!appData) return
         for (let x = 0, len = appData.online.length; x < len; x++) {
