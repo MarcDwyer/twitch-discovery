@@ -38,7 +38,7 @@ const Featured = (props: Props) => {
                     </div>
                     <div className="twitch">
                         <div className="video">
-                            <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=true`} frameBorder="0" />
+                            <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.streamName}&autoplay=false`} frameBorder="0" />
                             <a
                                 className="twitch-button"
                                 href={`https://twitch.tv/${featured.channelData.display_name}`}

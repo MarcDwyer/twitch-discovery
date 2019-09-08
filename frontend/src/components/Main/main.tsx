@@ -24,6 +24,7 @@ export type StructureStreams = {
 export type IDiag = {
     offset: number;
     total: number;
+    pullPercent: number;
 }
 // Use channel data for channel info. Check stream key in streamData if null because streamers can go offline. 
 // `${document.location.hostname}:5000`

@@ -39,7 +39,7 @@ export interface TwitchDisc {
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 48,
+    popTime = minutes * 1, // 44,
     refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
@@ -72,10 +72,10 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     }
 
     this.getOffset = (total: number) => {
-        if (this.pullPercentage >= .85) this.pullPercentage = 0
-        const value = this.pullPercentage
-        this.pullPercentage = value + .005
-        const offset = Math.floor(total * value)
+        if (this.pullPercentage >= .55) this.pullPercentage = 0
+        const value = this.pullPercentage,
+            offset = Math.floor(total * value)
+        this.pullPercentage = value + .00025
         return [offset, total, value]
     }
 }

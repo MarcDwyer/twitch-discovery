@@ -49,7 +49,7 @@ const Navbar = (props: Props) => {
     const time = useTimer(appData.nextRefresh)
     return (
         <div className="navbar">
-            <Diagnostic diag={appData.diagnostic} time={time} />
+            <Diagnostic appData={appData} time={time} />
             <Timer time={time} />
         </div>
     )
