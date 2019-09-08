@@ -46,7 +46,6 @@ const Main = () => {
     const socket = useSocket(isDev())
     const [appData, setAppData] = useState<Payload | null>(null)
     const [ifeatured, setFeatured] = useState<number | null>(null)
-    const dataRef = useRef<Payload | null>(null)
 
     useEffect(() => {
         if (socket) {
@@ -61,7 +60,6 @@ const Main = () => {
         if (ifeatured === null) {
             setFeatured(0)
         }
-        dataRef.current = appData
     }, [appData])
     const getFeatured = (name: string) => {
         if (!appData) return
