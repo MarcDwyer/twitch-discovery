@@ -72,13 +72,6 @@ const Main = () => {
         dataRef.current = appData
     }, [appData])
     
-    useEffect(() => {
-        if (ifeatured === null || !appData) return
-        if (!appData.online[ifeatured]) {
-            setFeatured(0)
-        }
-    }, [ifeatured])
-
     const getFeatured = (name: string) => {
         if (!appData) return
         for (let x = 0, len = appData.online.length; x < len; x++) {

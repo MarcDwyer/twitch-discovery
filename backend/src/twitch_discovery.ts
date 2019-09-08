@@ -78,7 +78,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
         const value = this.pullPercentage,
             offset = Math.floor(total * value)
             // best value to use - .00025
-        this.pullPercentage = value + .00025
+        this.pullPercentage = value + .0005
         return [offset, total, value]
     }
 }
