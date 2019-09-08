@@ -11,6 +11,7 @@ import './main.scss'
 export type Payload = {
     nextRefresh: number;
     streams: StructureStreams;
+    online: SubStream[];
     diagnostic: IDiag;
 }
 export type IStreamers = {
@@ -44,6 +45,7 @@ const useSocket = (url: string): SocketIOClient.Socket | null => {
 const Main = () => {
     const socket = useSocket(isDev())
     const [appData, setAppData] = useState<Payload | null>(null)
+    const [ifeatured, setFeatured] = useState<number | null>(null)
     const dataRef = useRef<Payload | null>(null)
 
     const updateData = (refresh: StructureStreams) => {
@@ -58,27 +60,46 @@ const Main = () => {
             socket.on('connect', () => {
                 socket.on('random-data', (data: Payload) => setAppData(data))
                 socket.on('updated-data', (data: StructureStreams) => updateData(data))
-                socket.on('request-error', (data: any) => {
-                    console.log('error', data)
-
-                })
             })
         }
     }, [socket])
 
     useEffect(() => {
         if (!appData) return
+        if (ifeatured === null) {
+            setFeatured(0)
+        }
         dataRef.current = appData
     }, [appData])
+    
+    useEffect(() => {
+        if (ifeatured === null || !appData) return
+        if (!appData.online[ifeatured]) {
+            setFeatured(0)
+        }
+    }, [ifeatured])
+
+    const getFeatured = (name: string) => {
+        if (!appData) return
+        for (let x = 0, len = appData.online.length; x < len; x++) {
+            const stream = appData.online[x]
+            if (stream.channel.name === name) {
+                setFeatured(x)
+                break
+            }
+        }
+    }
     return (
         <div className="main">
             {appData && (
                 <div className="loaded">
                     <Navbar appData={appData} />
-                    <Featured streamers={appData.streams} />
+                    {ifeatured !== null && appData.online[ifeatured] && (
+                        <Featured appData={appData} ifeatured={ifeatured} setFeatured={setFeatured} />
+                    )}
                     <div className="streamer-grid">
                         {Object.values(appData.streams).map(stream => (
-                            <StreamCard streamer={stream} key={stream.streamName} />
+                            <StreamCard streamer={stream} key={stream.streamName} getFeatured={getFeatured} />
                         ))}
                     </div>
                 </div>

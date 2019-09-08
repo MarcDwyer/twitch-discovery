@@ -59,7 +59,7 @@ async function fetchRandomStreams(totalOffset: number[]): Promise<Payload> {
     const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${offset}&language=en`
     try {
         const data = await fetchTwitch(url)
-        return { streams: structureData(data.streams), diagnostic: { total, offset, pullPercent } }
+        return { streams: structureData(data.streams), online: data.streams, diagnostic: { total, offset, pullPercent } }
     } catch (err) {
         console.log(err)
     }

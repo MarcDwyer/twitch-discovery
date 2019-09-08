@@ -8,6 +8,7 @@ export type Payload = {
     nextRefresh?: number;
     streams: StructureStreams;
     diagnostic: Diag;
+    online?: SubStream[];
 }
 type Diag = {
     offset: number;
@@ -15,7 +16,7 @@ type Diag = {
     total: number;
 }
 export interface IStreamers {
-    streamData: SubStream;
+    streamData: SubStream | null;
     streamName: string;
     channelData: Channel;
     id?: number;
@@ -39,7 +40,7 @@ export interface TwitchDisc {
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 45, // 44,
+    popTime = minutes * 35, // 44,
     refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
@@ -55,8 +56,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.refreshRandom = async () => {
         console.log('ref ran')
         const streams = Object.values(this.data.streams)
-        const newStream = await Promise.all(streams.map(async (stream) => await twitch.fetchStreamData(stream)))
-        this.data.streams = structureLiveData(newStream)
+        const newStreams = await Promise.all(streams.map(async (stream) => await twitch.fetchStreamData(stream)))
+        const online = newStreams.filter(stream => stream.streamData).map(stream => stream.streamData)
+        this.data = {...this.data, streams: structureLiveData(newStreams), online}
         this.io.sockets.emit('updated-data', this.data.streams)
     }
 
@@ -75,6 +77,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
         if (this.pullPercentage >= .55) this.pullPercentage = 0
         const value = this.pullPercentage,
             offset = Math.floor(total * value)
+            // best value to use - .00025
         this.pullPercentage = value + .00025
         return [offset, total, value]
     }

@@ -6,20 +6,27 @@ import './stream-card.scss'
 
 interface Props {
     streamer: IStreamers;
+    getFeatured(stream: string): void;
 }
 // https://www.twitch.tv/
 const StreamCard = (props: Props) => {
     const { streamData, channelData } = props.streamer
-
+    const twitchColor = "#6441A5"
     return (
         <div className="stream-card">
             <div className="center">
-                <img src={channelData.logo} />
+                <img
+                style={streamData ? {border: `solid 3px ${twitchColor}`, cursor: 'pointer'} : {}} 
+                onClick={() => {
+                    if (!streamData) return
+                    props.getFeatured(props.streamer.streamName)
+                }}
+                src={channelData.logo} />
                 <div className="text-info">
                     <span>{channelData.display_name}</span>
                     {streamData && (
                         <span>Is playing {streamData.game}</span>
-                    )}
+                    )}  
                     <span>{streamData ? `${streamData.viewers} viewers` : 'Offline'}</span>
                 </div>
             </div>
@@ -29,7 +36,7 @@ const StreamCard = (props: Props) => {
                 rel="noopener noreferrer"
             >
                 <FaTwitch
-                    style={streamData ? { color: "#6441A5" } : { color: '#eee' }}
+                    style={streamData ? { color: twitchColor } : { color: '#eee' }}
                 />
             </a>
         </div>
