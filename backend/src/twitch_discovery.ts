@@ -40,7 +40,7 @@ export interface TwitchDisc {
 }
 // const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 35, // 44,
+    popTime = minutes * 45, // 44,
     refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
