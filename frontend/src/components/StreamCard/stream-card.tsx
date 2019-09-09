@@ -1,44 +1,42 @@
 import React from 'react'
-import { IStreamers } from '../Main/main'
-import { FaTwitch } from 'react-icons/fa'
 import { SubStream } from '../../data_types/data_types'
-
+import { FaTwitch } from 'react-icons/fa'
+import { SET_FEATURED } from '../../reducers/reducer'
 import './stream-card.scss'
 
 interface Props {
-    streamer: IStreamers;
-    setFeatured(stream: SubStream): void;
+    streamer: SubStream;
+    index: number;
+    dispatchFeat: Function;
 }
+const twitchColor = "#6441A5"
 // https://www.twitch.tv/
 const StreamCard = React.memo((props: Props) => {
-    const { streamData, channelData } = props.streamer
-    const twitchColor = "#6441A5"
-    console.log('streamcard rendered')
+    const { streamer } = props
+    console.log('re')
     return (
         <div className="stream-card">
             <div className="center">
                 <img
-                style={streamData ? {border: `solid 3px ${twitchColor}`, cursor: 'pointer'} : {}} 
-                onClick={() => {
-                    if (!streamData) return
-                    props.setFeatured(streamData)
-                }}
-                src={channelData.logo} />
+                    style={{ border: `3px solid ${twitchColor}`, cursor: 'pointer' }}
+                    onClick={() => {
+                        console.log(streamer)
+                        props.dispatchFeat({type: SET_FEATURED, payload: {stream: streamer, index: props.index}})
+                    }}
+                    src={streamer.channel.logo} />
                 <div className="text-info">
-                    <span>{channelData.display_name}</span>
-                    {streamData && (
-                        <span>Is playing {streamData.game}</span>
-                    )}  
-                    <span>{streamData ? `${streamData.viewers} viewers` : 'Offline'}</span>
+                    <span>{streamer.channel.display_name}</span>
+                    <span>Is playing {streamer.game}</span>
+                    <span>{streamer.viewers} viewers</span>
                 </div>
             </div>
             <a
-                href={`https://www.twitch.tv/${channelData.name}`}
+                href={`https://www.twitch.tv/${streamer.channel.name}`}
                 target="_blank"
                 rel="noopener noreferrer"
             >
                 <FaTwitch
-                    style={streamData ? { color: twitchColor } : { color: '#eee' }}
+                    style={{ color: twitchColor }}
                 />
             </a>
         </div>

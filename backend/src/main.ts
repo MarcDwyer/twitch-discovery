@@ -15,7 +15,6 @@ const app = express(),
 (async () => {
     const streams: TwitchDisc = new TwitchDiscovery(io)
     await streams.populateRandom()
-
     io.on('connection', (socket) => socket.emit('random-data', streams.data))
 
     app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))

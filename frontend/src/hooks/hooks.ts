@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { SubStream } from '../data_types/data_types'
+import io from 'socket.io-client'
 
 export interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
 
@@ -40,14 +41,15 @@ export const useTimer = (futureTime: number): ITimer => {
 }
 
 
-
-export const useAverage = (online: SubStream[]) => {
-    const [avg, setAvg] = useState<number>(0)
-
+export const useSocket = (url: string): SocketIOClient.Socket | null => {
+    const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null)
     useEffect(() => {
-        const average = online.reduce((num, stream) => stream.viewers += num, 0) / online.length
-        setAvg(Math.round(average))
-    }, [online])
+        const socketRef = io(url)
+        setSocket(socketRef)
 
-    return avg
+        return function () {
+            socketRef.disconnect()
+        }
+    }, [url])
+    return socket
 }

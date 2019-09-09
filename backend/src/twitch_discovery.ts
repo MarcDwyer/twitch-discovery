@@ -6,7 +6,7 @@ import { structureLiveData } from './structure_data'
 
 export type Payload = {
     nextRefresh?: number;
-    streams: StructureStreams;
+    streams: SubStream[];
     diagnostic: Diag;
     online?: SubStream[];
 }
@@ -55,11 +55,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
 
     this.refreshRandom = async () => {
         console.log('ref ran')
-        const streams = Object.values(this.data.streams)
-        const newStreams = await Promise.all(streams.map(async (stream) => await twitch.fetchStreamData(stream)))
-        const online = newStreams.filter(stream => stream.streamData).map(stream => stream.streamData)
-        this.data = {...this.data, streams: structureLiveData(newStreams), online}
-        this.io.sockets.emit('random-data', this.data)
+        const streams = await twitch.fetchStreamData(this.data.streams)
+        this.data = { ...this.data, streams }
+        this.io.sockets.emit('updated-data', this.data.streams)
     }
 
     this.populateRandom = async () => {
@@ -77,7 +75,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
         if (this.pullPercentage >= .75) this.pullPercentage = 0
         const value = this.pullPercentage,
             offset = Math.floor(total * value)
-            // best value to use - .00025
+        // best value to use - .00025
         this.pullPercentage = value + .0025
         return [offset, total, value]
     }

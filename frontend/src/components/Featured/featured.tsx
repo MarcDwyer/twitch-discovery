@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FaSync } from 'react-icons/fa'
 
 import './featured.scss'
@@ -6,17 +6,17 @@ import { SubStream } from '../../data_types/data_types'
 
 interface Props {
     featured: SubStream;
-    incKey(): void;
+    incFeatured(): void;
 }
 const Featured = React.memo((props: Props) => {
     const { featured } = props
-
+    console.log(featured)
     return (
         <div className="featured-parent">
             <div className="featured">
                 <div className="header">
                     <FaSync
-                    onClick={() => props.incKey()}
+                    onClick={() => props.incFeatured()}
                     />
                     <div className="title">
                         <h2>{featured.channel.display_name}</h2>
@@ -26,7 +26,7 @@ const Featured = React.memo((props: Props) => {
                 </div>
                 <div className="twitch">
                     <div className="video">
-                        <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.channel.display_name}&autoplay=true`} frameBorder="0" />
+                        <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.channel.display_name}&autoplay=false`} frameBorder="0" />
                         <a
                             className="twitch-button"
                             href={`https://twitch.tv/${featured.channel.display_name}`}

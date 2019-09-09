@@ -4,13 +4,14 @@ import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaHamburger } from 'react-icons/fa'
 import { ITimer } from '../../hooks/hooks'
+import { SubStream } from '../../data_types/data_types'
 
 import './diag.scss'
 
 type Props = {
     diagnostic: IDiag;
-    average: number;
     time: ITimer;
+    streams: SubStream[];
 }
 const Diag = (props: Props) => {
     const { total, offset, pullPercent } = props.diagnostic
@@ -24,6 +25,9 @@ const Diag = (props: Props) => {
         reverse: !showDiag
     })
     const percent = pullPercent * 100
+
+    const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
+
 
     return (
         createPortal(
@@ -46,7 +50,7 @@ const Diag = (props: Props) => {
                             Top {percent.toString().length >= 4 ? percent.toFixed(2) : percent}% of streamers
                             </span>
                         <span>Total Streams: {total}</span>
-                        <span>Average viewership: {props.average}</span>
+                        <span>Average viewership: {average}</span>
                         <span>Skipped over: {offset}</span>
                         <span>Streamers left: {total - offset}</span>
                         {time && (
