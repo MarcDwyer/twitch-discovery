@@ -1,17 +1,19 @@
 import React from 'react'
 import { IStreamers } from '../Main/main'
 import { FaTwitch } from 'react-icons/fa'
+import { SubStream } from '../../data_types/data_types'
 
 import './stream-card.scss'
 
 interface Props {
     streamer: IStreamers;
-    getFeatured(stream: string): void;
+    setFeatured(stream: SubStream): void;
 }
 // https://www.twitch.tv/
-const StreamCard = (props: Props) => {
+const StreamCard = React.memo((props: Props) => {
     const { streamData, channelData } = props.streamer
     const twitchColor = "#6441A5"
+    console.log('streamcard rendered')
     return (
         <div className="stream-card">
             <div className="center">
@@ -19,7 +21,7 @@ const StreamCard = (props: Props) => {
                 style={streamData ? {border: `solid 3px ${twitchColor}`, cursor: 'pointer'} : {}} 
                 onClick={() => {
                     if (!streamData) return
-                    props.getFeatured(props.streamer.streamName)
+                    props.setFeatured(streamData)
                 }}
                 src={channelData.logo} />
                 <div className="text-info">
@@ -41,6 +43,6 @@ const StreamCard = (props: Props) => {
             </a>
         </div>
     )
-}
+})
 
 export default StreamCard

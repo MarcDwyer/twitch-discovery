@@ -1,30 +1,22 @@
-import React from 'react'
-import { Payload } from '../Main/main'
+import React, { useState } from 'react'
 import { FaSync } from 'react-icons/fa'
 
 import './featured.scss'
+import { SubStream } from '../../data_types/data_types'
 
 interface Props {
-    appData: Payload;
-    ifeatured: number;
-    setFeatured(index: number): void;
+    featured: SubStream;
+    incKey(): void;
 }
-const Featured = (props: Props) => {
-    const { ifeatured } = props
-    const featured = props.appData.online[ifeatured]
+const Featured = React.memo((props: Props) => {
+    const { featured } = props
 
     return (
         <div className="featured-parent">
             <div className="featured">
                 <div className="header">
                     <FaSync
-                        onClick={() => {
-                            if (!props.appData.online[ifeatured + 1]) {
-                                props.setFeatured(0)
-                                return
-                            }
-                            props.setFeatured(ifeatured + 1)
-                        }}
+                    onClick={() => props.incKey()}
                     />
                     <div className="title">
                         <h2>{featured.channel.display_name}</h2>
@@ -34,7 +26,7 @@ const Featured = (props: Props) => {
                 </div>
                 <div className="twitch">
                     <div className="video">
-                        <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.channel.display_name}&autoplay=false`} frameBorder="0" />
+                        <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${featured.channel.display_name}&autoplay=true`} frameBorder="0" />
                         <a
                             className="twitch-button"
                             href={`https://twitch.tv/${featured.channel.display_name}`}
@@ -49,6 +41,6 @@ const Featured = (props: Props) => {
             </div>
         </div>
     )
-}
+})
 
 export default Featured

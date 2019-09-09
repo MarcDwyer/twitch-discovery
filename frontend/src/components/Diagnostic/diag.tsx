@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Payload } from '../Main/main'
+import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaHamburger } from 'react-icons/fa'
-import { ITimer } from '../Navbar/navbar'
+import { ITimer } from '../../hooks/hooks'
+
 import './diag.scss'
 
 type Props = {
-    appData: Payload;
+    diagnostic: IDiag;
+    average: number;
     time: ITimer;
 }
 const Diag = (props: Props) => {
-    const { total, offset, pullPercent } = props.appData.diagnostic
+    const { total, offset, pullPercent } = props.diagnostic
     const [time, waiting] = props.time
     const [showDiag, setShowDiag] = useState<boolean>(false)
 
@@ -21,11 +23,8 @@ const Diag = (props: Props) => {
         from: { opacity: 0, transform: 'translateX(-100%)' },
         reverse: !showDiag
     })
-    const streams = Object.values(props.appData.streams)
-    const percent = pullPercent * 100,
-        //@ts-ignore
-        totalViewers = streams.filter(stream => stream.streamData).reduce((num, stream) => num += stream.streamData.viewers, 0)
-    // percent < .9 ? 1 : 
+    const percent = pullPercent * 100
+
     return (
         createPortal(
             <React.Fragment>
@@ -47,7 +46,7 @@ const Diag = (props: Props) => {
                             Top {percent.toString().length >= 4 ? percent.toFixed(2) : percent}% of streamers
                             </span>
                         <span>Total Streams: {total}</span>
-                        <span>Average viewership: {Math.round(totalViewers / streams.length)}</span>
+                        <span>Average viewership: {props.average}</span>
                         <span>Skipped over: {offset}</span>
                         <span>Streamers left: {total - offset}</span>
                         {time && (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ITimer } from '../Navbar/navbar'
+import { ITimer } from '../../hooks/hooks'
 import './timer.scss'
 
 

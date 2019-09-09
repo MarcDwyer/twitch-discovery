@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import io from 'socket.io-client'
 import { BounceLoader } from 'react-spinners'
 
@@ -45,7 +45,8 @@ const useSocket = (url: string): SocketIOClient.Socket | null => {
 const Main = () => {
     const socket = useSocket(isDev())
     const [appData, setAppData] = useState<Payload | null>(null)
-    const [ifeatured, setFeatured] = useState<number | null>(null)
+    const [featured, setFeatured] = useState<SubStream | null>(null)
+    const [key, setKey] = useState<number>(0)
 
     useEffect(() => {
         if (socket) {
@@ -56,32 +57,42 @@ const Main = () => {
     }, [socket])
 
     useEffect(() => {
-        if (!appData) return
-        if (ifeatured === null) {
-            setFeatured(0)
-        }
-    }, [appData])
-    const getFeatured = (name: string) => {
-        if (!appData) return
-        for (let x = 0, len = appData.online.length; x < len; x++) {
-            const stream = appData.online[x]
-            if (stream.channel.name === name) {
-                setFeatured(x)
-                break
+        if (appData) {
+            if (!featured) {
+                const stream = appData.online[0]
+                setFeatured(stream)
             }
         }
-    }
+    }, [appData])
+
+    useEffect(() => {
+        if (featured && appData) {
+            if (featured.channel.name === appData.online[key].channel.name) setKey(k => k + 1)
+            setFeatured(appData.online[key])
+        }
+    }, [key])
+
+    const incKey = useCallback(() => {
+        if (!appData) return
+        setKey(k => {
+            if (!appData.online[k + 1]) {
+                return 0
+            } else {
+                return k + 1
+            }
+        })
+    }, [appData, key])
     return (
         <div className="main">
             {appData && (
                 <div className="loaded">
                     <Navbar appData={appData} />
-                    {ifeatured !== null && appData.online[ifeatured] && (
-                        <Featured appData={appData} ifeatured={ifeatured} setFeatured={setFeatured} />
+                    {featured && (
+                        <Featured featured={featured} incKey={incKey} />
                     )}
                     <div className="streamer-grid">
                         {Object.values(appData.streams).map(stream => (
-                            <StreamCard streamer={stream} key={stream.streamName} getFeatured={getFeatured} />
+                            <StreamCard streamer={stream} key={stream.streamName} setFeatured={setFeatured} />
                         ))}
                     </div>
                 </div>

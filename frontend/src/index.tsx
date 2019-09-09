@@ -4,9 +4,6 @@ import './index.scss';
 import Main from './components/Main/main'
 import * as serviceWorker from './serviceWorker';
 
-console.log(window)
-
-
 ReactDOM.render(
     <Main />
     , document.getElementById('root'));

@@ -1,59 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Payload } from '../Main/main'
 import Timer from '../Timer/timer'
 import Diagnostic from '../Diagnostic/diag'
+import { useTimer, useAverage } from '../../hooks/hooks'
 
 import './navbar.scss'
 interface Props {
     appData: Payload;
 }
-export type Time = {
-    hours: number;
-    minutes: number;
-    seconds: number;
-}
-export interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
 
-const useTimer = (futureTime: number): ITimer => {
-    const [timer, setTimer] = useState<Time | null>(null)
-    const [waiting, setWaiting] = useState<boolean>(false)
 
-    useEffect(() => {
-        let interval: number | undefined;
-        clearTimeout(interval)
-        //@ts-ignore
-        interval = setInterval(() => {
-            const now = new Date().getTime()
-            if (now >= futureTime) {
-                setWaiting(true)
-                return
-            }
-            const distance = futureTime - now
 
-            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-                seconds = Math.floor((distance % (1000 * 60)) / 1000)
-            setWaiting(false)
-            setTimer({ hours, minutes, seconds })
-        }, 1000)
-        return function () {
-            if (interval) clearInterval(interval)
-        }
-    }, [futureTime])
-
-    return [timer, waiting]
-}
-
-const Navbar = (props: Props) => {
+const Navbar = React.memo((props: Props) => {
     const { appData } = props
     const time = useTimer(appData.nextRefresh)
+    const average = useAverage(appData.online)
     return (
         <div className="navbar">
-            <Diagnostic appData={appData} time={time} />
+            <Diagnostic average={average} diagnostic={appData.diagnostic} time={time} />
             <Timer time={time} />
         </div>
     )
-}
+})
 
 
 export default Navbar
