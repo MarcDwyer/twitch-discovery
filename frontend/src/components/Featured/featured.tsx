@@ -10,7 +10,6 @@ interface Props {
 }
 const Featured = React.memo((props: Props) => {
     const { featured } = props
-    console.log(featured)
     return (
         <div className="featured-parent">
             <div className="featured">

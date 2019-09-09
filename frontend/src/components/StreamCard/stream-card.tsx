@@ -13,7 +13,7 @@ const twitchColor = "#6441A5"
 // https://www.twitch.tv/
 const StreamCard = React.memo((props: Props) => {
     const { streamer } = props
-    console.log('re')
+
     return (
         <div className="stream-card">
             <div className="center">
