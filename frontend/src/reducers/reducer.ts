@@ -18,7 +18,6 @@ export function featReducer(state: IFeatured, action: { type: string, payload?: 
         case RESET_FEATURED:
             return { ...action.payload, key: 0 }
         case SET_FEATURED:
-            console.log(action)
             return action.payload
         default:
             return state

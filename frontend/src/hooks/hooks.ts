@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { SubStream } from '../data_types/data_types'
 import io from 'socket.io-client'
 
 export interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
