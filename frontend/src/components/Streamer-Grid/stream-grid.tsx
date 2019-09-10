@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { IStreamers, IDiag } from '../Main/main';
+import { IDiag, Featured } from '../Main/main';
 import { SET_FEATURED } from '../../reducers/reducer'
 import { SubStream } from '../../data_types/data_types'
 import { usePercentage } from '../../hooks/hooks'
@@ -7,14 +7,14 @@ import StreamCard from '../StreamCard/stream-card'
 
 import './stream-grid.scss'
 interface Props {
-    streams: IStreamers[];
+    streams: SubStream[];
     diag: IDiag;
-    dispatchFeat: Function;
+    dispatchApp: Function;
 }
 const StreamerGrid = (props: Props) => {
 
-    const updateFeatured = useCallback((streamData: SubStream, index: number) => {
-        props.dispatchFeat({ type: SET_FEATURED, payload: { stream: streamData, index } })
+    const updateFeatured = useCallback((payload: Featured) => {
+        props.dispatchApp({ type: SET_FEATURED, payload })
     }, [props.streams])
 
     const top = usePercentage(props.diag.pullPercent)
@@ -22,10 +22,10 @@ const StreamerGrid = (props: Props) => {
         <React.Fragment>
             <h2>
                 {`Top ${top} of streamers`}
-        </h2>
+            </h2>
             <div className="streamer-grid">
                 {Object.values(props.streams).map((stream, i) => (
-                    <StreamCard index={i} streamer={stream} key={stream.streamName} updateFeatured={updateFeatured} />
+                    <StreamCard index={i} streamer={stream} key={stream._id} updateFeatured={updateFeatured} />
                 ))}
             </div>
         </React.Fragment>

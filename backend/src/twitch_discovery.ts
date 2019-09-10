@@ -2,11 +2,10 @@
 import { Server } from 'socket.io'
 import twitch from './twitch_methods'
 import { Channel, SubStream } from './data_types/data_types'
-import { structureLiveData } from './structure_data'
 
 export type Payload = {
     nextRefresh?: number;
-    streams: IStreamers[];
+    streams: SubStream[];
     diagnostic: Diag;
     online?: SubStream[];
 }
@@ -39,14 +38,14 @@ export interface TwitchDisc {
     getOffset(total: number): number[];
 }
 const minutes = 60000,
-    popTime = minutes * 46,
-    refreshTime = minutes * 6,
+    popTime = minutes * 47,
+    refreshTime = minutes * 4,
     nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.data = null
     this.io = io
-    this.pullPercentage = 0
+    this.pullPercentage = .5
     this.intervalCopy = (func, dur) => setInterval(func, dur)
 
     this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popTime)
@@ -54,7 +53,8 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
 
     this.refreshRandom = async () => {
         console.log('ref ran')
-        const streams = await Promise.all(this.data.streams.map(async (stream) => await twitch.fetchStreamData(stream)))
+        const ids = this.data.streams.map(stream => stream.channel._id)
+        const streams = await twitch.fetchStreamData(ids)
         this.data = { ...this.data, streams }
         this.io.sockets.emit('updated-data', this.data.streams)
     }

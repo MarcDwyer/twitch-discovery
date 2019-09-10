@@ -3,10 +3,11 @@ import { FaSync } from 'react-icons/fa'
 
 import './featured.scss'
 import { SubStream } from '../../data_types/data_types'
+import { INC_KEY } from '../../reducers/reducer';
 
 interface Props {
     featured: SubStream;
-    incFeatured(): void;
+    dispatchApp: Function;
 }
 const Featured = React.memo((props: Props) => {
     const { featured } = props
@@ -15,7 +16,7 @@ const Featured = React.memo((props: Props) => {
             <div className="featured">
                 <div className="header">
                     <FaSync
-                    onClick={() => props.incFeatured()}
+                        onClick={() => props.dispatchApp({ type: INC_KEY })}
                     />
                     <div className="title">
                         <h2>{featured.channel.display_name}</h2>

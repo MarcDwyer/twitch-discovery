@@ -1,5 +1,4 @@
 
-import { IStreamers } from './twitch_discovery'
 import fetch from 'node-fetch'
 import { Payload } from './twitch_discovery'
 import { structureData } from './structure_data'
@@ -27,17 +26,12 @@ async function fetchTwitch(url: string): Promise<IData> {
     }
 }
 
-async function fetchStreamData({channelData, streamName, id}: IStreamers): Promise<IStreamers> {
-    const url = `https://api.twitch.tv/kraken/streams/${id}`
+async function fetchStreamData(ids: number[]): Promise<SubStream[]> {
+    const url = `https://api.twitch.tv/kraken/streams/?channel=${ids.join(',')}`
     try {
         const data = await fetchTwitch(url)
         if (data['error']) throw new Error(`error at fetchstreamdata`)
-        return {
-            streamData: data.stream,
-            channelData,
-            streamName,
-            id
-        }
+        return data.streams.filter(stream => stream)
     } catch (err) {
         console.log(err)
     }
@@ -61,7 +55,7 @@ async function fetchRandomStreams(totalOffset: number[]): Promise<Payload> {
     const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${offset}&language=en`
     try {
         const data = await fetchTwitch(url)
-        return { streams: structureData(data.streams), diagnostic: { total, offset, pullPercent } }
+        return { streams: data.streams, diagnostic: { total, offset, pullPercent } }
     } catch (err) {
         console.log(err)
     }

@@ -1,39 +1,37 @@
 import React from 'react'
 import { FaTwitch } from 'react-icons/fa'
 import './stream-card.scss'
-import { IStreamers } from '../Main/main';
+import { SubStream } from '../../data_types/data_types';
+import { Featured } from '../Main/main';
 
 interface Props {
-    streamer: IStreamers;
+    streamer: SubStream;
+    updateFeatured(feat: Featured): void;
     index: number;
-    updateFeatured: Function;
 }
 const twitchColor = "#6441A5"
-// https://www.twitch.tv/
+// TODO 
+// Fix offline 
 const StreamCard = React.memo((props: Props) => {
-    const { streamData, channelData } = props.streamer
+    const { streamer } = props
+
     return (
         <div className="stream-card">
             <div className="center">
                 <img
-                    style={streamData ? { border: `3px solid ${twitchColor}`} : {border: 'solid 3px #eee'}}
+                    style={{ border: `3px solid ${twitchColor}`, cursor: 'pointer' }}
                     onClick={() => {
-                        if (!streamData) return
-                        props.updateFeatured(streamData, props.index)
+                        props.updateFeatured({ stream: streamer, index: props.index })
                     }}
-                    src={channelData.logo} />
+                    src={streamer.channel.logo} />
                 <div className="text-info">
-                    <span>{channelData.display_name}</span>
-                    {streamData && (
-                        <React.Fragment>
-                            <span>Is playing {streamData.game}</span>
-                            <span>{streamData.viewers} viewers</span>
-                        </React.Fragment>
-                    )}
+                    <span>{streamer.channel.display_name}</span>
+                    <span>Is playing {streamer.game}</span>
+                    <span>{streamer.viewers} viewers</span>
                 </div>
             </div>
             <a
-                href={`https://www.twitch.tv/${channelData.name}`}
+                href={`https://www.twitch.tv/${streamer.channel.name}`}
                 target="_blank"
                 rel="noopener noreferrer"
             >

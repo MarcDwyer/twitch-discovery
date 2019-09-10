@@ -11,7 +11,7 @@ import './diag.scss'
 type Props = {
     diagnostic: IDiag;
     time: ITimer;
-    online: SubStream[];
+    streams: SubStream[];
 }
 const Diag = (props: Props) => {
     const { total, offset, pullPercent } = props.diagnostic
@@ -24,7 +24,7 @@ const Diag = (props: Props) => {
         from: { opacity: 0, transform: 'translateX(-100%)' },
         reverse: !showDiag
     })
-    const average = Math.round(props.online.reduce((num, stream) => num += stream.viewers, 0) / props.online.length)
+    const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
     const top = usePercentage(pullPercent)
     return (
         createPortal(

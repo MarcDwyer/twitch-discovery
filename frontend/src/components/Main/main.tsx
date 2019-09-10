@@ -1,11 +1,10 @@
-import React, { useEffect, useReducer, useRef, useCallback } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks'
 
 import {
-    appReducer, APP_INIT, APP_UPDATE,
-    featReducer, RESET_FEATURED, SET_FEATURED
+    appReducer, APP_INIT, APP_UPDATE
 } from '../../reducers/reducer'
 
 import StreamerGrid from '../Streamer-Grid/stream-grid'
@@ -16,9 +15,10 @@ import './main.scss'
 
 export type Payload = {
     nextRefresh: number;
-    streams: IStreamers[];
+    streams: SubStream[];
     diagnostic: IDiag;
     online: SubStream[];
+    featured: Featured;
 }
 export type IStreamers = {
     streamData: SubStream | null;
@@ -33,29 +33,16 @@ export type IDiag = {
     total: number;
     pullPercent: number;
 }
-type Featured = {
+export type Featured = {
     stream: SubStream | null;
     index: number;
 }
-// TODO 
-// Add more detail to the app
-// Add viewing Top % of streams
 
 const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname
 
 const Main = () => {
     const socket = useSocket(isDev())
     const [appData, dispatchApp] = useReducer(appReducer, null)
-    const [featured, dispatchFeat] = useReducer(featReducer, { stream: null, index: 0 })
-
-    const refreshRef = useRef<number | null>(null)
-
-    const incFeatured = useCallback(() => {
-        if (!appData) return
-        let value = featured.index + 1
-        if (!appData.streams[value]) value = 0
-        dispatchFeat({ type: SET_FEATURED, payload: { stream: appData.online[value], index: value } })
-    }, [appData, featured])
 
     useEffect(() => {
         if (socket) {
@@ -66,24 +53,15 @@ const Main = () => {
         }
     }, [socket])
 
-    useEffect(() => {
-        if (appData) {
-            if (!featured.stream || refreshRef.current !== appData.nextRefresh) {
-                dispatchFeat({ type: RESET_FEATURED, payload: { stream: appData.online[0], index: 0 } })
-                refreshRef.current = appData.nextRefresh
-            }
-        }
-    }, [appData])
-
     return (
         <div className="main">
             {appData && (
                 <div className="loaded">
                     <Navbar appData={appData} />
-                    {featured.stream && (
-                        <Featured featured={featured.stream} incFeatured={incFeatured} />
+                    {appData.featured.stream && (
+                        <Featured featured={appData.featured.stream} dispatchApp={dispatchApp} />
                     )}
-                    <StreamerGrid streams={appData.streams} dispatchFeat={dispatchFeat} diag={appData.diagnostic} />
+                    <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
                 </div>
             )}
             {!appData && (
