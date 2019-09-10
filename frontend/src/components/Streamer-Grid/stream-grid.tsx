@@ -6,6 +6,7 @@ import { usePercentage } from '../../hooks/hooks'
 import StreamCard from '../StreamCard/stream-card'
 
 import './stream-grid.scss'
+
 interface Props {
     streams: SubStream[];
     diag: IDiag;

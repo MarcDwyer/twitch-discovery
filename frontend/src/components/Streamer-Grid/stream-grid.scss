@@ -6,29 +6,18 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 25px;
     row-gap: 25px;
-    
-    @media (max-width: 1550px) {
 
-        .streamer-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    @media (max-width: 1550px) {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     @media(max-width: 1000px) {
-        .streamer-grid {
-            grid-template-columns: repeat(2, 1fr);
-            width: 100%;
-        }
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
     }
 
     @media(max-width: 750px) {
-        .featured-parent {
-            display: none;
-        }
-
-        .streamer-grid {
-            grid-template-columns: repeat(1, 1fr);
-            width: 100%;
-        }
+        grid-template-columns: repeat(1, 1fr);
+        width: 100%;
     }
 }
