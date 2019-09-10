@@ -8,7 +8,7 @@ import {
     featReducer, RESET_FEATURED, SET_FEATURED
 } from '../../reducers/reducer'
 
-import StreamCard from '../StreamCard/stream-card'
+import StreamerGrid from '../Streamer-Grid/stream-grid'
 import Featured from '../Featured/featured'
 import Navbar from '../Navbar/navbar'
 
@@ -16,8 +16,9 @@ import './main.scss'
 
 export type Payload = {
     nextRefresh: number;
-    streams: SubStream[];
+    streams: IStreamers[];
     diagnostic: IDiag;
+    online: SubStream[];
 }
 export type IStreamers = {
     streamData: SubStream | null;
@@ -36,8 +37,10 @@ type Featured = {
     stream: SubStream | null;
     index: number;
 }
-// Use channel data for channel info. Check stream key in streamData if null because streamers can go offline. 
-// `${document.location.hostname}:5000`
+// TODO 
+// Add more detail to the app
+// Add viewing Top % of streams
+
 const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname
 
 const Main = () => {
@@ -51,7 +54,7 @@ const Main = () => {
         if (!appData) return
         let value = featured.index + 1
         if (!appData.streams[value]) value = 0
-        dispatchFeat({ type: SET_FEATURED, payload: { stream: appData.streams[value], index: value } })
+        dispatchFeat({ type: SET_FEATURED, payload: { stream: appData.online[value], index: value } })
     }, [appData, featured])
 
     useEffect(() => {
@@ -66,7 +69,7 @@ const Main = () => {
     useEffect(() => {
         if (appData) {
             if (!featured.stream || refreshRef.current !== appData.nextRefresh) {
-                dispatchFeat({ type: RESET_FEATURED, payload: { stream: appData.streams[0], index: 0 } })
+                dispatchFeat({ type: RESET_FEATURED, payload: { stream: appData.online[0], index: 0 } })
                 refreshRef.current = appData.nextRefresh
             }
         }
@@ -80,11 +83,7 @@ const Main = () => {
                     {featured.stream && (
                         <Featured featured={featured.stream} incFeatured={incFeatured} />
                     )}
-                    <div className="streamer-grid">
-                        {Object.values(appData.streams).map((stream, i) => (
-                            <StreamCard index={i} streamer={stream} key={stream._id} dispatchFeat={dispatchFeat} />
-                        ))}
-                    </div>
+                    <StreamerGrid streams={appData.streams} dispatchFeat={dispatchFeat} diag={appData.diagnostic} />
                 </div>
             )}
             {!appData && (

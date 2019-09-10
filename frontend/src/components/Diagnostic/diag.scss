@@ -4,27 +4,41 @@
     top: 0;
     height: 100vh;
     width: 100vw;
-    opacity: .85;
-    color: #eee;
     background-color: transparent;
     z-index: 1000;
     overflow: hidden;
 
-    .innertext {
-        z-index: 1001;
-        width: 350px;
-        display: flex;
-        flex-direction: column;
-        background-color: black;
-        opacity: .85;
-        height: 100vh;
-        text-align: center;
+}
 
-        .top {
-            font-size: 20px;
+.innertext {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 350px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    opacity: .85;
+    color: #eee;
+    text-align: center;
+
+    .top {
+        font-size: 20px;
+    }
+
+    a {
+        margin: auto auto 25px auto;
+        color: inherit;
+        text-decoration: none;
+
+        svg {
+            font-size: 42px;
         }
     }
 }
+
 .show-diag {
     position: absolute;
     top: 10px;

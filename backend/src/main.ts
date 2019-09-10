@@ -11,7 +11,6 @@ const app = express(),
     port = 5005,
     server = new http.Server(app),
     io = ioSetup(server);
-// TODO 
 (async () => {
     const streams: TwitchDisc = new TwitchDiscovery(io)
     await streams.populateRandom()

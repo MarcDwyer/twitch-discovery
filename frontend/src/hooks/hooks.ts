@@ -52,3 +52,16 @@ export const useSocket = (url: string): SocketIOClient.Socket | null => {
     }, [url])
     return socket
 }
+
+export const usePercentage = (num: number) => {
+    const [top, setTop] = useState<string | number>('Calculating percentage...')
+    useEffect(() => {
+        let top: number | string = num * 100
+        if (top.toString().length >= 3) {
+            top = top.toFixed(2)
+        }
+        top = `${top}%`
+        setTop(top)
+    }, [num])
+    return top
+}

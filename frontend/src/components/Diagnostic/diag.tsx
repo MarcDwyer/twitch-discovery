@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
-import { FaHamburger } from 'react-icons/fa'
-import { ITimer } from '../../hooks/hooks'
+import { FaHamburger, FaGithub } from 'react-icons/fa'
+import { ITimer, usePercentage } from '../../hooks/hooks'
 import { SubStream } from '../../data_types/data_types'
 
 import './diag.scss'
@@ -11,7 +11,7 @@ import './diag.scss'
 type Props = {
     diagnostic: IDiag;
     time: ITimer;
-    streams: SubStream[];
+    online: SubStream[];
 }
 const Diag = (props: Props) => {
     const { total, offset, pullPercent } = props.diagnostic
@@ -24,11 +24,8 @@ const Diag = (props: Props) => {
         from: { opacity: 0, transform: 'translateX(-100%)' },
         reverse: !showDiag
     })
-    const percent = pullPercent * 100
-
-    const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
-
-
+    const average = Math.round(props.online.reduce((num, stream) => num += stream.viewers, 0) / props.online.length)
+    const top = usePercentage(pullPercent)
     return (
         createPortal(
             <React.Fragment>
@@ -37,27 +34,34 @@ const Diag = (props: Props) => {
                     onClick={() => setShowDiag(!showDiag)}
                 />
                 <div className="diagnostic"
-                    style={!showDiag ? { transform: 'translateX(-100%)' } : { transform: 'translateX(0)' }}
+                    style={!showDiag ? { display: 'none' } : {}}
                     onClick={(e) => {
                         //@ts-ignore
                         if (e.target.classList.value !== 'diagnostic') return
                         setShowDiag(false)
                     }}
                 >
-                    <animated.div className="innertext" style={diagAnim}>
-                        <h2>Twitch Data</h2>
-                        <span className="top">
-                            Top {percent.toString().length >= 4 ? percent.toFixed(2) : percent}% of streamers
-                            </span>
-                        <span>Total Streams: {total}</span>
-                        <span>Average viewership: {average}</span>
-                        <span>Skipped over: {offset}</span>
-                        <span>Streamers left: {total - offset}</span>
-                        {time && (
-                            <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
-                        )}
-                    </animated.div>
                 </div>
+                <animated.div className="innertext" style={diagAnim}>
+                    <h2>Twitch Data</h2>
+                    <span className="top">
+                        Top {top} of streamers
+                            </span>
+                    <span>Total Streams: {total}</span>
+                    <span>Average viewership: {average}</span>
+                    <span>Skipped over: {offset}</span>
+                    <span>Streamers left: {total - offset}</span>
+                    {time && (
+                        <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
+                    )}
+                    <a
+                    href="https://github.com/MarcDwyer/twitch-discovery"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                        <FaGithub />
+                    </a>
+                </animated.div>
             </React.Fragment>,
             //@ts-ignore
             document.querySelector('#root')

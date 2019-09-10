@@ -12,45 +12,16 @@
         width: 100%;
         margin: auto;
 
-        .streamer-grid {
-            display: grid;
-            width: 100%;
-            grid-auto-rows: 1fr;
-            margin: 75px auto auto auto;
-            grid-template-columns: repeat(4, 1fr);
-            column-gap: 25px;
-            row-gap: 25px;
+        h2 {
+            padding: 0;
+            margin-top: 25px;
         }
+
 
 
 
         @media (max-width: 1919px) {
             width: 95%;
-        }
-
-        @media (max-width: 1550px) {
-
-            .streamer-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media(max-width: 1000px) {
-            .streamer-grid {
-                grid-template-columns: repeat(2, 1fr);
-                width: 100%;
-            }
-        }
-
-        @media(max-width: 750px) {
-            .featured-parent {
-                display: none;
-            }
-
-            .streamer-grid {
-                grid-template-columns: repeat(1, 1fr);
-                width: 100%;
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ import { structureLiveData } from './structure_data'
 
 export type Payload = {
     nextRefresh?: number;
-    streams: SubStream[];
+    streams: IStreamers[];
     diagnostic: Diag;
     online?: SubStream[];
 }
@@ -19,7 +19,7 @@ export interface IStreamers {
     streamData: SubStream | null;
     streamName: string;
     channelData: Channel;
-    id?: number;
+    id: number;
 }
 
 export type StructureStreams = {
@@ -38,10 +38,9 @@ export interface TwitchDisc {
     setNewStreams(data: SubStream[]): void;
     getOffset(total: number): number[];
 }
-// const devTest = 60000
 const minutes = 60000,
-    popTime = minutes * 33, // 44,
-    refreshTime = minutes * 5,
+    popTime = minutes * 46,
+    refreshTime = minutes * 6,
     nextRefresh = () => new Date().getTime() + popTime
 
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
@@ -55,7 +54,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
 
     this.refreshRandom = async () => {
         console.log('ref ran')
-        const streams = await twitch.fetchStreamData(this.data.streams)
+        const streams = await Promise.all(this.data.streams.map(async (stream) => await twitch.fetchStreamData(stream)))
         this.data = { ...this.data, streams }
         this.io.sockets.emit('updated-data', this.data.streams)
     }
