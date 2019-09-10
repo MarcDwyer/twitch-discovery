@@ -71,7 +71,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     }
 
     this.getOffset = (total: number) => {
-        if (this.pullPercentage >= .75) this.pullPercentage = 0
+        if (this.pullPercentage >= .85) this.pullPercentage = 0
         const value = this.pullPercentage,
             offset = Math.floor(total * value)
         // best value to use - .00025
