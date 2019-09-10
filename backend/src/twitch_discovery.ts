@@ -45,7 +45,7 @@ const minutes = 60000,
 function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.data = null
     this.io = io
-    this.pullPercentage = .5
+    this.pullPercentage = 0
     this.intervalCopy = (func, dur) => setInterval(func, dur)
 
     this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), popTime)

@@ -17,6 +17,5 @@ const app = express(),
     io.on('connection', (socket) => socket.emit('random-data', streams.data))
 
     app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))
-
     server.listen(port)
 })()
