@@ -18,27 +18,29 @@ app.use(bodyParser.json());
 (async () => {
     const streams: TwitchDisc = new TwitchDiscovery(io)
     await streams.populateRandom()
-    
+
     io.on('connection', (socket) => socket.emit('random-data', streams.data))
 
     app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))
 
-    app.post('/set-offset', async (req, res) => {
-        const { offset, secret } = req.body
-        if (!offset || !secret) {
-            res.status(409).send({ error: 'Two parameters are required' })
+    app.post('/set-offset/', async (req, res) => {
+        const { secret } = req.body
+        if (!secret || secret && secret !== process.env.YEET || !req.body.offset) {
+            res.status(401).send({ error: 'It is Forbidden' })
             return
         }
-        if (secret === process.env.YEET) {
-            if (offset < 0.85) {
-                streams.pullPercentage = offset
-                await streams.populateRandom()
-                res.send({ success: 'Success!' })
-            } else {
-                res.status(409).send({ error: 'offset must be a float' })
-            }
+        const offset = parseFloat(req.body.offset)
+        if (isNaN(offset)) {
+            res.status(400).send({ error: "Offset is incorrect" })
+            return
+        }
+        if (offset > 0.85) {
+            res.status(400).send({ error: 'Offset too high' })
         } else {
-            res.status(401).send({ error: 'Forbidden' })
+            console.log({ offset, body: req.body })
+            streams.settings = { ...streams.settings, offset }
+            await streams.populateRandom(true)
+            res.send({ Success: `Offset ${offset} now set` })
         }
     })
 

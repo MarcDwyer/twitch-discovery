@@ -14,7 +14,7 @@ type Props = {
     streams: SubStream[];
 }
 const Diag = (props: Props) => {
-    const { total, offset, pullPercent } = props.diagnostic
+    const { total, offset, skippedOver } = props.diagnostic
     const [time, waiting] = props.time
     const [showDiag, setShowDiag] = useState<boolean>(false)
 
@@ -25,7 +25,7 @@ const Diag = (props: Props) => {
         reverse: !showDiag
     })
     const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
-    const top = usePercentage(pullPercent)
+    const top = usePercentage(offset)
     return (
         createPortal(
             <React.Fragment>
@@ -49,8 +49,8 @@ const Diag = (props: Props) => {
                             </span>
                     <span>Total Streams: {total}</span>
                     <span>Average viewership: {average}</span>
-                    <span>Skipped over: {offset}</span>
-                    <span>Streamers left: {total - offset}</span>
+                    <span>Skipped over streams: {skippedOver}</span>
+                    <span>Streamers left: {total - skippedOver}</span>
                     {time && (
                         <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
                     )}

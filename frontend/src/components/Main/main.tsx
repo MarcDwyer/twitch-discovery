@@ -31,7 +31,7 @@ export type StructureStreams = {
 export type IDiag = {
     offset: number;
     total: number;
-    pullPercent: number;
+    skippedOver: number;
 }
 export type Featured = {
     stream: SubStream | null;

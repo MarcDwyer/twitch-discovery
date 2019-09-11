@@ -13,8 +13,10 @@ export const APP_INIT = 'appinitbro',
 export function appReducer(state: Payload | null, { type, payload }: { type: string, payload: any }): Payload | null {
     switch (type) {
         case APP_INIT:
+            if (!payload.streams) return state
             return { ...payload, featured: { stream: payload.streams[0], index: 0 } }
         case APP_UPDATE:
+            if (!payload || payload.length < 1) return state
             let index = payload.findIndex((stream: SubStream) => stream._id === state.featured.stream._id)
             if (index === -1) {
                 index = 0

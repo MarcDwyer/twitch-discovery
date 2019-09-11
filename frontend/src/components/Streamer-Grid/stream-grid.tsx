@@ -18,7 +18,7 @@ const StreamerGrid = (props: Props) => {
         props.dispatchApp({ type: SET_FEATURED, payload })
     }, [props.streams])
 
-    const top = usePercentage(props.diag.pullPercent)
+    const top = usePercentage(props.diag.offset)
     return (
         <React.Fragment>
             <h2>

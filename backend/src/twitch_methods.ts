@@ -51,11 +51,12 @@ async function fetchTotal(): Promise<number> {
 // `https://api.twitch.tv/kraken/streams/?limit=5&client_id=${process.env.TWITCH}`
 
 async function fetchRandomStreams(totalOffset: number[]): Promise<Payload> {
-    const [offset, total, pullPercent] = totalOffset
-    const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${offset}&language=en`
+    const [skippedOver, total, offset] = totalOffset
+    const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${skippedOver}&language=en`
     try {
         const data = await fetchTwitch(url)
-        return { streams: data.streams, diagnostic: { total, offset, pullPercent } }
+
+        return { streams: data.streams, diagnostic: { skippedOver, offset, total } }
     } catch (err) {
         console.log(err)
     }
