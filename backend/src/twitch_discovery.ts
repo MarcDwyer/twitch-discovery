@@ -51,7 +51,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.settings = {
         offset: 0,
         popTime: minutes * 47,
-        refreshTime: minutes * 4
+        refreshTime: minutes * 6
     }
 
     this.nextRefresh = () => new Date().getTime() + this.settings.popTime
