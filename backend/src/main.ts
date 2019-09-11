@@ -37,7 +37,6 @@ app.use(bodyParser.json());
         if (offset > 0.85) {
             res.status(400).send({ error: 'Offset too high' })
         } else {
-            console.log({ offset, body: req.body })
             streams.settings = { ...streams.settings, offset }
             await streams.populateRandom(true)
             res.send({ Success: `Offset ${offset} now set` })
