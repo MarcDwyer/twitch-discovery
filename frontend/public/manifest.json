@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TD",
+  "name": "Twitch-Discovery",
   "icons": [
     {
       "src": "favicon.ico",
