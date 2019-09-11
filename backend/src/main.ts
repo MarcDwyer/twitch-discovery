@@ -18,13 +18,15 @@ app.use(bodyParser.json());
 (async () => {
     const streams: TwitchDisc = new TwitchDiscovery(io)
     await streams.populateRandom()
+    
     io.on('connection', (socket) => socket.emit('random-data', streams.data))
 
     app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))
+
     app.post('/set-offset', async (req, res) => {
         const { offset, secret } = req.body
         if (!offset || !secret) {
-            res.send({ error: 'Two parameters are required' })
+            res.status(409).send({ error: 'Two parameters are required' })
             return
         }
         if (secret === process.env.YEET) {
@@ -33,9 +35,12 @@ app.use(bodyParser.json());
                 await streams.populateRandom()
                 res.send({ success: 'Success!' })
             } else {
-                res.send({ error: 'offset must be a float' })
+                res.status(409).send({ error: 'offset must be a float' })
             }
+        } else {
+            res.status(401).send({ error: 'Forbidden' })
         }
     })
+
     server.listen(port)
 })()
