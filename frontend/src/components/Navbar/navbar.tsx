@@ -17,7 +17,7 @@ const Navbar = React.memo((props: Props) => {
 
     return (
         <div className="navbar">
-            <Diagnostic streams={appData.streams} diagnostic={appData.diagnostic} time={time} />
+            <Diagnostic streams={appData.online} diagnostic={appData.diagnostic} time={time} />
             <Timer time={time} />
         </div>
     )

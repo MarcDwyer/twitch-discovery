@@ -36,14 +36,11 @@
             margin-right: 45px;
         }
 
-        a {
+        a, svg {
+            font-size: 42px;
             opacity: .75;
             color: inherit;
             text-decoration: none;
-
-            svg {
-                font-size: 42px;
-            }
 
             &:hover {
                 opacity: 1;

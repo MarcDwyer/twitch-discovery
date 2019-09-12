@@ -1,6 +1,6 @@
 
 import fetch from 'node-fetch'
-import { Payload } from './twitch_discovery'
+import { Payload, IStreamers } from './twitch_discovery'
 import { structureData } from './structure_data'
 import { SubStream } from './data_types/data_types'
 
@@ -26,12 +26,17 @@ async function fetchTwitch(url: string): Promise<IData> {
     }
 }
 
-async function fetchStreamData(ids: number[]): Promise<SubStream[]> {
-    const url = `https://api.twitch.tv/kraken/streams/?channel=${ids.join(',')}`
+async function fetchStreamData({ streamName, channelData, id }: IStreamers): Promise<IStreamers> {
+    const url = `https://api.twitch.tv/kraken/streams/${id}`
     try {
         const data = await fetchTwitch(url)
         if (data['error']) throw new Error(`error at fetchstreamdata`)
-        return data.streams.filter(stream => stream)
+        return {
+            streamData: data.stream,
+            streamName,
+            channelData,
+            id
+        }
     } catch (err) {
         console.log(err)
     }
@@ -51,9 +56,12 @@ async function fetchRandomStreams(totalOffset: number[]): Promise<Payload> {
     const [skippedOver, total, offset] = totalOffset
     const url = `https://api.twitch.tv/kraken/streams/?limit=10&offset=${skippedOver}&language=en`
     try {
-        const data = await fetchTwitch(url)
-
-        return { streams: data.streams, diagnostic: { skippedOver, offset, total } }
+        const { streams } = await fetchTwitch(url)
+        return {
+            streams: structureData(streams),
+            online: streams,
+            diagnostic: { skippedOver, offset, total }
+        }
     } catch (err) {
         console.log(err)
     }

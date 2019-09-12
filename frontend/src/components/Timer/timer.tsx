@@ -16,7 +16,7 @@ const Timer = (props: Props) => {
                 <React.Fragment>
                     {!waiting ? (
                         <span>
-                            {`Next update in ${time.minutes} ${time.minutes <  2 ? 'minute' : 'minutes'}`}
+                            {`Next update in ${time.minutes} ${time.minutes <  2 ? 'minute' : 'minutes'} and ${time.seconds} seconds`}
                         </span>
                     ) : (
                             <span>

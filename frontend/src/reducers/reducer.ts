@@ -1,5 +1,5 @@
-import { SubStream } from '../data_types/data_types'
 import { Payload } from '../components/Main/main';
+import { SubStream } from '../data_types/data_types';
 
 
 export const INC_KEY = 'inc_key',
@@ -14,22 +14,24 @@ export function appReducer(state: Payload | null, { type, payload }: { type: str
     switch (type) {
         case APP_INIT:
             if (!payload.streams) return state
-            return { ...payload, featured: { stream: payload.streams[0], index: 0 } }
+            return { ...payload, featured: { stream: payload.online[0], index: 0 } }
         case APP_UPDATE:
-            if (!payload || payload.length < 1) return state
-            let index = payload.findIndex((stream: SubStream) => stream._id === state.featured.stream._id)
+            if (!payload || payload.online.length < 1 || payload.streams.length < 1) return state
+            const { online, streams } = payload
+            let index = online.findIndex((stream: SubStream) => stream._id === state.featured.stream._id)
             if (index === -1) {
                 index = 0
             }
-            return { ...state, streams: payload, featured: { stream: payload[index], index } }
+            return { ...state, streams, online, featured: { stream: payload.online[index], index } }
         case SET_FEATURED:
             if (!state) return null
-            return { ...state, featured: payload }
+            const i = state.online.findIndex(stream => stream._id === payload._id)
+            return { ...state, featured: { stream: state.online[i], index: i } }
         case INC_KEY:
             if (!state) return state
             let value = state.featured.index + 1
             if (!state.streams[value]) value = 0
-            return { ...state, featured: { stream: state.streams[value], index: value } }
+            return { ...state, featured: { stream: state.online[value], index: value } }
         default:
             return state
     }

@@ -6,9 +6,9 @@ import Timer, { ITimer } from './timers'
 
 export type Payload = {
     nextRefresh?: number;
-    streams: SubStream[];
+    streams: IStreamers[];
     diagnostic: Diag;
-    online?: SubStream[];
+    online: SubStream[];
 }
 type Diag = {
     skippedOver: number;
@@ -60,11 +60,11 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.intervalRefresh = new Timer(async () => await this.refreshRandom(), this.settings.refreshTime)
 
     this.refreshRandom = async () => {
-        console.log('ref ran')
-        const ids = this.data.streams.map(stream => stream.channel._id)
-        const streams = await twitch.fetchStreamData(ids)
-        this.data = { ...this.data, streams }
-        this.io.sockets.emit('updated-data', this.data.streams)
+        console.log(`Refresh ran on ${new Date()}`)
+        const streams = await Promise.all(this.data.streams.map(async (stream) => await twitch.fetchStreamData(stream)))
+        const online = streams.filter(stream => stream.streamData).map(stream => stream.streamData)
+        this.data = { ...this.data, streams, online }
+        this.io.sockets.emit('updated-data', { streams, online })
     }
 
     this.populateRandom = async (update) => {

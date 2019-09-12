@@ -4,12 +4,14 @@ import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaHamburger, FaGithub, FaMoon } from 'react-icons/fa'
 import { ITimer, usePercentage } from '../../hooks/hooks'
-import { SubStream } from '../../data_types/data_types'
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom'
+import { SubStream } from '../../data_types/data_types';
+
+import ChangeOffset from '../Offset-Change/change-offset'
 
 import './diag.scss'
 
-interface Props extends RouteComponentProps {
+
+interface Props {
     diagnostic: IDiag;
     time: ITimer;
     streams: SubStream[];
@@ -18,6 +20,7 @@ const Diag = (props: Props) => {
     const { total, offset, skippedOver } = props.diagnostic
     const [time, waiting] = props.time
     const [showDiag, setShowDiag] = useState<boolean>(false)
+    const [showOffset, setShowOffset] = useState<boolean>(false)
 
     const diagAnim = useSpring({
         opacity: 1,
@@ -64,13 +67,16 @@ const Diag = (props: Props) => {
                         >
                             <FaGithub />
                         </a>
-                        <Link
-                            to="/set-offset"
-                        >
-                            <FaMoon />
-                        </Link>
+                        <FaMoon
+                            onClick={() => setShowOffset(!showOffset)}
+                        />
                     </div>
                 </animated.div>
+                <ChangeOffset
+                    showOffset={showOffset}
+                    setShowOffset={setShowOffset}
+                />
+                )}
             </React.Fragment>,
             //@ts-ignore
             document.querySelector('#root')
@@ -78,4 +84,4 @@ const Diag = (props: Props) => {
     )
 }
 // document.querySelector('#root')
-export default withRouter(Diag)
+export default Diag
