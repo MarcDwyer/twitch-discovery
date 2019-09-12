@@ -2,6 +2,7 @@
 import { Server } from 'socket.io'
 import twitch from './twitch_methods'
 import { Channel, SubStream } from './data_types/data_types'
+import Timer, { ITimer } from './timers'
 
 export type Payload = {
     nextRefresh?: number;
@@ -31,13 +32,12 @@ type Settings = {
 }
 export interface TwitchDisc {
     data: Payload | null;
-    intervalPopulate: number;
-    intervalRefresh: number;
+    intervalPopulate: ITimer;
+    intervalRefresh: ITimer;
     io: Server;
     settings: Settings;
     nextRefresh(): number;
     populateRandom(param?: boolean): void;
-    intervalCopy(func: Function, dur: number): number;
     refreshRandom(): void;
     setNewStreams(data: SubStream[]): void;
     getOffset(total: number): number[];
@@ -55,10 +55,9 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     }
 
     this.nextRefresh = () => new Date().getTime() + this.settings.popTime
-    this.intervalCopy = (func, dur) => setInterval(func, dur)
 
-    this.intervalPopulate = this.intervalCopy(async () => await this.populateRandom(), this.settings.popTime)
-    this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), this.settings.refreshTime)
+    this.intervalPopulate = new Timer(async () => await this.populateRandom(), this.settings.popTime)
+    this.intervalRefresh = new Timer(async () => await this.refreshRandom(), this.settings.refreshTime)
 
     this.refreshRandom = async () => {
         console.log('ref ran')
@@ -70,25 +69,23 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
 
     this.populateRandom = async (update) => {
         if (this.data) {
-            clearInterval(this.intervalRefresh)
-            this.intervalRefresh = this.intervalCopy(async () => await this.refreshRandom(), this.settings.refreshTime)
+            this.intervalRefresh.reset(this.settings.refreshTime)
             if (update) {
-                clearInterval(this.intervalPopulate)
-                this.intervalCopy(async () => await this.populateRandom(), this.settings.popTime)
+                this.intervalPopulate.reset(this.settings.popTime)
             }
         }
         const total = await twitch.fetchTotal()
-        const checkData = await twitch.fetchRandomStreams(this.getOffset(total))
-        this.data = { ...checkData, nextRefresh: this.nextRefresh() }
+        const streamData = await twitch.fetchRandomStreams(this.getOffset(total))
+        this.data = { ...streamData, nextRefresh: this.nextRefresh() }
         this.io.sockets.emit('random-data', this.data)
     }
 
     this.getOffset = (total: number) => {
-        if (this.settings.offset >= .85) this.settings.offset = 0
-        let offset = this.settings.offset,
-            skippedOver = Math.floor(total * offset)
+        let offset = this.settings.offset
+        if (offset >= .85) offset = 0
+        const skippedOver = Math.floor(total * offset)
         this.settings.offset = offset + .0025
-        return [skippedOver, total, offset]
+        return [skippedOver, total, this.settings.offset]
     }
 }
 
