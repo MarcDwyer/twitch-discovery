@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
-import { FaHamburger, FaGithub } from 'react-icons/fa'
+import { FaHamburger, FaGithub, FaMoon } from 'react-icons/fa'
 import { ITimer, usePercentage } from '../../hooks/hooks'
 import { SubStream } from '../../data_types/data_types'
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom'
 
 import './diag.scss'
 
-type Props = {
+interface Props extends RouteComponentProps {
     diagnostic: IDiag;
     time: ITimer;
     streams: SubStream[];
@@ -26,6 +27,7 @@ const Diag = (props: Props) => {
     })
     const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
     const top = usePercentage(offset)
+
     return (
         createPortal(
             <React.Fragment>
@@ -54,13 +56,20 @@ const Diag = (props: Props) => {
                     {time && (
                         <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
                     )}
-                    <a
-                    href="https://github.com/MarcDwyer/twitch-discovery"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >
-                        <FaGithub />
-                    </a>
+                    <div className="links">
+                        <a
+                            href="https://github.com/MarcDwyer/twitch-discovery"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <FaGithub />
+                        </a>
+                        <Link
+                            to="/set-offset"
+                        >
+                            <FaMoon />
+                        </Link>
+                    </div>
                 </animated.div>
             </React.Fragment>,
             //@ts-ignore
@@ -69,4 +78,4 @@ const Diag = (props: Props) => {
     )
 }
 // document.querySelector('#root')
-export default Diag
+export default withRouter(Diag)

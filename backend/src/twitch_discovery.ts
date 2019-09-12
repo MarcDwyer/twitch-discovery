@@ -50,7 +50,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.io = io
     this.settings = {
         offset: 0,
-        popTime: minutes * 47,
+        popTime: minutes * 38,
         refreshTime: minutes * 6
     }
 
@@ -68,6 +68,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     }
 
     this.populateRandom = async (update) => {
+        console.log(`Populate random has run on: ${new Date()}`)
         if (this.data) {
             this.intervalRefresh.reset(this.settings.refreshTime)
             if (update) {
@@ -85,7 +86,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
         if (offset >= .85) offset = 0
         const skippedOver = Math.floor(total * offset)
         this.settings.offset = offset + .0025
-        return [skippedOver, total, this.settings.offset]
+        return [skippedOver, total, offset]
     }
 }
 

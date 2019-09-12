@@ -1,5 +1,6 @@
 import React from 'react'
 import { ITimer } from '../../hooks/hooks'
+
 import './timer.scss'
 
 
@@ -15,7 +16,7 @@ const Timer = (props: Props) => {
                 <React.Fragment>
                     {!waiting ? (
                         <span>
-                            {`Pulling new streamers in ${time.hours} hours ${time.minutes} minutes and ${time.seconds} seconds`}
+                            {`Next update in ${time.minutes} ${time.minutes <  2 ? 'minute' : 'minutes'}`}
                         </span>
                     ) : (
                             <span>

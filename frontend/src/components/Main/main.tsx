@@ -2,6 +2,7 @@ import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks'
+import { BrowserRouter, Route } from 'react-router-dom'
 
 import {
     appReducer, APP_INIT, APP_UPDATE
@@ -10,6 +11,7 @@ import {
 import StreamerGrid from '../Streamer-Grid/stream-grid'
 import Featured from '../Featured/featured'
 import Navbar from '../Navbar/navbar'
+import ChangeOffset from '../Offset-Change/change-offset'
 
 import './main.scss'
 
@@ -52,28 +54,30 @@ const Main = () => {
             })
         }
     }, [socket])
-
     return (
-        <div className="main">
-            {appData && (
-                <div className="loaded">
-                    <Navbar appData={appData} />
-                    {appData.featured.stream && (
-                        <Featured featured={appData.featured.stream} dispatchApp={dispatchApp} />
-                    )}
-                    <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
-                </div>
-            )}
-            {!appData && (
-                <div className="no-data">
-                    <h1>Looking for streams...</h1>
-                    <BounceLoader
-                        color="#eee"
-                    />
-                </div>
-            )
-            }
-        </div >
+        <BrowserRouter>
+            <div className="main">
+                {appData && (
+                    <div className="loaded">
+                        <Navbar appData={appData} />
+                        {appData.featured.stream && (
+                            <Featured featured={appData.featured.stream} dispatchApp={dispatchApp} />
+                        )}
+                        <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
+                    </div>
+                )}
+                {!appData && (
+                    <div className="no-data">
+                        <h1>Looking for streams...</h1>
+                        <BounceLoader
+                            color="#eee"
+                        />
+                    </div>
+                )
+                }
+            </div >
+            <Route path="/set-offset" component={ChangeOffset} />
+        </BrowserRouter>
     )
 }
 

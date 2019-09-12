@@ -4,7 +4,7 @@ import ioSetup from 'socket.io'
 import dotenv from 'dotenv'
 import TwitchDiscovery, { TwitchDisc } from './twitch_discovery'
 import bodyParser from 'body-parser'
-
+import cors from 'cors'
 
 dotenv.config()
 
@@ -14,6 +14,7 @@ const app = express(),
     io = ioSetup(server);
 
 app.use(bodyParser.json());
+app.use(cors());
 
 (async () => {
     const streams: TwitchDisc = new TwitchDiscovery(io)

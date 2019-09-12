@@ -28,13 +28,26 @@
         font-size: 20px;
     }
 
-    a {
+    .links {
         margin: auto auto 25px auto;
-        color: inherit;
-        text-decoration: none;
+        display: flex;
 
-        svg {
-            font-size: 42px;
+        a:first-child {
+            margin-right: 45px;
+        }
+
+        a {
+            opacity: .75;
+            color: inherit;
+            text-decoration: none;
+
+            svg {
+                font-size: 42px;
+            }
+
+            &:hover {
+                opacity: 1;
+            }
         }
     }
 }
