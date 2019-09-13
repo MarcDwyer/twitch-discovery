@@ -2,6 +2,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 
 import './modal.scss'
+
 type Props = {
     children: JSX.Element;
     shouldOpen: boolean;

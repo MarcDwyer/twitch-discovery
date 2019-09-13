@@ -3,8 +3,11 @@ import http from 'http'
 import ioSetup from 'socket.io'
 import dotenv from 'dotenv'
 import TwitchDiscovery, { TwitchDisc } from './twitch_discovery'
+import { handleOffset } from './offset-change'
+
 import bodyParser from 'body-parser'
 import cors from 'cors'
+
 
 dotenv.config()
 
@@ -24,25 +27,7 @@ app.use(cors());
 
     app.use('/test', (req, res) => res.send(JSON.stringify(streams.data)))
 
-    app.post('/set-offset/', async (req, res) => {
-        const { secret } = req.body
-        if (!secret || secret && secret !== process.env.YEET || !req.body.offset) {
-            res.status(401).send({ error: 'It is Forbidden' })
-            return
-        }
-        const offset = parseFloat(req.body.offset)
-        if (isNaN(offset)) {
-            res.status(400).send({ error: "Offset is incorrect" })
-            return
-        }
-        if (offset > 0.85) {
-            res.status(400).send({ error: 'Offset too high' })
-        } else {
-            streams.settings = { ...streams.settings, offset }
-            await streams.populateRandom(true)
-            res.send({ Success: `Offset ${offset} now set` })
-        }
-    })
+    app.post('/set-offset/', async (req, res) => handleOffset(req, res, streams))
 
     server.listen(port)
 })()
