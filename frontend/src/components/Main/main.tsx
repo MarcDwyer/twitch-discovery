@@ -48,7 +48,6 @@ const Main = () => {
 
     useEffect(() => {
         if (socket) {
-            console.log('this ran')
             socket.on('connect', () => {
                 socket.on('random-data', (data: Payload) => dispatchApp({ type: APP_INIT, payload: data }))
                 socket.on('updated-data', (data: SubStream[]) => dispatchApp({ type: APP_UPDATE, payload: data }))

@@ -9,7 +9,8 @@ export const INC_KEY = 'inc_key',
 
 export const APP_INIT = 'appinitbro',
     APP_UPDATE = 'holdmybeer'
-
+// TODO
+// Fix shuffle to end bug
 export function appReducer(state: Payload | null, { type, payload }: { type: string, payload: any }): Payload | null {
     switch (type) {
         case APP_INIT:
@@ -30,7 +31,7 @@ export function appReducer(state: Payload | null, { type, payload }: { type: str
         case INC_KEY:
             if (!state) return state
             let value = state.featured.index + 1
-            if (!state.streams[value]) value = 0
+            if (!state.online[value]) value = 0
             return { ...state, featured: { stream: state.online[value], index: value } }
         default:
             return state
