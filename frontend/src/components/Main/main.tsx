@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks'
@@ -40,21 +40,24 @@ export type Featured = {
     index: number;
 }
 
-const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname
+const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5010` : document.location.hostname
 
 const Main = () => {
-    const socket = useSocket(isDev())
+    const [socket, setSocker] = useState<WebSocket>(new WebSocket(`ws://${document.location.hostname}:5010/ws`))
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
     useEffect(() => {
-        if (socket) {
-            socket.on('connect', () => {
-                socket.on('random-data', (data: Payload) => dispatchApp({ type: APP_INIT, payload: data }))
-                socket.on('updated-data', (data: SubStream[]) => dispatchApp({ type: APP_UPDATE, payload: data }))
-            })
-        }
+        socket.addEventListener('message', (msg: any) => {
+            const parsed = JSON.parse(msg.data)
+            console.log(parsed)
+            switch (parsed.type) {
+                case "init-data":
+                    console.log('huh')
+                    dispatchApp({ type: APP_INIT, payload: parsed.data })
+            }
+        })
     }, [socket])
-
+    console.log(appData)
     return (
         <div className="main">
             {appData && (

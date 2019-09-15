@@ -14,7 +14,7 @@ export const APP_INIT = 'appinitbro',
 export function appReducer(state: Payload | null, { type, payload }: { type: string, payload: any }): Payload | null {
     switch (type) {
         case APP_INIT:
-            if (!payload.streams) return state
+            console.log(payload)
             return { ...payload, featured: { stream: payload.online[0], index: 0 } }
         case APP_UPDATE:
             if (!payload || payload.online.length < 1 || payload.streams.length < 1) return state

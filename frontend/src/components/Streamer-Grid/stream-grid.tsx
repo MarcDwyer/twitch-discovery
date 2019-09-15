@@ -13,7 +13,7 @@ interface Props {
     dispatchApp: Function;
 }
 const StreamerGrid = (props: Props) => {
-
+    console.log(props)
     const updateFeatured = useCallback((payload: SubStream) => {
         props.dispatchApp({ type: SET_FEATURED, payload })
     }, [props.streams])
