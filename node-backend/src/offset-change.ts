@@ -4,6 +4,7 @@ import { Dictionary, Request, Response } from "express-serve-static-core";
 
 export const handleOffset = async (req: Request<Dictionary<string>>, res: Response, streams: TwitchDisc) => {
     const { secret } = req.body
+    console.log(req.body)
     if (!secret || secret && secret !== process.env.YEET || !req.body.offset) {
         res.status(401).send({ error: 'It is Forbidden' })
         return

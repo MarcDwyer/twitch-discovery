@@ -12,8 +12,7 @@ interface Props {
     diag: IDiag;
     dispatchApp: Function;
 }
-const StreamerGrid = (props: Props) => {
-    console.log(props)
+const StreamerGrid = React.memo((props: Props) => {
     const updateFeatured = useCallback((payload: SubStream) => {
         props.dispatchApp({ type: SET_FEATURED, payload })
     }, [props.streams])
@@ -32,6 +31,6 @@ const StreamerGrid = (props: Props) => {
             </div>
         </React.Fragment>
     )
-}
+})
 
 export default StreamerGrid

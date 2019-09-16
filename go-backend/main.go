@@ -5,8 +5,14 @@ import (
 	"log"
 	"net/http"
 	"runtime"
+	"time"
 
 	"github.com/joho/godotenv"
+)
+
+var (
+	newStreams    = 35
+	refreshStream = 1
 )
 
 func init() {
@@ -27,6 +33,13 @@ func main() {
 
 	go hub.run()
 	go td.populateTwitchData(hub, &payload)
+
+	go func() {
+		timerCh := time.Tick(time.Duration(refreshStream) * time.Minute)
+		for range timerCh {
+			go td.refreshStreams(hub, &payload)
+		}
+	}()
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r, &payload)

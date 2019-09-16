@@ -51,7 +51,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
     this.settings = {
         offset: 0,
         popTime: minutes * 38,
-        refreshTime: minutes * 6
+        refreshTime: minutes * 1
     }
 
     this.nextRefresh = () => new Date().getTime() + this.settings.popTime
@@ -78,7 +78,7 @@ function TwitchDiscovery(this: TwitchDisc, io: Server) {
         const total = await twitch.fetchTotal()
         const streamData = await twitch.fetchRandomStreams(this.getOffset(total))
         this.data = { ...streamData, nextRefresh: this.nextRefresh() }
-        this.io.sockets.emit('random-data', this.data)
+        this.io.sockets.emit('init-data', this.data)
     }
 
     this.getOffset = (total: number) => {

@@ -11,70 +11,6 @@ import (
 	"time"
 )
 
-type TResponse struct {
-	Total   int        `json:"_total"`
-	Streams []TStreams `json:"streams"`
-}
-type TStreams struct {
-	ID         int64     `json:"_id"`
-	AverageFps int       `json:"average_fps"`
-	Channel    TChannel  `json:"channel"`
-	CreatedAt  time.Time `json:"created_at"`
-	Delay      int       `json:"delay"`
-	Game       string    `json:"game"`
-	IsPlaylist bool      `json:"is_playlist"`
-	Preview    struct {
-		Large    string `json:"large"`
-		Medium   string `json:"medium"`
-		Small    string `json:"small"`
-		Template string `json:"template"`
-	} `json:"preview"`
-	VideoHeight int `json:"video_height"`
-	Viewers     int `json:"viewers"`
-}
-type TChannel struct {
-	ID                           int         `json:"_id"`
-	BroadcasterLanguage          string      `json:"broadcaster_language"`
-	CreatedAt                    time.Time   `json:"created_at"`
-	DisplayName                  string      `json:"display_name"`
-	Followers                    int         `json:"followers"`
-	Game                         string      `json:"game"`
-	Language                     string      `json:"language"`
-	Logo                         string      `json:"logo"`
-	Mature                       bool        `json:"mature"`
-	Name                         string      `json:"name"`
-	Partner                      bool        `json:"partner"`
-	ProfileBanner                string      `json:"profile_banner"`
-	ProfileBannerBackgroundColor interface{} `json:"profile_banner_background_color"`
-	Status                       string      `json:"status"`
-	UpdatedAt                    time.Time   `json:"updated_at"`
-	URL                          string      `json:"url"`
-	VideoBanner                  string      `json:"video_banner"`
-	Views                        int         `json:"views"`
-}
-
-type Stream struct {
-	Stream      TStreams `json:"streamData"`
-	StreamName  string   `json:"streamName"`
-	ChannelData TChannel `json:"channelData"`
-	ID          int      `json:"id"`
-}
-type Diag struct {
-	SkippedOver int     `json:"skippedOver"`
-	Offset      float64 `json:"offset"`
-	Total       int     `json:"total"`
-}
-type TwitchData struct {
-	StreamData  *[]Stream   `json:"streams,omitempty"`
-	NextRefresh int64       `json:"nextRefresh,omitempty"`
-	Online      *[]TStreams `json:"online,omitempty"`
-	Diagnostic  Diag        `json:"diagnostic,omitempty"`
-}
-type Payload1 struct {
-	Data TwitchData `json:"data"`
-	Type string     `json:"type"`
-}
-
 func newTwitchData() *TwitchData {
 	return &TwitchData{}
 }
@@ -114,7 +50,7 @@ func (tData *TwitchData) getDiagData() {
 	skippedOver := math.Floor(float64(total) * tData.Diagnostic.Offset)
 	newOffset := tData.Diagnostic.Offset
 
-	if newOffset == 0 && tData.StreamData != nil {
+	if tData.StreamData != nil {
 		newOffset = newOffset + 0.025
 	}
 	newDiag := Diag{
@@ -126,7 +62,7 @@ func (tData *TwitchData) getDiagData() {
 }
 
 func getTime() int64 {
-	nowTime := time.Now().Add(time.Minute * 35)
+	nowTime := time.Now().Add(time.Minute * time.Duration(newStreams))
 	now := nowTime.UnixNano() / int64(time.Millisecond)
 	return now
 }
@@ -145,20 +81,6 @@ func (tData *TwitchData) getNewStreams() {
 	tData.NextRefresh = getTime()
 }
 
-func structureStreams(s []TStreams) *[]Stream {
-	structuredStreams := []Stream{}
-	for _, v := range s {
-		stream := Stream{
-			StreamName:  v.Channel.Name,
-			ChannelData: v.Channel,
-			ID:          v.Channel.ID,
-			Stream:      v,
-		}
-		structuredStreams = append(structuredStreams, stream)
-	}
-	return &structuredStreams
-}
-
 func (tData *TwitchData) populateTwitchData(h *Hub, p *[]byte) {
 	tData.getDiagData()
 	tData.getNewStreams()
@@ -172,4 +94,37 @@ func (tData *TwitchData) populateTwitchData(h *Hub, p *[]byte) {
 	}
 	*p = payload
 	h.broadcast <- *p
+}
+
+func (tData *TwitchData) refreshStreams(h *Hub, p *[]byte) {
+	newStreamers := []Stream{}
+	fmt.Println("refresh ran")
+	for _, v := range *tData.StreamData {
+		url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/%v", v.ID)
+		data, err := fetchTwitch(url)
+		if err != nil {
+			continue
+		}
+		var stream SingleResponse
+		json.Unmarshal(data, &stream)
+
+		newStream := Stream{
+			StreamName:  v.StreamName,
+			ChannelData: v.ChannelData,
+			Stream:      &stream.Stream,
+			ID:          v.ID,
+		}
+		newStreamers = append(newStreamers, newStream)
+	}
+	tData.StreamData = &newStreamers
+	tData.Online = filterLive(newStreamers)
+
+	payload := &Payload2{
+		Online:     *tData.Online,
+		StreamData: *tData.StreamData,
+		Type:       "updated-data",
+	}
+	res, _ := json.Marshal(payload)
+	*p = res
+	h.broadcast <- res
 }

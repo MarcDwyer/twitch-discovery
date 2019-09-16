@@ -21,7 +21,7 @@ const StreamCard = React.memo((props: Props) => {
         <div className="stream-card">
             <div className="center">
                 <img
-                    style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer' } : { border: '3px solid grey' }}
+                    style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '3px solid grey' }}
                     onClick={() => {
                         if (!streamData) return
                         props.updateFeatured(streamData)
@@ -31,6 +31,7 @@ const StreamCard = React.memo((props: Props) => {
                     <span>{channelData.display_name}</span>
                     {streamData && (
                         <React.Fragment>
+                            <span>Online</span>
                             <span>Is playing {streamData.game}</span>
                             <span>{streamData.viewers} viewers</span>
                         </React.Fragment>
