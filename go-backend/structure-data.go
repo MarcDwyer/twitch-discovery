@@ -1,13 +1,16 @@
 package main
 
+import "fmt"
+
 func structureStreams(s []TStreams) *[]Stream {
 	structuredStreams := []Stream{}
-	for _, v := range s {
+	for i, v := range s {
+		fmt.Println(v.Viewers)
 		stream := Stream{
 			StreamName:  v.Channel.Name,
 			ChannelData: v.Channel,
 			ID:          v.Channel.ID,
-			Stream:      &v,
+			Stream:      &s[i],
 		}
 		structuredStreams = append(structuredStreams, stream)
 	}

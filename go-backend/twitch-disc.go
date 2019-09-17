@@ -3,56 +3,28 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math"
-	"net/http"
-	"os"
 	"time"
 )
 
-func newTwitchData() *TwitchData {
-	return &TwitchData{}
+func newTwitchData(hub *Hub) *TwitchData {
+	return &TwitchData{
+		Hub: hub,
+	}
 }
 
-func fetchTwitch(url string) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Accept", "application/vnd.twitchtv.v5+json")
-	req.Header.Set("Client-ID", os.Getenv("TWITCH"))
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Fatalf("Error fetching twitch data")
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-
-	return body, err
-}
-
-func getTotal() int {
-	url := "https://api.twitch.tv/kraken/streams/?limit=1&language=en"
-	resp, err := fetchTwitch(url)
-	if err != nil {
-		log.Printf("error fetching total")
-	}
-	var data TResponse
-	json.Unmarshal(resp, &data)
-	return data.Total
-}
 func (tData *TwitchData) getDiagData() {
 	total := getTotal()
-	skippedOver := math.Floor(float64(total) * tData.Diagnostic.Offset)
 	newOffset := tData.Diagnostic.Offset
 
 	if tData.StreamData != nil {
-		newOffset = newOffset + 0.025
+		newOffset = newOffset + 0.0025
+		if newOffset >= .85 {
+			newOffset = 0
+		}
 	}
+	skippedOver := math.Round(float64(total) * newOffset)
 	newDiag := Diag{
 		Offset:      newOffset,
 		Total:       total,
@@ -81,22 +53,18 @@ func (tData *TwitchData) getNewStreams() {
 	tData.NextRefresh = getTime()
 }
 
-func (tData *TwitchData) populateTwitchData(h *Hub, p *[]byte) {
+func (tData *TwitchData) populateTwitchData() {
 	tData.getDiagData()
 	tData.getNewStreams()
-	newPayload := Payload1{
-		Data: *tData,
-		Type: "init-data",
-	}
-	payload, err := json.Marshal(newPayload)
+
+	payload, err := json.Marshal(tData.givePayload())
 	if err != nil {
 		log.Fatal(err)
 	}
-	*p = payload
-	h.broadcast <- *p
+	tData.Hub.broadcast <- payload
 }
 
-func (tData *TwitchData) refreshStreams(h *Hub, p *[]byte) {
+func (tData *TwitchData) refreshStreams() {
 	newStreamers := []Stream{}
 	fmt.Println("refresh ran")
 	for _, v := range *tData.StreamData {
@@ -125,6 +93,11 @@ func (tData *TwitchData) refreshStreams(h *Hub, p *[]byte) {
 		Type:       "updated-data",
 	}
 	res, _ := json.Marshal(payload)
-	*p = res
-	h.broadcast <- res
+	tData.Hub.broadcast <- res
+}
+
+func (tData *TwitchData) givePayload() TwitchData {
+	copy := *tData
+	copy.Hub = nil
+	return copy
 }

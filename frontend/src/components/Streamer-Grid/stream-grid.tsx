@@ -12,7 +12,7 @@ interface Props {
     diag: IDiag;
     dispatchApp: Function;
 }
-const StreamerGrid = React.memo((props: Props) => {
+const StreamerGrid = (props: Props) => {
     const updateFeatured = useCallback((payload: SubStream) => {
         props.dispatchApp({ type: SET_FEATURED, payload })
     }, [props.streams])
@@ -25,12 +25,12 @@ const StreamerGrid = React.memo((props: Props) => {
                 {`Top ${top} of streamers`}
             </h2>
             <div className="streamer-grid">
-                {props.streams.map((stream, i) => (
+                {props.streams.map((stream) => (
                     <StreamCard streamer={stream} key={stream.id} updateFeatured={updateFeatured} />
                 ))}
             </div>
         </React.Fragment>
     )
-})
+}
 
 export default StreamerGrid

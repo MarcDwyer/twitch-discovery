@@ -25,7 +25,10 @@ export function appReducer(state: Payload | null, { type, payload }: { type: str
             return { ...state, streams, online, featured: { stream: payload.online[index], index } }
         case SET_FEATURED:
             if (!state) return null
-            const i = state.online.findIndex(stream => stream._id === payload._id)
+            let i = state.online.findIndex(stream => stream._id === payload._id)
+            if (i === -1) {
+                i = 0
+            }
             return { ...state, featured: { stream: state.online[i], index: i } }
         case INC_KEY:
             if (!state) return state

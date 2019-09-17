@@ -48,7 +48,7 @@ type TChannel struct {
 }
 
 type Stream struct {
-	Stream      *TStreams `json:"streamData"`
+	Stream      *TStreams `json:"streamData,omitempty"`
 	StreamName  string    `json:"streamName"`
 	ChannelData TChannel  `json:"channelData"`
 	ID          int       `json:"id"`
@@ -63,6 +63,7 @@ type TwitchData struct {
 	NextRefresh int64       `json:"nextRefresh,omitempty"`
 	Online      *[]TStreams `json:"online,omitempty"`
 	Diagnostic  Diag        `json:"diagnostic,omitempty"`
+	Hub         *Hub        `json:",omitempty"`
 }
 type Payload1 struct {
 	Data TwitchData `json:"data"`

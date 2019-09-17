@@ -43,15 +43,24 @@ export type Featured = {
 const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname
 
 const Main = () => {
-    const socket = useSocket(isDev())
+    const [socket, setSocket] = useState<WebSocket>(new WebSocket(`ws://localhost:5010/ws`))
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
     useEffect(() => {
-        if (socket){
-            socket.on('init-data', (data) => dispatchApp({type: APP_INIT, payload: data}))
-            socket.on('updated-data', (data) => dispatchApp({type: APP_UPDATE, payload: data}))
-        }
-    }, [socket])
+        socket.addEventListener('message', (payload: any) => {
+            const data = JSON.parse(payload.data)
+            console.log(data)
+            if (!data['type']) {
+                dispatchApp({ type: APP_INIT, payload: data })
+                return
+            }
+            switch (data.type) {
+                case "updated-data":
+                    dispatchApp({ type: APP_UPDATE, payload: data })
+            }
+        })
+    }, [])
+    console.log(appData)
     return (
         <div className="main">
             {appData && (

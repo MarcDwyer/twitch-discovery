@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -119,7 +120,7 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, payload *[]byte) {
+func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, tData *TwitchData) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -131,5 +132,6 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, payload *[]byte) 
 	// new goroutines.
 	go client.writePump()
 	go client.readPump()
-	client.send <- *payload
+	tdPayload, _ := json.Marshal(tData.givePayload())
+	client.send <- tdPayload
 }

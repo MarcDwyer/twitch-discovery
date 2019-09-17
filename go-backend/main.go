@@ -10,9 +10,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type Offset struct {
+	Offset float64 `json:"offset"`
+	Secret string  `json:"secret"`
+}
+
 var (
-	newStreams    = 35
-	refreshStream = 1
+	newStreams    = 3
+	refreshStream = 15
 )
 
 func init() {
@@ -27,23 +32,32 @@ func main() {
 	fmt.Println("this ran...")
 
 	hub := newHub()
-	td := newTwitchData()
-
-	var payload []byte
+	td := newTwitchData(hub)
 
 	go hub.run()
-	go td.populateTwitchData(hub, &payload)
-
-	go func() {
-		timerCh := time.Tick(time.Duration(refreshStream) * time.Minute)
-		for range timerCh {
-			go td.refreshStreams(hub, &payload)
-		}
-	}()
+	go td.populateTwitchData()
+	go setTimers(td)
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r, &payload)
+		serveWs(hub, w, r, td)
 	})
-
+	http.HandleFunc("/set-offset/", func(w http.ResponseWriter, r *http.Request) {
+		td.setOffset(w, r)
+	})
 	http.ListenAndServe(":5010", nil)
+}
+
+func setTimers(td *TwitchData) {
+	go func() {
+		refresh := time.Tick(time.Duration(refreshStream) * time.Minute)
+		for range refresh {
+			go td.refreshStreams()
+		}
+	}()
+	go func() {
+		newList := time.Tick(time.Duration(newStreams) * time.Minute)
+		for range newList {
+			go td.populateTwitchData()
+		}
+	}()
 }
