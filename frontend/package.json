@@ -53,5 +53,6 @@
     "plugins": [
       "react-hot-loader/babel"
     ]
-  }
+  },
+  "proxy": "http://localhost:5010"
 }

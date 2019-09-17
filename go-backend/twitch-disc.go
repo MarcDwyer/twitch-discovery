@@ -14,19 +14,18 @@ func newTwitchData(hub *Hub) *TwitchData {
 	}
 }
 
+var offsetRef float64
+
 func (tData *TwitchData) getDiagData() {
 	total := getTotal()
-	newOffset := tData.Diagnostic.Offset
-
-	if tData.StreamData != nil {
-		newOffset = newOffset + 0.0025
-		if newOffset >= .85 {
-			newOffset = 0
-		}
+	if offsetRef+.0025 >= .85 {
+		offsetRef = 0
 	}
-	skippedOver := math.Round(float64(total) * newOffset)
+	tData.Diagnostic.Offset = offsetRef
+	offsetRef += .0025
+	skippedOver := math.Round(float64(total) * tData.Diagnostic.Offset)
 	newDiag := Diag{
-		Offset:      newOffset,
+		Offset:      tData.Diagnostic.Offset,
 		Total:       total,
 		SkippedOver: int(skippedOver),
 	}

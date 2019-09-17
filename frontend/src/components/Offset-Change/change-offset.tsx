@@ -10,7 +10,7 @@ type Props = {
     setShowOffset(param: boolean): void;
 }
 
-const URL = () => document.location.hostname.startsWith('localhost') ? 'http://localhost:5005' : `https://${document.location.hostname}`
+const URL = () => document.location.hostname.startsWith('localhost') ? 'http://localhost:5010' : `https://${document.location.hostname}`
 //TODO 
 // Make a modal component
 // re-use it
@@ -46,14 +46,13 @@ const ChangeOffset = React.memo((props: Props) => {
 
                                 const sendThis = await fetch(`${URL()}/set-offset/`, {
                                     method: 'POST',
+                                    mode: 'cors',
                                     headers: {
                                         'Content-Type': 'application/json'
                                     },
                                     body: JSON.stringify(payload)
                                 })
-
-                                const res = await sendThis.json()
-                                if (res['error'] || !sendThis.ok) setCount(count + 1)
+                                if (!sendThis.ok) setCount(count + 1)
 
                             } catch (err) {
                                 console.log(err)

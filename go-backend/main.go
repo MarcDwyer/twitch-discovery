@@ -7,13 +7,10 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/rs/cors"
+
 	"github.com/joho/godotenv"
 )
-
-type Offset struct {
-	Offset float64 `json:"offset"`
-	Secret string  `json:"secret"`
-}
 
 var (
 	newStreams    = 3
@@ -31,6 +28,8 @@ func init() {
 func main() {
 	fmt.Println("this ran...")
 
+	mux := http.NewServeMux()
+
 	hub := newHub()
 	td := newTwitchData(hub)
 
@@ -38,13 +37,15 @@ func main() {
 	go td.populateTwitchData()
 	go setTimers(td)
 
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r, td)
 	})
-	http.HandleFunc("/set-offset/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/set-offset/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("triggered")
 		td.setOffset(w, r)
 	})
-	http.ListenAndServe(":5010", nil)
+	handler := cors.Default().Handler(mux)
+	http.ListenAndServe(":5010", handler)
 }
 
 func setTimers(td *TwitchData) {
