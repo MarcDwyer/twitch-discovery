@@ -48,7 +48,7 @@ type TChannel struct {
 }
 
 type Stream struct {
-	Stream      *TStreams `json:"streamData,omitempty"`
+	Stream      *TStreams `json:"streamData"`
 	StreamName  string    `json:"streamName"`
 	ChannelData TChannel  `json:"channelData"`
 	ID          int       `json:"id"`

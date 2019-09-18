@@ -14,10 +14,10 @@ export const useTimer = (futureTime: number): ITimer => {
     const [waiting, setWaiting] = useState<boolean>(false)
 
     useEffect(() => {
-        let interval: number | undefined;
-        clearTimeout(interval)
+        let interval;
+        clearInterval(interval)
         //@ts-ignore
-        interval = setInterval(() => {
+        const getTime = () => {
             const now = new Date().getTime()
             if (now >= futureTime) {
                 setWaiting(true)
@@ -30,10 +30,10 @@ export const useTimer = (futureTime: number): ITimer => {
                 seconds = Math.floor((distance % (1000 * 60)) / 1000)
             setWaiting(false)
             setTimer({ hours, minutes, seconds })
-        }, 1000)
-        return function () {
-            if (interval) clearInterval(interval)
         }
+        getTime()
+        interval = setInterval(getTime, 1000)
+        return () => clearInterval
     }, [futureTime])
 
     return [timer, waiting]

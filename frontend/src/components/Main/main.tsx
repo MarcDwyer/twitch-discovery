@@ -62,7 +62,6 @@ const Main = () => {
             })
         }
     }, [socket])
-    console.log(appData)
     return (
         <div className="main">
             {appData && (
