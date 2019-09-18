@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
-
+import { useSocket } from '../../hooks/hooks';
 import {
     appReducer, APP_INIT, APP_UPDATE
 } from '../../reducers/reducer'
@@ -12,6 +12,7 @@ import Navbar from '../Navbar/navbar'
 
 
 import './main.scss'
+
 
 export type Payload = {
     nextRefresh: number;
@@ -38,17 +39,15 @@ export type Featured = {
     stream: SubStream | null;
     index: number;
 }
-
-const isDev = (): string => document.location.hostname.startsWith('local') ? `ws://${document.location.hostname}:5010` : `wss://${document.location.hostname}`
+const isDev = (): string => document.location.hostname.startsWith('local') ? `ws://${document.location.hostname}:5010/ws` : `wss://${document.location.hostname}/ws`
 
 const Main = () => {
-    const [socket, setSocket] = useState<WebSocket | null>(null)
+    const socket = useSocket(isDev())
+    const [showUpdate, setShowUpdate] = useState<boolean>(false)
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
     useEffect(() => {
-        if (!socket) {
-            setSocket(new WebSocket(`${isDev()}/ws`))
-        } else {
+        if (socket) {
             socket.addEventListener('message', (payload: any) => {
                 const data = JSON.parse(payload.data)
                 if (!data['type']) {

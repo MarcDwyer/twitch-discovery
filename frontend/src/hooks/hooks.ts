@@ -15,8 +15,7 @@ export const useTimer = (futureTime: number): ITimer => {
 
     useEffect(() => {
         let interval;
-        clearInterval(interval)
-        //@ts-ignore
+
         const getTime = () => {
             const now = new Date().getTime()
             if (now >= futureTime) {
@@ -32,22 +31,23 @@ export const useTimer = (futureTime: number): ITimer => {
             setTimer({ hours, minutes, seconds })
         }
         getTime()
+     
         interval = setInterval(getTime, 1000)
-        return () => clearInterval
+       
+        return function() {
+            clearInterval(interval)
+        }
     }, [futureTime])
 
     return [timer, waiting]
 }
 
 
-export const useSocket = (url: string): SocketIOClient.Socket | null => {
-    const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null)
+export const useSocket = (url: string): WebSocket | null => {
+    const [socket, setSocket] = useState<WebSocket | null>(null)
     useEffect(() => {
-        const socketRef = io(url)
-        setSocket(socketRef)
-
-        return function () {
-            socketRef.disconnect()
+        if (!socket) {
+            setSocket(new WebSocket(url))
         }
     }, [url])
     return socket

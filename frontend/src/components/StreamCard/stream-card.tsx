@@ -23,7 +23,6 @@ const StreamCard = React.memo((props: Props) => {
                     style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '3px solid grey' }}
                     onClick={(e) => {
                         if (!streamData) return
-                        console.log(streamData)
                         props.updateFeatured(streamData)
                     }}
                     src={channelData.logo} />
