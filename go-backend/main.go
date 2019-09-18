@@ -24,15 +24,17 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	var payload []byte
+
 	hub := newHub()
-	td := newTwitchData(hub)
+	td := newTwitchData(hub, &payload)
 
 	go hub.run()
 	go td.populateTwitchData()
 	go td.setTimers()
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r, td)
+		serveWs(hub, w, r, &payload)
 	})
 	mux.HandleFunc("/set-offset/", func(w http.ResponseWriter, r *http.Request) {
 		td.setOffset(w, r)

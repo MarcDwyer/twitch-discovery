@@ -14,7 +14,8 @@ type TwitchData struct {
 	Online      *[]TStreams `json:"online,omitempty"`
 	Diagnostic  Diag        `json:"diagnostic,omitempty"`
 	Hub         *Hub        `json:",omitempty"`
-	MyTimers    *IMyTimers  `json:",omitempty"`
+	MyTimers    *IMyTimers  `json:",omitempty"	`
+	Payload     *[]byte     `json:",omitempty"`
 }
 type IMyTimers struct {
 	RefreshTimer    *SubTimer
@@ -25,9 +26,10 @@ type SubTimer struct {
 	timer  *time.Timer
 }
 
-func newTwitchData(hub *Hub) *TwitchData {
+func newTwitchData(hub *Hub, payload *[]byte) *TwitchData {
 	return &TwitchData{
-		Hub: hub,
+		Hub:     hub,
+		Payload: payload,
 	}
 }
 
@@ -71,11 +73,8 @@ func (tData *TwitchData) populateTwitchData() {
 		go resetTimer(tData.MyTimers.RefreshTimer)
 	}
 
-	payload, err := json.Marshal(tData.givePayload())
-	if err != nil {
-		log.Fatal(err)
-	}
-	tData.Hub.broadcast <- payload
+	tData.setPayload()
+	tData.Hub.broadcast <- *tData.Payload
 }
 
 func (tData *TwitchData) refreshStreams() {
@@ -93,14 +92,14 @@ func (tData *TwitchData) refreshStreams() {
 		newStream := Stream{
 			StreamName:  v.StreamName,
 			ChannelData: v.ChannelData,
-			Stream:      &stream.Stream,
+			Stream:      stream.Stream,
 			ID:          v.ID,
 		}
 		newStreamers = append(newStreamers, newStream)
 	}
-	tData.StreamData = &newStreamers
-	tData.Online = filterLive(newStreamers)
-
+	*tData.StreamData = newStreamers
+	*tData.Online = filterLive(newStreamers)
+	go tData.setPayload()
 	payload := &Payload2{
 		Online:     *tData.Online,
 		StreamData: *tData.StreamData,
@@ -110,9 +109,17 @@ func (tData *TwitchData) refreshStreams() {
 	tData.Hub.broadcast <- res
 }
 
-func (tData *TwitchData) givePayload() TwitchData {
+func givePayload(tData *TwitchData) TwitchData {
 	copy := *tData
 	copy.Hub = nil
 	copy.MyTimers = nil
+	copy.Payload = nil
 	return copy
+}
+
+func (tData *TwitchData) setPayload() {
+	trimmedData := givePayload(tData)
+	rs, _ := json.Marshal(trimmedData)
+
+	*tData.Payload = rs
 }

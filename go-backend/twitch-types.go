@@ -7,7 +7,7 @@ type TResponse struct {
 	Streams []TStreams `json:"streams"`
 }
 type SingleResponse struct {
-	Stream TStreams `json:"stream"`
+	Stream *TStreams `json:"stream"`
 }
 type TStreams struct {
 	ID         int64     `json:"_id"`

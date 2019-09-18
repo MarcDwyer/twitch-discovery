@@ -14,12 +14,12 @@ func structureStreams(s []TStreams) *[]Stream {
 	return &structuredStreams
 }
 
-func filterLive(s []Stream) *[]TStreams {
+func filterLive(s []Stream) []TStreams {
 	liveStreams := []TStreams{}
 	for _, v := range s {
 		if v.Stream != nil {
 			liveStreams = append(liveStreams, *v.Stream)
 		}
 	}
-	return &liveStreams
+	return liveStreams
 }

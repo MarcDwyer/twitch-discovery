@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
-import { useSocket } from '../../hooks/hooks'
 
 import {
     appReducer, APP_INIT, APP_UPDATE
@@ -40,16 +39,15 @@ export type Featured = {
     index: number;
 }
 
-const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5005` : document.location.hostname
+const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5010` : document.location.hostname
 
 const Main = () => {
-    const [socket, setSocket] = useState<WebSocket>(new WebSocket(`ws://localhost:5010/ws`))
+    const [socket, setSocket] = useState<WebSocket>(new WebSocket(`ws://${isDev()}/ws`))
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
     useEffect(() => {
         socket.addEventListener('message', (payload: any) => {
             const data = JSON.parse(payload.data)
-            console.log(data)
             if (!data['type']) {
                 dispatchApp({ type: APP_INIT, payload: data })
                 return
