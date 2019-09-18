@@ -1,7 +1,8 @@
 import React from 'react'
 import { IDiag } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
-import { FaHamburger, FaGithub } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
+import { MdClose } from 'react-icons/md'
 import { ITimer, usePercentage } from '../../hooks/hooks'
 import { SubStream } from '../../data_types/data_types';
 
@@ -14,6 +15,7 @@ interface Props {
     diagnostic: IDiag;
     time: ITimer;
     streams: SubStream[];
+    setShowDiag(boolean): void;
 }
 const Diag = (props: Props) => {
     const { total, offset, skippedOver } = props.diagnostic
@@ -31,6 +33,9 @@ const Diag = (props: Props) => {
     return (
         <React.Fragment>
             <animated.div className="innertext" style={diagAnim}>
+                <MdClose 
+                onClick={() => props.setShowDiag(false)}
+                />
                 <h2>Twitch Data</h2>
                 <span className="top">
                     Top {top} of streamers

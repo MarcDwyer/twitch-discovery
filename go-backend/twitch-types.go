@@ -58,12 +58,10 @@ type Diag struct {
 	Offset      float64 `json:"offset"`
 	Total       int     `json:"total"`
 }
-type TwitchData struct {
-	StreamData  *[]Stream   `json:"streams,omitempty"`
-	NextRefresh int64       `json:"nextRefresh,omitempty"`
-	Online      *[]TStreams `json:"online,omitempty"`
-	Diagnostic  Diag        `json:"diagnostic,omitempty"`
-	Hub         *Hub        `json:",omitempty"`
+
+type Times struct {
+	refreshTime    int64
+	newStreamsTime int64
 }
 type Payload1 struct {
 	Data TwitchData `json:"data"`

@@ -1,5 +1,5 @@
 .offset {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
     padding: 15px 15px;
@@ -56,5 +56,17 @@
         color: #eee;
         text-decoration: none;
         border: solid 1px #eee;
+    }
+    @media (max-width: 850px) {
+        width: 90vw;
+
+        .inner-offset {
+            width: 90%;
+        
+            span, input {
+                margin: 0;
+            }
+        }
+
     }
 }

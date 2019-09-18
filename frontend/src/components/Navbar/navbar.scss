@@ -2,25 +2,25 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    z-index: 999;
+    width: 100vw;
     height: 60px;
     background-color: hsl(0, 0, 15%);
     display: flex;
     border-bottom: 1px solid black;
+    transition: background-color .75s ease;
+    z-index: 1003;
 
     .offset-trigger {
         cursor: pointer;
         font-size: 32px;
-        margin: auto 25px auto auto;
+        margin: auto 10px auto auto;
     }
 
-    
+}
+
 .show-diag {
-    margin: auto auto auto 15px;
+    margin: auto auto auto 10px;
     font-size: 33px;
-    z-index: 2000;
     color: #eee;
     cursor: pointer;
-}
 }

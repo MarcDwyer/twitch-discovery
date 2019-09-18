@@ -22,13 +22,14 @@ const Navbar = React.memo((props: Props) => {
     const time = useTimer(appData.nextRefresh)
 
     return (
-        <div className="navbar">
+        <div className="navbar"
+        >
             <FaHamburger
                 className="show-diag"
                 onClick={() => setShowDiag(!showDiag)}
             />
             <Modal
-                children={<Diagnostic streams={appData.online} diagnostic={appData.diagnostic} time={time} showDiag={showDiag} />}
+                children={<Diagnostic streams={appData.online} diagnostic={appData.diagnostic} time={time} showDiag={showDiag} setShowDiag={setShowDiag} />}
                 shouldOpen={showDiag}
                 close={setShowDiag}
             />

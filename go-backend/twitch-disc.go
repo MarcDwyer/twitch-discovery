@@ -8,6 +8,23 @@ import (
 	"time"
 )
 
+type TwitchData struct {
+	StreamData  *[]Stream   `json:"streams,omitempty"`
+	NextRefresh int64       `json:"nextRefresh,omitempty"`
+	Online      *[]TStreams `json:"online,omitempty"`
+	Diagnostic  Diag        `json:"diagnostic,omitempty"`
+	Hub         *Hub        `json:",omitempty"`
+	MyTimers    *IMyTimers  `json:",omitempty"`
+}
+type IMyTimers struct {
+	RefreshTimer    *SubTimer
+	NewStreamsTimer *SubTimer
+}
+type SubTimer struct {
+	myTime int64
+	timer  *time.Timer
+}
+
 func newTwitchData(hub *Hub) *TwitchData {
 	return &TwitchData{
 		Hub: hub,
@@ -32,12 +49,6 @@ func (tData *TwitchData) getDiagData() {
 	tData.Diagnostic = newDiag
 }
 
-func getTime() int64 {
-	nowTime := time.Now().Add(time.Minute * time.Duration(newStreams))
-	now := nowTime.UnixNano() / int64(time.Millisecond)
-	return now
-}
-
 func (tData *TwitchData) getNewStreams() {
 	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=10&offset=%d&language=en", tData.Diagnostic.SkippedOver)
 	streamBytes, err := fetchTwitch(url)
@@ -49,12 +60,16 @@ func (tData *TwitchData) getNewStreams() {
 
 	tData.StreamData = structureStreams(streamers.Streams)
 	tData.Online = &streamers.Streams
-	tData.NextRefresh = getTime()
 }
 
 func (tData *TwitchData) populateTwitchData() {
 	tData.getDiagData()
 	tData.getNewStreams()
+	tData.NextRefresh = getTime(tData.MyTimers.NewStreamsTimer.myTime)
+	if tData.StreamData != nil {
+		go resetTimer(tData.MyTimers.NewStreamsTimer)
+		go resetTimer(tData.MyTimers.RefreshTimer)
+	}
 
 	payload, err := json.Marshal(tData.givePayload())
 	if err != nil {
@@ -98,5 +113,6 @@ func (tData *TwitchData) refreshStreams() {
 func (tData *TwitchData) givePayload() TwitchData {
 	copy := *tData
 	copy.Hub = nil
+	copy.MyTimers = nil
 	return copy
 }
