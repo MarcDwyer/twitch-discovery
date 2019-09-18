@@ -9,7 +9,7 @@ func (tData *TwitchData) setTimers() {
 	myTimers := &IMyTimers{
 		RefreshTimer: &SubTimer{
 			timer:  nil,
-			myTime: int64(2),
+			myTime: int64(6),
 		},
 		NewStreamsTimer: &SubTimer{
 			timer:  nil,
