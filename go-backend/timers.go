@@ -13,7 +13,7 @@ func (tData *TwitchData) setTimers() {
 		},
 		NewStreamsTimer: &SubTimer{
 			timer:  nil,
-			myTime: int64(1),
+			myTime: int64(33),
 		},
 	}
 
