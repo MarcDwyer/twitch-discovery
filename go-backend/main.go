@@ -24,13 +24,20 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	// TwitchData converted to bytes
 	var payload []byte
 
+	// Create webscoket hub
 	hub := newHub()
+	// create new instance of TwitchData and pass hub & payload to broadcast to clients
 	td := newTwitchData(hub, &payload)
 
 	go hub.run()
+
+	// build up the TwitchData
 	go td.populateTwitchData()
+
+	//Sets timers to update data
 	go td.setTimers()
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
