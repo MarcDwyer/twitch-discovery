@@ -39,10 +39,10 @@ export type Featured = {
     index: number;
 }
 
-const isDev = (): string => document.location.hostname.startsWith('local') ? `${document.location.hostname}:5010` : document.location.hostname
+const isDev = (): string => document.location.hostname.startsWith('local') ? `ws://${document.location.hostname}:5010` : `wss://${document.location.hostname}`
 
 const Main = () => {
-    const [socket, setSocket] = useState<WebSocket>(new WebSocket(`ws://${isDev()}/ws`))
+    const [socket, setSocket] = useState<WebSocket>(new WebSocket(`${isDev()}/ws`))
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
     useEffect(() => {
