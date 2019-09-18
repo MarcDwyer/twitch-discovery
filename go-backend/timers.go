@@ -30,9 +30,9 @@ func (tData *TwitchData) timeListener() {
 		case <-tData.MyTimers.NewStreamsTimer.timer.C:
 			fmt.Println("newstreams timer ran...")
 			go tData.populateTwitchData()
-
 		case <-tData.MyTimers.RefreshTimer.timer.C:
 			fmt.Println("refresh timer ran...")
+			resetTimer(tData.MyTimers.RefreshTimer)
 			go tData.refreshStreams()
 		}
 	}
