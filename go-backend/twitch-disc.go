@@ -14,7 +14,7 @@ type TwitchData struct {
 	Online      *[]TStreams `json:"online,omitempty"`
 	Diagnostic  Diag        `json:"diagnostic,omitempty"`
 	Hub         *Hub        `json:",omitempty"`
-	MyTimers    *IMyTimers  `json:",omitempty"	`
+	MyTimers    *IMyTimers  `json:",omitempty"`
 	Payload     *[]byte     `json:",omitempty"`
 }
 type IMyTimers struct {
