@@ -35,6 +35,7 @@ export const useTimer = (futureTime: number): ITimer => {
         interval = setInterval(getTime, 1000)
        
         return function() {
+            setWaiting(false)
             clearInterval(interval)
         }
     }, [futureTime])

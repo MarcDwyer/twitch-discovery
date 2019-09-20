@@ -19,8 +19,6 @@ func init() {
 }
 
 func main() {
-	fmt.Println("this ran...")
-
 	mux := http.NewServeMux()
 
 	// TwitchData converted to bytes
