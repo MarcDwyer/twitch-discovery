@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"runtime"
 
-	"github.com/rs/cors"
-
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func init() {
