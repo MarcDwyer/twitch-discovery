@@ -60,7 +60,7 @@ const StreamCard = React.memo((props: Props) => {
                 rel="noopener noreferrer"
             >
                 <FaTwitch
-                    style={streamData ? { color: twitchColor } : { color: '#eee' }}
+                    style={{ color: twitchColor }}
                 />
             </a>
         </div>
