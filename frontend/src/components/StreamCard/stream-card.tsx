@@ -14,12 +14,19 @@ const twitchColor = "#6441A5"
 // HUGE BUG,
 // Index being passed here does not reflect the index of the online array
 
+
+
 const StreamCard = React.memo((props: Props) => {
     const { streamData, channelData } = props.streamer
+
     return (
         <div className="stream-card">
             <div className="background-image"
-            style={{backgroundImage: `url(${channelData.profile_banner})`, backgroundColor: `${channelData.profile_banner_background_color}`}}
+                style={channelData.profile_banner.length >= 1 ?
+                    { backgroundImage: `url(${channelData.profile_banner})`, backgroundColor: `${channelData.profile_banner_background_color}` }
+                    :
+                    {backgroundColor: '#eee'}
+            }
             >
             </div>
             <div className="center">
