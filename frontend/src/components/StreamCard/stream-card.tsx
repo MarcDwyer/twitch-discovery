@@ -18,6 +18,10 @@ const StreamCard = React.memo((props: Props) => {
     const { streamData, channelData } = props.streamer
     return (
         <div className="stream-card">
+            <div className="background-image"
+            style={{backgroundImage: `url(${channelData.profile_banner})`, backgroundColor: `${channelData.profile_banner_background_color}`}}
+            >
+            </div>
             <div className="center">
                 <img
                     style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '3px solid grey' }}
