@@ -1,9 +1,10 @@
 import React from 'react'
 import { FaTwitch } from 'react-icons/fa'
 import { IStreamers } from '../Main/main';
+import { SubStream } from '../../data_types/data_types';
 
 import './stream-card.scss'
-import { SubStream } from '../../data_types/data_types';
+
 
 interface Props {
     streamer: IStreamers;
@@ -25,8 +26,8 @@ const StreamCard = React.memo((props: Props) => {
                 style={channelData.profile_banner.length >= 1 ?
                     { backgroundImage: `url(${channelData.profile_banner})`, backgroundColor: `${channelData.profile_banner_background_color}` }
                     :
-                    {backgroundColor: '#eee'}
-            }
+                    { backgroundColor: '#eee' }
+                }
             >
             </div>
             <div className="center">
