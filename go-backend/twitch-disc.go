@@ -9,13 +9,12 @@ import (
 )
 
 type TwitchData struct {
-	StreamData  *[]Stream   `json:"streams,omitempty"`
-	NextRefresh int64       `json:"nextRefresh,omitempty"`
-	Online      *[]TStreams `json:"online,omitempty"`
-	Diagnostic  Diag        `json:"diagnostic,omitempty"`
-	Hub         *Hub        `json:",omitempty"`
-	MyTimers    *IMyTimers  `json:",omitempty"`
-	Payload     *[]byte     `json:",omitempty"`
+	StreamData  map[string]Stream `json:"streams,omitempty"`
+	NextRefresh int64             `json:"nextRefresh,omitempty"`
+	Diagnostic  Diag              `json:"diagnostic,omitempty"`
+	Hub         *Hub              `json:",omitempty"`
+	MyTimers    *IMyTimers        `json:",omitempty"`
+	Payload     *[]byte           `json:",omitempty"`
 }
 type IMyTimers struct {
 	RefreshTimer    *SubTimer
@@ -61,7 +60,6 @@ func (tData *TwitchData) getNewStreams() {
 	json.Unmarshal(streamBytes, &streamers)
 
 	tData.StreamData = structureStreams(streamers.Streams)
-	tData.Online = &streamers.Streams
 }
 
 func (tData *TwitchData) populateTwitchData() {
@@ -78,9 +76,8 @@ func (tData *TwitchData) populateTwitchData() {
 }
 
 func (tData *TwitchData) refreshStreams() {
-	newStreamers := []Stream{}
 	fmt.Println("refresh ran")
-	for _, v := range *tData.StreamData {
+	for key, v := range tData.StreamData {
 		url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/%v", v.ID)
 		data, err := fetchTwitch(url)
 		if err != nil {
@@ -89,20 +86,14 @@ func (tData *TwitchData) refreshStreams() {
 		var stream SingleResponse
 		json.Unmarshal(data, &stream)
 
-		newStream := Stream{
-			StreamName:  v.StreamName,
-			ChannelData: v.ChannelData,
-			Stream:      stream.Stream,
-			ID:          v.ID,
+		if val, ok := tData.StreamData[key]; ok {
+			val.Stream = stream.Stream
+			tData.StreamData[key] = val
 		}
-		newStreamers = append(newStreamers, newStream)
 	}
-	*tData.StreamData = newStreamers
-	*tData.Online = filterLive(newStreamers)
 	go tData.setPayload()
 	payload := &Payload2{
-		Online:     *tData.Online,
-		StreamData: *tData.StreamData,
+		StreamData: tData.StreamData,
 		Type:       "updated-data",
 	}
 	res, _ := json.Marshal(payload)

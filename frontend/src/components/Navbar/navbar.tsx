@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { Payload } from '../Main/main'
-import Timer from '../Timer/timer'
-import Diagnostic from '../Diagnostic/diag'
 import { useTimer } from '../../hooks/hooks'
 import { FaMoon, FaHamburger } from 'react-icons/fa'
+import { SubStream } from '../../data_types/data_types';
 
 import Modal from '../Modal/modal'
 import CreateOffset from '../Offset-Change/change-offset'
+import Timer from '../Timer/timer'
+import Diagnostic from '../Diagnostic/diag'
 
 import './navbar.scss'
+
 interface Props {
     appData: Payload;
+    view: SubStream;
 }
 
 
@@ -33,9 +36,15 @@ const Navbar = React.memo((props: Props) => {
                 shouldOpen={showDiag}
                 close={setShowDiag}
             />
-            <Timer time={time} />
+            <div className="timer-or-viewing">
+                {props.view ? (
+                        <span>Viewing {props.view.channel.name}</span>
+                ) : (
+                        <Timer time={time} />
+                    )}
+            </div>
             <FaMoon
-                className="offset-trigger"
+                className="offset-trigger buttons"
                 onClick={() => setShowOffset(!showOffset)}
             />
             <Modal

@@ -1,25 +1,25 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks';
+import { useTransition, animated } from 'react-spring'
 import {
     appReducer, APP_INIT, APP_UPDATE
 } from '../../reducers/reducer'
 
 import StreamerGrid from '../Streamer-Grid/stream-grid'
-import Featured from '../Featured/featured'
 import Navbar from '../Navbar/navbar'
-
+import ViewStream from '../View-Stream/view_stream'
 
 import './main.scss'
 
 
 export type Payload = {
     nextRefresh: number;
-    streams: IStreamers[];
+    streams: StructureStreams;
     diagnostic: IDiag;
     online: SubStream[];
-    featured: Featured;
+    view: SubStream | null;
 }
 export type IStreamers = {
     streamData: SubStream | null;
@@ -35,17 +35,18 @@ export type IDiag = {
     total: number;
     skippedOver: number;
 }
-export type Featured = {
-    stream: SubStream | null;
-    index: number;
-}
+
 const isDev = (): string => document.location.hostname.startsWith('local') ? `ws://${document.location.hostname}:5010/ws` : `wss://${document.location.hostname}/ws`
 
 const Main = () => {
     const socket = useSocket(isDev())
-    const [showUpdate, setShowUpdate] = useState<boolean>(false)
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
+    const transitions = useTransition(appData, null, {
+        from: { opacity: 0, height: 'auto', border: 'solid 5px green' },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+    })
     useEffect(() => {
         if (socket) {
             socket.addEventListener('message', (payload: any) => {
@@ -65,11 +66,11 @@ const Main = () => {
         <div className="main">
             {appData && (
                 <div className="loaded">
-                    <Navbar appData={appData} />
-                    {appData.featured.stream && (
-                        <Featured featured={appData.featured.stream} dispatchApp={dispatchApp} />
-                    )}
+                    <Navbar appData={appData} view={appData.view} />
                     <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
+                    {appData && appData.view && (
+                        <ViewStream stream={appData.view} dispatchApp={dispatchApp} />
+                    )}
                 </div>
             )}
             {!appData && (

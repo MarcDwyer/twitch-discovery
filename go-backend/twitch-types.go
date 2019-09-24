@@ -69,7 +69,6 @@ type Payload1 struct {
 }
 
 type Payload2 struct {
-	Online     []TStreams `json:"online"`
-	StreamData []Stream   `json:"streams"`
-	Type       string     `json:"type"`
+	StreamData map[string]Stream `json:"streams"`
+	Type       string            `json:"type"`
 }

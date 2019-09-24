@@ -22,14 +22,9 @@ const StreamCard = React.memo((props: Props) => {
 
     return (
         <div className="stream-card">
-            <div className="background-image"
-                style={channelData.profile_banner.length >= 1 ?
-                    { backgroundImage: `url(${channelData.profile_banner})`, backgroundColor: `${channelData.profile_banner_background_color}` }
-                    :
-                    { backgroundColor: '#eee' }
-                }
-            >
-            </div>
+            <div className="center-image"
+                style={channelData.profile_banner.length > 0 ? { backgroundImage: `url(${channelData.profile_banner})` } : { backgroundColor: "#eee" }}
+            ></div>
             <div className="center">
                 <img
                     style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '3px solid grey' }}
@@ -64,6 +59,7 @@ const StreamCard = React.memo((props: Props) => {
                     style={{ color: twitchColor }}
                 />
             </a>
+
         </div>
     )
 })

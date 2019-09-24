@@ -1,7 +1,7 @@
 package main
 
-func structureStreams(s []TStreams) *[]Stream {
-	structuredStreams := []Stream{}
+func structureStreams(s []TStreams) map[string]Stream {
+	ss := make(map[string]Stream)
 	for i, v := range s {
 		stream := Stream{
 			StreamName:  v.Channel.Name,
@@ -9,17 +9,7 @@ func structureStreams(s []TStreams) *[]Stream {
 			ID:          v.Channel.ID,
 			Stream:      &s[i],
 		}
-		structuredStreams = append(structuredStreams, stream)
+		ss[v.Channel.Name] = stream
 	}
-	return &structuredStreams
-}
-
-func filterLive(s []Stream) []TStreams {
-	liveStreams := []TStreams{}
-	for _, v := range s {
-		if v.Stream != nil {
-			liveStreams = append(liveStreams, *v.Stream)
-		}
-	}
-	return liveStreams
+	return ss
 }

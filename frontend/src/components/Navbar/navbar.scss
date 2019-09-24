@@ -4,16 +4,23 @@
     left: 0;
     width: 100vw;
     height: 60px;
-    background-color: hsl(0, 0, 20%);
+    background-color: hsl(0, 0, 15%);
     display: flex;
     border-bottom: 1px solid black;
     transition: background-color .75s ease;
     z-index: 1003;
+    display: flex;
 
-    .offset-trigger {
-        cursor: pointer;
-        font-size: 32px;
-        margin: auto 10px auto auto;
+}
+
+.buttons {
+    margin: auto 10px auto auto;
+    display: flex;
+    font-size: 32px;
+    text-align: center;
+    
+    & * {
+        margin: auto;
     }
 
 }
@@ -23,4 +30,19 @@
     font-size: 33px;
     color: #eee;
     cursor: pointer;
+}
+
+.timer-or-viewing {
+    display: flex;
+    text-align: center;
+    margin: auto;
+
+    span {
+        color: hsl(0, 0, 85%);
+        font-size: 22px;
+    }
+
+    @media (max-width: 950px) {
+        display: none;
+    }
 }
