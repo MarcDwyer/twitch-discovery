@@ -2,7 +2,6 @@ import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks';
-import { useTransition, animated } from 'react-spring'
 import {
     appReducer, APP_INIT, APP_UPDATE
 } from '../../reducers/reducer'
@@ -42,11 +41,6 @@ const Main = () => {
     const socket = useSocket(isDev())
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
-    const transitions = useTransition(appData, null, {
-        from: { opacity: 0, height: 'auto', border: 'solid 5px green' },
-        enter: { opacity: 1 },
-        leave: { opacity: 0 },
-    })
     useEffect(() => {
         if (socket) {
             socket.addEventListener('message', (payload: any) => {
