@@ -6,9 +6,9 @@ Twitch Discovery pulls an array of livestreams from the Twitch API every 35 minu
 This allows you to discover new twitch streams and find out the percentage they fall in. The off-canvas menu also provides more data into the list of streamers it pulled. 
 
 ## Navigating
-..* ./go-backend - the Golang backend server
-..* ./node-backend - NodeJS backend server (No longer being updated)
-..* ./frontend - React
+* go-backend - the Golang backend server
+* node-backend - NodeJS backend server (No longer being updated)
+* frontend - React
 
 ## Use it yourself
 1. Clone the Repo
