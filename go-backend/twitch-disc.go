@@ -77,6 +77,7 @@ func (tData *TwitchData) populateTwitchData() {
 
 func (tData *TwitchData) refreshStreams() {
 	fmt.Println("refresh ran")
+	offlineCount := 0
 	for key, v := range tData.StreamData {
 		url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/%v", v.ID)
 		data, err := fetchTwitch(url)
@@ -89,7 +90,13 @@ func (tData *TwitchData) refreshStreams() {
 		if val, ok := tData.StreamData[key]; ok {
 			val.Stream = stream.Stream
 			tData.StreamData[key] = val
+		} else {
+			offlineCount++
 		}
+	}
+	if len(tData.StreamData) == offlineCount {
+		go tData.getNewStreams()
+		return
 	}
 	go tData.setPayload()
 	payload := &Payload2{
