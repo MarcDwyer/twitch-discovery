@@ -15,7 +15,7 @@ const ViewStream = (props: Props) => {
 
 
     const anim = useSpring({
-        from: {opacity: 0},
+        from: { opacity: 0 },
         opacity: 1,
     })
     const handleExit = useCallback((e: KeyboardEvent) => {
@@ -37,7 +37,7 @@ const ViewStream = (props: Props) => {
 
     return (
         <animated.div className="view-stream"
-        style={anim}
+            style={anim}
         >
             <div className="video">
                 <div className="sub-video">
@@ -49,6 +49,7 @@ const ViewStream = (props: Props) => {
                     {showVideo && (
                         <iframe allowFullScreen={true} src={`https://player.twitch.tv/?channel=${stream.channel.display_name}&autoplay=true`} frameBorder="0" />
                     )}
+                    <span className="viewer-count">{stream.viewers} viewers</span>
                 </div>
                 <a
                     target="_blank"

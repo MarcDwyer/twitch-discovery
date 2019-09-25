@@ -20,7 +20,11 @@ export function appReducer(state: Payload | null, { type, payload }: { type: str
         case APP_UPDATE:
             const { streams } = payload
             const newOnline = getOnline(streams)
-            return { ...state, streams, online: newOnline }
+            let view = state.view
+            if (view && !payload.streams[view.channel.name].streamData) {
+                view = newOnline[0]
+            }
+            return { ...state, streams, online: newOnline, view }
         case SET_VIEW:
             return { ...state, view: payload }
         case REMOVE_VIEW:

@@ -38,7 +38,7 @@ const Navbar = React.memo((props: Props) => {
             />
             <div className="timer-or-viewing">
                 {props.view ? (
-                        <span>Viewing {props.view.channel.name}</span>
+                        <span>Currently viewing {props.view.channel.name}</span>
                 ) : (
                         <Timer time={time} />
                     )}
