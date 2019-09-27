@@ -10,7 +10,7 @@ interface Props {
     streamer: IStreamers;
     updateFeatured(feat: SubStream): void;
 }
-const twitchColor = "#6441A5"
+const twitchColor = "#9147ff"
 // TODO 
 // HUGE BUG,
 // Index being passed here does not reflect the index of the online array
@@ -21,17 +21,19 @@ const StreamCard = React.memo((props: Props) => {
     const { streamData, channelData } = props.streamer
 
     return (
-        <div className="stream-card">
+        <div
+            className="stream-card"
+            onClick={(e) => {
+                if (!streamData) return
+                props.updateFeatured(streamData)
+            }}
+        >
             <div className="center-image"
                 style={channelData.profile_banner.length > 0 ? { backgroundImage: `url(${channelData.profile_banner})` } : { backgroundColor: "#eee" }}
             ></div>
             <div className="center">
                 <img
-                    style={streamData ? { border: `3px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '3px solid grey' }}
-                    onClick={(e) => {
-                        if (!streamData) return
-                        props.updateFeatured(streamData)
-                    }}
+                    style={streamData ? { border: `4px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '4px solid grey' }}
                     src={channelData.logo} />
                 <div className="text-info">
                     <span>{channelData.display_name}</span>
@@ -50,16 +52,8 @@ const StreamCard = React.memo((props: Props) => {
                     )}
                 </div>
             </div>
-            <a
-                href={channelData.url}
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <FaTwitch
-                    style={{ color: twitchColor }}
-                />
-            </a>
-
+            <FaTwitch
+            />
         </div>
     )
 })

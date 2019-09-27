@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useCallback } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks';
@@ -41,6 +41,7 @@ const Main = () => {
     const socket = useSocket(isDev())
     const [appData, dispatchApp] = useReducer(appReducer, null)
 
+    // Handles websocket messages
     useEffect(() => {
         if (socket) {
             socket.addEventListener('message', (payload: any) => {
@@ -56,7 +57,7 @@ const Main = () => {
             })
         }
     }, [socket])
-
+    // Sets View to null if escape key is pressed
     const removeView = (e: KeyboardEvent) => {
         if (!appData || appData && !appData.view || e.keyCode !== 27) return
         dispatchApp({ type: REMOVE_VIEW, payload: null })
