@@ -1,28 +1,28 @@
     .video {
-        width: 85%;
-        display: flex;
-        flex-direction: column;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
         position: absolute;
+        display: flex;
+        background-color: hsl(0, 0, 20%);
 
-        
         .sub-video {
+            width: 85%;
             height: 100%;
             position: relative;
+            display: flex;
+            flex-direction: column;
 
-            iframe {
-                width: 100%;
+            .video-container {
                 height: 100%;
-            }
+                width: 100%;
+                display: flex;
 
-            .viewer-count {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                padding: 10px 10px;
-                border-radius: 5px;
-                width: 275px;
-                text-align: center;
-                background-color: rgba(0, 0, 0, 1);
+                iframe {
+                    height: auto;
+                    width: 100%;
+                }
             }
 
             .close-div {
@@ -33,6 +33,7 @@
                 right: 0;
                 cursor: pointer;
                 padding: 5px 10px 5px 10px;
+                z-index: 1005;
 
                 svg {
                     font-size: 46px;
@@ -43,17 +44,28 @@
                     background-color: rgba(255, 0, 0, .9)
                 }
             }
-        }
 
-        @media (max-width: 1000px) {
-            width: 100%;
+            .viewer-count {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                padding: 10px 10px;
+                border-radius: 5px;
+                text-align: center;
+                background-color: transparent;
+            }
+
+            @media(max-width: 1000px) {
+                width: 100%;
+            }
         }
     }
 
     .chat {
         width: 15%;
         height: 100%;
-
+        position: relative;
 
         iframe {
             background-color: transparent;

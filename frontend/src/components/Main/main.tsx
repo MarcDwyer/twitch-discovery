@@ -1,9 +1,9 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useCallback } from 'react'
 import { BounceLoader } from 'react-spinners'
 import { Channel, SubStream } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks';
 import {
-    appReducer, APP_INIT, APP_UPDATE
+    appReducer, APP_INIT, APP_UPDATE, REMOVE_VIEW
 } from '../../reducers/reducer'
 
 import StreamerGrid from '../Streamer-Grid/stream-grid'
@@ -56,6 +56,19 @@ const Main = () => {
             })
         }
     }, [socket])
+
+    const removeView = (e: KeyboardEvent) => {
+        if (!appData || appData && !appData.view || e.keyCode !== 27) return
+        dispatchApp({ type: REMOVE_VIEW, payload: null })
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', removeView)
+
+        return function () {
+            document.removeEventListener('keydown', removeView)
+        }
+    }, [appData])
     return (
         <div className="main">
             {appData && (
