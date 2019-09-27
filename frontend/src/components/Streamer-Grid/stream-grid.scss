@@ -24,4 +24,8 @@
             width: 100%;
         }
     }
+
+    @media(max-height: 1680px) {
+        margin-top: 75px;
+    }
 }

@@ -62,9 +62,7 @@ const Main = () => {
                 <div className="loaded">
                     <Navbar appData={appData} view={appData.view} />
                     <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
-                    {appData && appData.view && (
-                        <ViewStream stream={appData.view} dispatchApp={dispatchApp} />
-                    )}
+                    <ViewStream stream={appData.view} dispatchApp={dispatchApp} />
                 </div>
             )}
             {!appData && (
