@@ -13,34 +13,32 @@ import './navbar.scss'
 
 interface Props {
     appData: Payload;
-    view: SubStream;
+    view: SubStream | null;
 }
 
 
 
 const Navbar = React.memo((props: Props) => {
-    const { appData } = props
     const [showOffset, setShowOffset] = useState<boolean>(false)
     const [showDiag, setShowDiag] = useState<boolean>(false)
-    const time = useTimer(appData.nextRefresh)
-
     return (
         <div className="navbar"
+            style={props.view ? { backgroundColor: 'black' } : { backgroundColor: '#262626' }}
         >
             <FaHamburger
                 className="show-diag"
                 onClick={() => setShowDiag(!showDiag)}
             />
             <Modal
-                children={<Diagnostic streams={appData.online} diagnostic={appData.diagnostic} time={time} showDiag={showDiag} setShowDiag={setShowDiag} />}
+                children={<Diagnostic appData={props.appData}  showDiag={showDiag} setShowDiag={setShowDiag} />}
                 shouldOpen={showDiag}
                 close={setShowDiag}
             />
             <div className="timer-or-viewing">
                 {props.view ? (
-                        <span>Currently viewing {props.view.channel.name}</span>
+                    <span>Currently viewing {props.view.channel.name}</span>
                 ) : (
-                        <Timer time={time} />
+                        <Timer nextRefresh={props.appData.nextRefresh} />
                     )}
             </div>
             <FaMoon

@@ -1,10 +1,10 @@
 import React from 'react'
-import { IDiag } from '../Main/main'
+import { Payload } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaGithub } from 'react-icons/fa'
 import { MdClose } from 'react-icons/md'
-import { ITimer, usePercentage } from '../../hooks/hooks'
-import { SubStream } from '../../data_types/data_types';
+import { usePercentage, useTimer } from '../../hooks/hooks'
+
 
 
 import './diag.scss'
@@ -12,29 +12,26 @@ import './diag.scss'
 
 interface Props {
     showDiag: boolean;
-    diagnostic: IDiag;
-    time: ITimer;
-    streams: SubStream[];
+    appData: Payload;
     setShowDiag(boolean): void;
 }
 const Diag = (props: Props) => {
-    const { total, offset, skippedOver } = props.diagnostic
-    const [time, waiting] = props.time
-
+    const { total, offset, skippedOver } = props.appData.diagnostic
+    const [timer, waiting] = useTimer(props.appData.nextRefresh)
     const diagAnim = useSpring({
         opacity: 1,
         transform: 'translateX(0)',
         from: { opacity: 0, transform: 'translateX(-100%)' },
         reverse: !props.showDiag
     })
-    const average = Math.round(props.streams.reduce((num, stream) => num += stream.viewers, 0) / props.streams.length)
+    const average = Math.round(props.appData.streams.reduce((num, stream) => num += stream.viewers, 0) / props.appData.streams.length)
     const top = usePercentage(offset)
 
     return (
         <React.Fragment>
             <animated.div className="innertext" style={diagAnim}>
-                <MdClose 
-                onClick={() => props.setShowDiag(false)}
+                <MdClose
+                    onClick={() => props.setShowDiag(false)}
                 />
                 <h2>Twitch Data</h2>
                 <span className="top">
@@ -44,8 +41,8 @@ const Diag = (props: Props) => {
                 <span>Average viewership: {average}</span>
                 <span>Skipped over streams: {skippedOver}</span>
                 <span>Streamers left: {total - skippedOver}</span>
-                {time && (
-                    <span>{`Next refresh: ${time.hours}:${time.minutes}:${time.seconds}`}</span>
+                {timer && (
+                    <span>{`Next refresh: ${timer.hours}:${timer.minutes}:${timer.seconds}`}</span>
                 )}
                 <div className="links">
                     <a

@@ -11,7 +11,7 @@ type SingleResponse struct {
 }
 type TStreams struct {
 	ID         int64     `json:"_id"`
-	AverageFps int       `json:"average_fps"`
+	AverageFps float64   `json:"average_fps"`
 	Channel    TChannel  `json:"channel"`
 	CreatedAt  time.Time `json:"created_at"`
 	Delay      int       `json:"delay"`
@@ -69,6 +69,6 @@ type Payload1 struct {
 }
 
 type Payload2 struct {
-	StreamData map[string]Stream `json:"streams"`
-	Type       string            `json:"type"`
+	StreamData []TStreams `json:"streams"`
+	Type       string     `json:"type"`
 }

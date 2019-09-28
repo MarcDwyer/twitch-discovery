@@ -1,14 +1,15 @@
 import React, { useCallback } from 'react'
-import { IDiag, StructureStreams } from '../Main/main';
+import { IDiag } from '../Main/main';
 import { SET_VIEW } from '../../reducers/reducer'
 import { usePercentage } from '../../hooks/hooks'
 import StreamCard from '../StreamCard/stream-card'
 
 import './stream-grid.scss'
+
 import { SubStream } from '../../data_types/data_types';
 
 interface Props {
-    streams: StructureStreams;
+    streams: SubStream[];
     diag: IDiag;
     dispatchApp: Function;
 }
@@ -25,8 +26,8 @@ const StreamerGrid = (props: Props) => {
                 {`Top ${top} of streamers`}
             </h1>
             <div className="streamer-grid">
-                {Object.values(props.streams).map((stream) => (
-                    <StreamCard streamer={stream} key={stream.id} updateFeatured={updateFeatured} />
+                {props.streams.map((stream) => (
+                    <StreamCard streamer={stream} key={stream._id} updateFeatured={updateFeatured} />
                 ))}
             </div>
         </div>

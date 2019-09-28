@@ -1,15 +1,11 @@
 package main
 
-func structureStreams(s []TStreams) map[string]Stream {
-	ss := make(map[string]Stream)
-	for i, v := range s {
-		stream := Stream{
-			StreamName:  v.Channel.Name,
-			ChannelData: v.Channel,
-			ID:          v.Channel.ID,
-			Stream:      &s[i],
+func checkLive(streams []*TStreams) []TStreams {
+	live := []TStreams{}
+	for _, v := range streams {
+		if v != nil {
+			live = append(live, *v)
 		}
-		ss[v.Channel.Name] = stream
 	}
-	return ss
+	return live
 }

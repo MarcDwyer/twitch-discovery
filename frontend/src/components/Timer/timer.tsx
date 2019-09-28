@@ -1,22 +1,22 @@
 import React from 'react'
-import { ITimer } from '../../hooks/hooks'
+import { useTimer } from '../../hooks/hooks'
 
 import './timer.scss'
 
 
 interface Props {
-    time: ITimer;
+    nextRefresh: number;
 }
 
 const Timer = (props: Props) => {
-    const [time, waiting] = props.time
+    const [timer, waiting] = useTimer(props.nextRefresh)
     return (
         <div className="timer-parent">
-            {time && (
+            {timer && (
                 <React.Fragment>
                     {!waiting ? (
                         <span>
-                            {`Next update in ${time.minutes} ${time.minutes <  2 ? 'minute' : 'minutes'} and ${time.seconds} seconds`}
+                            {`Next update in ${timer.minutes} ${timer.minutes <  2 ? 'minute' : 'minutes'} and ${timer.seconds} seconds`}
                         </span>
                     ) : (
                             <span>

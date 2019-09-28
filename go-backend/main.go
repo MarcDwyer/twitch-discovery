@@ -35,7 +35,7 @@ func main() {
 	go td.populateTwitchData()
 
 	//Sets timers to update data
-	go td.setTimers()
+	go td.setTimes()
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r, &payload)

@@ -27,7 +27,7 @@ const ViewStream = (props: Props) => {
                 if (props.stream) {
                     setShowVideo(true)
                 }
-            }, 1050)
+            }, 650)
         } else {
             setShowVideo(false)
         }

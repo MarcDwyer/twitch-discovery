@@ -1,13 +1,12 @@
 import React from 'react'
 import { FaTwitch } from 'react-icons/fa'
-import { IStreamers } from '../Main/main';
 import { SubStream } from '../../data_types/data_types';
 
 import './stream-card.scss'
 
 
 interface Props {
-    streamer: IStreamers;
+    streamer: SubStream;
     updateFeatured(feat: SubStream): void;
 }
 const twitchColor = "#9147ff"
@@ -18,38 +17,28 @@ const twitchColor = "#9147ff"
 
 
 const StreamCard = React.memo((props: Props) => {
-    const { streamData, channelData } = props.streamer
+    const { streamer } = props
 
     return (
         <div
             className="stream-card"
             onClick={(e) => {
-                if (!streamData) return
-                props.updateFeatured(streamData)
+                props.updateFeatured(streamer)
             }}
         >
             <div className="center-image"
-                style={channelData.profile_banner.length > 0 ? { backgroundImage: `url(${channelData.profile_banner})` } : { backgroundColor: "#eee" }}
+                style={streamer.channel.profile_banner.length > 0 ? { backgroundImage: `url(${streamer.channel.profile_banner})` } : { backgroundColor: "#eee" }}
             ></div>
             <div className="center">
                 <img
-                    style={streamData ? { border: `4px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` } : { border: '4px solid grey' }}
-                    src={channelData.logo} />
+                    style={{ border: `4px solid ${twitchColor}`, cursor: 'pointer', boxShadow: `15px ${twitchColor}` }}
+                    src={streamer.channel.logo} />
                 <div className="text-info">
-                    <span>{channelData.display_name}</span>
-                    {streamData && (
-                        <React.Fragment>
-                            <span>Online</span>
-                            <span>Is playing {streamData.game}</span>
-                            <span>{streamData.viewers} viewers</span>
-                        </React.Fragment>
-                    )}
-                    {!streamData && (
-                        <React.Fragment>
-                            <span>Offline</span>
-                            <span>was playing {channelData.game}</span>
-                        </React.Fragment>
-                    )}
+                    <span>{streamer.channel.display_name}</span>
+                    <React.Fragment>
+                        <span>Is playing {streamer.game}</span>
+                        <span>{streamer.viewers} viewers</span>
+                    </React.Fragment>
                 </div>
             </div>
             <FaTwitch

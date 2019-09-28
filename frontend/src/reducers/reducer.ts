@@ -1,5 +1,4 @@
-import { Payload, StructureStreams } from '../components/Main/main';
-import { SubStream } from '../data_types/data_types';
+import { Payload } from '../components/Main/main';
 
 
 export const INC_KEY = 'inc_key',
@@ -15,12 +14,10 @@ export const APP_INIT = 'appinitbro',
 export function appReducer(state: Payload | null, { type, payload }: { type: string, payload: any }): Payload | null {
     switch (type) {
         case APP_INIT:
-            const online = getOnline(payload.streams);
-            return { ...payload, online, view: state && state.view ? state.view : null }
+            return { ...payload, view: state && state.view ? state.view : null }
         case APP_UPDATE:
             const { streams } = payload
-            const newOnline = getOnline(streams)
-            return { ...state, streams, online: newOnline }
+            return { ...state, streams }
         case SET_VIEW:
             return { ...state, view: payload }
         case REMOVE_VIEW:
@@ -28,8 +25,4 @@ export function appReducer(state: Payload | null, { type, payload }: { type: str
         default:
             return state
     }
-}
-
-function getOnline(streams: StructureStreams): SubStream[] {
-    return Object.values(streams).filter(stream => stream.streamData).map(stream => stream.streamData)
 }
