@@ -64,11 +64,13 @@ const Main = () => {
     return (
         <div className="main">
             {appData && (
-                <div className="loaded">
+                <React.Fragment>
                     <Navbar appData={appData} view={appData.view} />
-                    <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
-                    <ViewStream stream={appData.view} dispatchApp={dispatchApp} />
-                </div>
+                    <div className="loaded">
+                        <StreamerGrid streams={appData.streams} dispatchApp={dispatchApp} diag={appData.diagnostic} />
+                        <ViewStream stream={appData.view} dispatchApp={dispatchApp} />
+                    </div>
+                </React.Fragment>
             )}
             {!appData && (
                 <div className="no-data">

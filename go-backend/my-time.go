@@ -6,8 +6,8 @@ import (
 )
 
 func (tData *TwitchData) setTimes() {
-	refTime := int64(4)
-	newTime := int64(33)
+	refTime := int64(6)
+	newTime := int64(45)
 
 	myTimers := &IMyTimers{
 		RefreshTimer: &SubTimer{

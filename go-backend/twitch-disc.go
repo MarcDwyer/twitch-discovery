@@ -57,7 +57,7 @@ func (tData *TwitchData) getDiagData() {
 }
 
 func (tData *TwitchData) getNewStreams() {
-	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=15&offset=%d&language=en", tData.Diagnostic.SkippedOver)
+	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=35&offset=%d&language=en", tData.Diagnostic.SkippedOver)
 	streamBytes, err := fetchTwitch(url, "GET")
 	if err != nil {
 		log.Println("Error fetching new streams")

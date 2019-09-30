@@ -1,12 +1,15 @@
 .main {
     overflow-x: hidden;
     overflow-y: auto;
-    height: 100vh;
+    height: fill;
+    z-index: 1;
     display: flex;
     color: #eee;
     width: 100%;
+    background-color: hsl(0, 0, 0);
 
     .loaded {
+        z-index: 2;
         max-width: 1920px;
         display: flex;
         flex-direction: column;
