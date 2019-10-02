@@ -70,3 +70,14 @@ interface ChannelData {
     video_banner?: any;
     views: number;
 }
+
+export type StructurcedStreams = {
+    id: number;
+    channelData: ChannelData;
+    streamName: string;
+    streamData: SubStream | null;
+}
+
+export type ParentData = {
+    [key: string]: StructurcedStreams;
+}

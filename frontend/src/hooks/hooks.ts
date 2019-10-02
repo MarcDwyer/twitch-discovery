@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import io from 'socket.io-client'
+import { ParentData } from '../data_types/data_types'
 
 export interface ITimer extends Array<Time | null | boolean> { 0: Time | null; 1: boolean }
 
@@ -31,10 +31,10 @@ export const useTimer = (futureTime: number): ITimer => {
             setTimer({ hours, minutes, seconds })
         }
         getTime()
-     
+
         interval = setInterval(getTime, 1000)
-       
-        return function() {
+
+        return function () {
             setWaiting(false)
             clearInterval(interval)
         }
@@ -65,4 +65,16 @@ export const usePercentage = (num: number) => {
         setTop(top)
     }, [num])
     return top
+}
+
+export const useAverage = (data: ParentData) => {
+    const [avg, setAvg] = useState<number>(0)
+
+    useEffect(() => {
+        if (data) {
+            const online = Object.values(data).filter(stream => stream.streamData)
+            setAvg(() => Math.round(online.reduce((num, stream) => num += stream.streamData.viewers, 0) / online.length))
+        }
+    }, [data])
+    return avg
 }

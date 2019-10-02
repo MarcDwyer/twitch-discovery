@@ -10,12 +10,12 @@ import (
 )
 
 type TwitchData struct {
-	StreamData  []TStreams `json:"streams,omitempty"`
-	NextRefresh int64      `json:"nextRefresh,omitempty"`
-	Diagnostic  Diag       `json:"diagnostic,omitempty"`
-	Hub         *Hub       `json:",omitempty"`
-	MyTimes     *IMyTimers `json:",omitempty"`
-	Payload     *[]byte    `json:",omitempty"`
+	StreamData  map[string]Stream `json:"streams,omitempty"`
+	NextRefresh int64             `json:"nextRefresh,omitempty"`
+	Diagnostic  Diag              `json:"diagnostic,omitempty"`
+	Hub         *Hub              `json:",omitempty"`
+	MyTimes     *IMyTimers        `json:",omitempty"`
+	Payload     *[]byte           `json:",omitempty"`
 }
 type IMyTimers struct {
 	RefreshTimer    *SubTimer
@@ -57,7 +57,7 @@ func (tData *TwitchData) getDiagData() {
 }
 
 func (tData *TwitchData) getNewStreams() {
-	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=35&offset=%d&language=en", tData.Diagnostic.SkippedOver)
+	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=18&offset=%d&language=en", tData.Diagnostic.SkippedOver)
 	streamBytes, err := fetchTwitch(url, "GET")
 	if err != nil {
 		log.Println("Error fetching new streams")
@@ -65,33 +65,24 @@ func (tData *TwitchData) getNewStreams() {
 	}
 	streamers := TResponse{}
 	json.Unmarshal(streamBytes, &streamers)
-	tData.StreamData = streamers.Streams
+	tData.StreamData = structureStreams(streamers.Streams)
 }
 
 func (tData *TwitchData) refreshStreams() {
 	fmt.Println("refresh ran")
-	ids := []int{}
 	for _, v := range tData.StreamData {
-		ids = append(ids, v.Channel.ID)
+		url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/%v", v.ID)
+		res, err := fetchTwitch(url, "GET")
+		if err != nil {
+			log.Fatalln(err)
+		}
+		var data SingleResponse
+		json.Unmarshal(res, &data)
+		if obj, ok := tData.StreamData[v.StreamName]; ok {
+			obj.Stream = data.Stream
+			tData.StreamData[v.StreamName] = obj
+		}
 	}
-	strIds := arrayToString(ids, ",")
-
-	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?channel=%s", strIds)
-
-	refBytes, err := fetchTwitch(url, "GET")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	var twitchData TResponse
-	err = json.Unmarshal(refBytes, &twitchData)
-	if err != nil {
-		log.Fatalln(err)
-	} else if len(twitchData.Streams) < 1 {
-		go tData.populateTwitchData()
-		return
-	}
-	tData.StreamData = twitchData.Streams
 	go tData.setPayload()
 	tData.broadCastData(updatedData)
 }

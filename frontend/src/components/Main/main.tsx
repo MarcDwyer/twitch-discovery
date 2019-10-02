@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react'
 import { BounceLoader } from 'react-spinners'
-import { SubStream } from '../../data_types/data_types'
+import { SubStream, ParentData } from '../../data_types/data_types'
 import { useSocket } from '../../hooks/hooks';
 import {
     appReducer, APP_INIT, APP_UPDATE, REMOVE_VIEW
@@ -15,7 +15,7 @@ import './main.scss'
 
 export type Payload = {
     nextRefresh: number;
-    streams: SubStream[];
+    streams: ParentData;
     diagnostic: IDiag;
     online: SubStream[];
     view: SubStream | null;

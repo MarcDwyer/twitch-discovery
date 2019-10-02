@@ -6,10 +6,10 @@ import StreamCard from '../StreamCard/stream-card'
 
 import './stream-grid.scss'
 
-import { SubStream } from '../../data_types/data_types';
+import { SubStream, ParentData } from '../../data_types/data_types';
 
 interface Props {
-    streams: SubStream[];
+    streams: ParentData;
     diag: IDiag;
     dispatchApp: Function;
 }
@@ -26,8 +26,8 @@ const StreamerGrid = (props: Props) => {
                 {`Top ${top} of streamers`}
             </h1>
             <div className="streamer-grid">
-                {props.streams.map((stream) => (
-                    <StreamCard streamer={stream} key={stream._id} updateFeatured={updateFeatured} />
+                {Object.values(props.streams).map((stream) => (
+                    <StreamCard streamer={stream} key={stream.id} updateFeatured={updateFeatured} />
                 ))}
             </div>
         </div>

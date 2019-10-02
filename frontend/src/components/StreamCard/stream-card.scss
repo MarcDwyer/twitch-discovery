@@ -11,7 +11,6 @@
     border-radius: 5px;
     border: 3px solid transparent;
     transition: border .25s ease;
-    cursor: pointer;
 
     .center-image {
         position: absolute;
@@ -55,8 +54,4 @@
             margin: auto;
             padding: 5px 5px;
         }
-
-    &:hover {
-        border: solid 3px #9147ff;
-    }
 }

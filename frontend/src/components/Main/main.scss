@@ -1,11 +1,11 @@
 .main {
     overflow-x: hidden;
     overflow-y: auto;
-    height: fill;
     z-index: 1;
     display: flex;
     color: #eee;
     width: 100%;
+    height: fill;
     background-color: hsl(0, 0, 0);
 
     .loaded {

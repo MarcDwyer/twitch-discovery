@@ -3,7 +3,7 @@ import { Payload } from '../Main/main'
 import { useSpring, animated } from 'react-spring'
 import { FaGithub } from 'react-icons/fa'
 import { MdClose } from 'react-icons/md'
-import { usePercentage, useTimer } from '../../hooks/hooks'
+import { usePercentage, useTimer, useAverage } from '../../hooks/hooks'
 
 
 
@@ -15,7 +15,7 @@ interface Props {
     appData: Payload;
     setShowDiag(boolean): void;
 }
-const Diag = (props: Props) => {
+const Diag = React.memo((props: Props) => {
     const { total, offset, skippedOver } = props.appData.diagnostic
     const [timer, waiting] = useTimer(props.appData.nextRefresh)
     const diagAnim = useSpring({
@@ -24,7 +24,7 @@ const Diag = (props: Props) => {
         from: { opacity: 0, transform: 'translateX(-100%)' },
         reverse: !props.showDiag
     })
-    const average = Math.round(props.appData.streams.reduce((num, stream) => num += stream.viewers, 0) / props.appData.streams.length)
+    const average = useAverage(props.appData.streams)
     const top = usePercentage(offset)
 
     return (
@@ -56,6 +56,6 @@ const Diag = (props: Props) => {
             </animated.div>
         </React.Fragment>
     )
-}
+})
 // document.querySelector('#root')
 export default Diag
