@@ -10,25 +10,45 @@ interface Props {
     updateFeatured(feat: SubStream): void;
 }
 const twitchColor = "#9147ff"
-// TODO 
-// HUGE BUG,
-// Index being passed here does not reflect the index of the online array
-
 
 
 const StreamCard = React.memo((props: Props) => {
     const { streamData, channelData } = props.streamer
     const [hover, setHover] = useState<boolean>(false)
+
+    const getStyles = () => {
+        let styles = {}
+        if (hover && streamData) {
+            styles = {
+                ...styles,
+                border: "3px solid #9147ff",
+            }
+        } else if (!streamData && !hover) {
+            styles = {
+                ...styles,
+                opacity: '.55'
+            }
+        } else if (hover && !streamData) {
+            styles = {
+                ...styles,
+                opacity: '.75'
+            }
+        }
+        return styles
+    }
     return (
         <div
             className="stream-card"
             onClick={() => {
-                if (!streamData) return
+                if (!streamData) {
+                    window.open(channelData.url)
+                    return
+                }
                 props.updateFeatured(streamData)
             }}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
-            style={hover && streamData ? { border: "3px solid #9147ff", cursor: 'pointer' } : {}}
+            style={getStyles()}
         >
             <div className="center-image"
                 style={channelData.profile_banner.length > 0 ? { backgroundImage: `url(${channelData.profile_banner})` } : { backgroundColor: "#eee" }}
@@ -41,6 +61,7 @@ const StreamCard = React.memo((props: Props) => {
                     <span>{channelData.display_name}</span>
                     {streamData ? (
                         <React.Fragment>
+                            <span>Live</span>
                             <span>Is playing {streamData.game}</span>
                             <span>{streamData.viewers} viewers</span>
                         </React.Fragment>
