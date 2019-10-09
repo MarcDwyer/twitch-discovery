@@ -62,11 +62,13 @@ const ChangeOffset = React.memo((props: Props) => {
                     }}
                 >
                     <input
+                        type="number"
                         value={offset}
                         placeholder="It gives a number..."
                         onChange={(e) => setOffset(e.target.value)}
                     />
                     <input
+                        type="password"
                         value={secret}
                         placeholder="It gives a riddle..."
                         onChange={(e) => setSecret(e.target.value)}

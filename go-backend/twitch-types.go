@@ -53,11 +53,7 @@ type Stream struct {
 	ChannelData TChannel  `json:"channelData"`
 	ID          int       `json:"id"`
 }
-type Diag struct {
-	SkippedOver int     `json:"skippedOver"`
-	Offset      float64 `json:"offset"`
-	Total       int     `json:"total"`
-}
+
 
 type Times struct {
 	refreshTime    int64

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"strings"
 	"time"
 )
 
@@ -16,6 +15,11 @@ type TwitchData struct {
 	Hub         *Hub              `json:",omitempty"`
 	MyTimes     *IMyTimers        `json:",omitempty"`
 	Payload     *[]byte           `json:",omitempty"`
+}
+type Diag struct {
+	SkippedOver int     `json:"skippedOver"`
+	Offset      float64 `json:"offset"`
+	Total       int     `json:"total"`
 }
 type IMyTimers struct {
 	RefreshTimer    *SubTimer
@@ -40,32 +44,33 @@ var (
 	newData     = "new-data"
 )
 
-func (tData *TwitchData) getDiagData() {
+func getDiagData() Diag {
 	total := getTotal()
 	if offsetRef+.0025 >= .85 {
 		offsetRef = 0
 	}
-	tData.Diagnostic.Offset = offsetRef
-	offsetRef += .0025
-	skippedOver := math.Round(float64(total) * tData.Diagnostic.Offset)
+	skippedOver := math.Round(float64(total) * offsetRef)
 	newDiag := Diag{
-		Offset:      tData.Diagnostic.Offset,
+		Offset:      offsetRef,
 		Total:       total,
 		SkippedOver: int(skippedOver),
 	}
-	tData.Diagnostic = newDiag
+	defer func() {
+		offsetRef += .0025
+	}()
+	return newDiag
 }
 
-func (tData *TwitchData) getNewStreams() {
-	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=18&offset=%d&language=en", tData.Diagnostic.SkippedOver)
+func getNewStreams(o int) (map[string]Stream, error) {
+	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=18&offset=%v&language=en", o)
 	streamBytes, err := fetchTwitch(url, "GET")
 	if err != nil {
-		log.Println("Error fetching new streams")
-		return
+		return nil, fmt.Errorf("Error fetching new Streams")
 	}
-	streamers := TResponse{}
+	var streamers TResponse
 	json.Unmarshal(streamBytes, &streamers)
-	tData.StreamData = structureStreams(streamers.Streams)
+	s := structureStreams(streamers.Streams)
+	return s, nil
 }
 
 func (tData *TwitchData) refreshStreams() {
@@ -87,13 +92,15 @@ func (tData *TwitchData) refreshStreams() {
 	tData.broadCastData(updatedData)
 }
 
-func arrayToString(ids []int, delim string) string {
-	return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(ids)), delim), "[]")
-}
-
 func (tData *TwitchData) populateTwitchData() {
-	tData.getDiagData()
-	tData.getNewStreams()
+	newDiag := getDiagData()
+	streams, err := getNewStreams(newDiag.SkippedOver)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	tData.StreamData = streams
+	tData.Diagnostic = newDiag
 	tData.NextRefresh = getTime(tData.MyTimes.NewStreamsTimer.time)
 	if tData.StreamData != nil {
 		go resetTimer(tData.MyTimes.NewStreamsTimer)
