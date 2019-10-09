@@ -12,6 +12,7 @@ export const APP_INIT = 'appinitbro',
 // TODO
 // Fix shuffle to end bug
 export function appReducer(state: Payload | null, { type, payload }: { type: string, payload: any }): Payload | null {
+    console.log(payload)
     switch (type) {
         case APP_INIT:
             return { ...payload, view: state && state.view ? state.view : null }

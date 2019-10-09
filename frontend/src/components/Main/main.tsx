@@ -31,7 +31,6 @@ const isDev = (): string => document.location.hostname.startsWith('local') ? `ws
 const Main = () => {
     const socket = useSocket(isDev())
     const [appData, dispatchApp] = useReducer(appReducer, null)
-    console.log(socket)
     // Handles websocket messages
     useEffect(() => {
         if (socket) {
