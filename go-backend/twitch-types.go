@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"time"
+
+	"github.com/MarcDwyer/twitch"
+)
 
 type TResponse struct {
 	Total   int        `json:"_total"`
@@ -48,12 +52,11 @@ type TChannel struct {
 }
 
 type Stream struct {
-	Stream      *TStreams `json:"streamData"`
-	StreamName  string    `json:"streamName"`
-	ChannelData TChannel  `json:"channelData"`
-	ID          int       `json:"id"`
+	Stream      *twitch.TStreams `json:"streamData"`
+	StreamName  string           `json:"streamName"`
+	ChannelData twitch.TChannel  `json:"channelData"`
+	ID          int              `json:"id"`
 }
-
 
 type Times struct {
 	refreshTime    int64

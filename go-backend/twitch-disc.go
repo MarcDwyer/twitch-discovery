@@ -45,14 +45,17 @@ var (
 )
 
 func getDiagData() Diag {
-	total := getTotal()
+	total, err := t.GetTotalStreams("en")
+	if err != nil || total == nil {
+		log.Fatalln(err)
+	}
 	if offsetRef+.0025 >= .85 {
 		offsetRef = 0
 	}
-	skippedOver := math.Round(float64(total) * offsetRef)
+	skippedOver := math.Round(float64(*total) * offsetRef)
 	newDiag := Diag{
 		Offset:      offsetRef,
-		Total:       total,
+		Total:       *total,
 		SkippedOver: int(skippedOver),
 	}
 	defer func() {
@@ -62,29 +65,24 @@ func getDiagData() Diag {
 }
 
 func getNewStreams(o int) (map[string]Stream, error) {
-	url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=18&offset=%v&language=en", o)
-	streamBytes, err := fetchTwitch(url, "GET")
+	limit := 15
+	list, err := t.GetStreamList("en", &limit, &o)
 	if err != nil {
-		return nil, fmt.Errorf("Error fetching new Streams")
+		return nil, err
 	}
-	var streamers TResponse
-	json.Unmarshal(streamBytes, &streamers)
-	s := structureStreams(streamers.Streams)
+	s := structureStreams(list.Streams)
 	return s, nil
 }
 
 func (tData *TwitchData) refreshStreams() {
 	fmt.Println("refresh ran")
 	for _, v := range tData.StreamData {
-		url := fmt.Sprintf("https://api.twitch.tv/kraken/streams/%v", v.ID)
-		res, err := fetchTwitch(url, "GET")
+		streamer, err := t.GetStream(v.ID)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		var data SingleResponse
-		json.Unmarshal(res, &data)
 		if obj, ok := tData.StreamData[v.StreamName]; ok {
-			obj.Stream = data.Stream
+			obj.Stream = streamer.Stream
 			tData.StreamData[v.StreamName] = obj
 		}
 	}

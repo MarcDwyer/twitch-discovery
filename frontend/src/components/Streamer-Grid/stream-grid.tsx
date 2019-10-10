@@ -19,14 +19,14 @@ const StreamerGrid = (props: Props) => {
     }, [props.streams])
 
     const top = usePercentage(props.diag.offset)
-
+    const streams = Object.values(props.streams)
     return (
         <div className="grid-parent">
             <h1>
                 {`Top ${top} of streamers`}
             </h1>
             <div className="streamer-grid">
-                {Object.values(props.streams).map((stream) => (
+                {streams.map((stream) => (
                     <StreamCard streamer={stream} key={stream.id} updateFeatured={updateFeatured} />
                 ))}
             </div>

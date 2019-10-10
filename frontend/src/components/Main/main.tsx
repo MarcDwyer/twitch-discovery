@@ -62,7 +62,7 @@ const Main = () => {
     }, [appData])
     return (
         <div className="main">
-            {appData && (
+            {appData && appData.streams && (
                 <React.Fragment>
                     <Navbar appData={appData} view={appData.view} />
                     <div className="loaded">
@@ -71,7 +71,7 @@ const Main = () => {
                     </div>
                 </React.Fragment>
             )}
-            {!appData && (
+            {(!appData || !appData.streams) && (
                 <div className="no-data">
                     <h1>Looking for streams...</h1>
                     <BounceLoader

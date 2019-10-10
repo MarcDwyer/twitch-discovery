@@ -1,16 +1,10 @@
 package main
 
-func checkLive(streams []*TStreams) []TStreams {
-	live := []TStreams{}
-	for _, v := range streams {
-		if v != nil {
-			live = append(live, *v)
-		}
-	}
-	return live
-}
+import (
+	"github.com/MarcDwyer/twitch"
+)
 
-func structureStreams(streams []TStreams) map[string]Stream {
+func structureStreams(streams []twitch.TStreams) map[string]Stream {
 	result := map[string]Stream{}
 	for i, v := range streams {
 		structured := Stream{
