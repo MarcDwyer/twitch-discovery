@@ -1,10 +1,8 @@
 package main
 
-import (
-	"github.com/MarcDwyer/twitch"
-)
+import "github.com/MarcDwyer/twitchgo"
 
-func structureStreams(streams []twitch.TStreams) map[string]Stream {
+func structureStreams(streams []twitchgo.TStreams) map[string]Stream {
 	result := map[string]Stream{}
 	for i, v := range streams {
 		structured := Stream{

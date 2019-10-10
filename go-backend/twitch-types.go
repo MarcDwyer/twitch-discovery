@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/MarcDwyer/twitch"
+	"github.com/MarcDwyer/twitchgo"
 )
 
 type TResponse struct {
@@ -52,10 +52,10 @@ type TChannel struct {
 }
 
 type Stream struct {
-	Stream      *twitch.TStreams `json:"streamData"`
-	StreamName  string           `json:"streamName"`
-	ChannelData twitch.TChannel  `json:"channelData"`
-	ID          int              `json:"id"`
+	Stream      *twitchgo.TStreams `json:"streamData"`
+	StreamName  string             `json:"streamName"`
+	ChannelData twitchgo.TChannel  `json:"channelData"`
+	ID          int                `json:"id"`
 }
 
 type Times struct {

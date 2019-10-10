@@ -7,13 +7,12 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/MarcDwyer/twitch"
-
+	"github.com/MarcDwyer/twitchgo"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
-var t *twitch.Twitch
+var t *twitchgo.Twitch
 
 func init() {
 	fmt.Println(runtime.NumCPU())
@@ -26,7 +25,7 @@ func init() {
 func main() {
 	mux := http.NewServeMux()
 
-	t = twitch.NewTwitchInstance(os.Getenv("TWITCH"))
+	t = twitchgo.NewTwitchInstance(os.Getenv("TWITCH"))
 	// TwitchData converted to bytes
 	var payload []byte
 	// Create webscoket hub
