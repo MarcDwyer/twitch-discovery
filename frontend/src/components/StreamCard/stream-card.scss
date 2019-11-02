@@ -8,7 +8,7 @@
     display: inline-block;
     text-align: center;
     background-color: transparent;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 3px solid transparent;
     transition: border .25s ease;
     cursor: pointer;
@@ -19,6 +19,7 @@
         width: 100%;
         z-index: -1;
         opacity: 0.45;
+        border-radius: 10px;
     }
 
     .center {
@@ -46,13 +47,14 @@
             }
         }
     }
-        svg {
-            background-color: #eee;
-            color: $twitch-color;
-            border-radius: 10px;
-            width: 35px;
-            height: 35px;
-            margin: auto;
-            padding: 5px 5px;
-        }
+
+    svg {
+        background-color: #eee;
+        color: $twitch-color;
+        border-radius: 10px;
+        width: 35px;
+        height: 35px;
+        margin: auto;
+        padding: 5px 5px;
+    }
 }
