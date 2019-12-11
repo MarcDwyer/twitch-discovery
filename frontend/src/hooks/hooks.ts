@@ -1,16 +1,6 @@
 import { useState, useEffect } from "react";
 import { ParentData } from "../data_types/data_types";
-
-export interface ITimer extends Array<Time | null | boolean> {
-  0: Time | null;
-  1: boolean;
-}
-
-export type Time = {
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
+import { Time } from "../reducers/timer_reducer";
 
 const getTime = (futureTime: number): Time | null => {
   const now = new Date().getTime();
@@ -19,23 +9,20 @@ const getTime = (futureTime: number): Time | null => {
   }
   const distance = futureTime - now;
 
-  let hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    ),
-    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-    seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  return { hours, minutes, seconds }
+  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+  return { hours, minutes };
 };
 
 export const useTimer = (futureTime: number) => {
   const [timer, setTimer] = useState<Time | null>(null);
 
   let interval: number | undefined;
-  console.log(futureTime)
   useEffect(() => {
     setTimer(getTime(futureTime));
     //@ts-ignore
-    interval = setInterval(() => setTimer(getTime(futureTime)), 1000);
+    interval = setInterval(() => setTimer(getTime(futureTime)), 60000);
 
     return function() {
       if (interval) {
@@ -79,7 +66,10 @@ export const useAverage = (data: ParentData) => {
       setAvg(() =>
         Math.round(
           online.reduce(
-            (num, stream) => stream && stream.streamData ? num += stream.streamData.viewers : 1337,
+            (num, stream) =>
+              stream && stream.streamData
+                ? (num += stream.streamData.viewers)
+                : 1337,
             0
           ) / online.length
         )

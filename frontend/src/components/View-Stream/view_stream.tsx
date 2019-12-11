@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SubStream } from "../../data_types/data_types";
 import { MdClose } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
-import { REMOVE_VIEW } from "../../reducers/reducer";
+import { REMOVE_VIEW } from "../../reducers/streams_reducer";
 import "./view_stream.scss";
 
 type Props = {

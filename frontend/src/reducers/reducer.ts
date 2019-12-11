@@ -1,41 +1,16 @@
-import { SubStream, ParentData } from "../data_types/data_types";
+import { combineReducers } from "redux";
+import StreamsReducer, { Payload } from "./streams_reducer";
+import TimeReducer, { Time } from "./timer_reducer";
 
-export type IDiag = {
-  offset: number;
-  total: number;
-  skippedOver: number;
+export type ReduxStore = {
+  streamData: Payload;
+  timer: Time | null;
 };
 export type Action = {
   payload: any;
-  type: string;
+  type: Symbol;
 };
-export type Payload = {
-  nextRefresh: number;
-  streams: ParentData;
-  diagnostic: IDiag;
-  online: SubStream[];
-  view: SubStream | null;
-};
-export const INC_KEY = "inc_key",
-  RESET_FEATURED = "resetplas",
-  SET_VIEW = "set_view",
-  REMOVE_VIEW = "qwedqwdqwed";
-
-export const APP_INIT = "appinitbro",
-  APP_UPDATE = "holdmybeer";
-
-export function appReducer(state: Payload | null, { type, payload }: Action) {
-  switch (type) {
-    case APP_INIT:
-      return { ...payload, view: state && state.view ? state.view : null };
-    case APP_UPDATE:
-      const { streams } = payload;
-      return { ...state, streams };
-    case SET_VIEW:
-      return { ...state, view: payload };
-    case REMOVE_VIEW:
-      return { ...state, view: null };
-    default:
-      return state;
-  }
-}
+export default combineReducers({
+  streamData: StreamsReducer,
+  timer: TimeReducer
+});

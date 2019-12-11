@@ -3,19 +3,19 @@ $twitch-color: #9147ff;
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 .update-notification {
-  background-color: hsl(0,0, 15%);
+  background-color: hsl(0, 0, 15%);
   position: fixed;
   bottom: 0;
   right: 0;
@@ -23,4 +23,5 @@ code {
   text-decoration: none;
   padding: 15px 15px;
   display: flex;
+  z-index: 5000 !important;
 }

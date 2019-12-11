@@ -3,7 +3,7 @@ import { useSpring, animated } from "react-spring";
 import { FaGithub } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { usePercentage, useTimer, useAverage } from "../../hooks/hooks";
-import { Payload } from "../../reducers/reducer";
+import { Payload } from "../../reducers/streams_reducer";
 
 import "./diag.scss";
 
@@ -34,9 +34,7 @@ const Diag = (props: Props) => {
         <span>Average viewership: {average}</span>
         <span>Skipped over streams: {skippedOver}</span>
         <span>Streamers left: {total - skippedOver}</span>
-        {timer && (
-          <span>{`Next refresh: ${timer.hours}:${timer.minutes}:${timer.seconds}`}</span>
-        )}
+        {timer && <span>{`Next refresh: ${timer.minutes} mins`}</span>}
         <div className="links">
           <a
             href="https://github.com/MarcDwyer/twitch-discovery"
