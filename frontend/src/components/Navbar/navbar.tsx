@@ -18,7 +18,7 @@ interface Props {
 
 
 
-const Navbar = React.memo((props: Props) => {
+const Navbar = (props: Props) => {
     const [showOffset, setShowOffset] = useState<boolean>(false)
     const [showDiag, setShowDiag] = useState<boolean>(false)
     return (
@@ -52,7 +52,7 @@ const Navbar = React.memo((props: Props) => {
             />
         </div>
     )
-})
+}
 
 
 export default Navbar

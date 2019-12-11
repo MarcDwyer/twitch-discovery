@@ -15,7 +15,7 @@ interface Props {
     appData: Payload;
     setShowDiag(boolean): void;
 }
-const Diag = React.memo((props: Props) => {
+const Diag = (props: Props) => {
     const { total, offset, skippedOver } = props.appData.diagnostic
     const [timer, waiting] = useTimer(props.appData.nextRefresh)
     const diagAnim = useSpring({
@@ -56,6 +56,6 @@ const Diag = React.memo((props: Props) => {
             </animated.div>
         </React.Fragment>
     )
-})
+}
 // document.querySelector('#root')
 export default Diag
