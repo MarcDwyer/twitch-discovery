@@ -14,7 +14,6 @@ interface Props {
 }
 const Diag = (props: Props) => {
   const { total, offset, skippedOver } = props.appData.diagnostic;
-  console.log(props.appData);
   const timer = useTimer(props.appData.nextRefresh);
   const diagAnim = useSpring({
     opacity: 1,

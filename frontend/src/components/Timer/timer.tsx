@@ -9,8 +9,6 @@ interface Props {
 
 const Timer = (props: Props) => {
   const timer = useTimer(props.nextRefresh);
-
-  console.log(timer);
   return (
     <div className="timer-parent">
       <React.Fragment>

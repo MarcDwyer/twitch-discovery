@@ -34,8 +34,8 @@ export const useTimer = (futureTime: number) => {
 
   useEffect(() => {
     setTimer(getTime(futureTime));
-
-    interval = setInterval(getTime, 1000);
+    //@ts-ignore
+    interval = setInterval(() => setTimer(getTime(futureTime)), 1000);
 
     return function() {
       if (interval) {
