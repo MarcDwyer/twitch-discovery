@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import { BounceLoader } from "react-spinners";
 import { useSocket } from "../../hooks/hooks";
 import {
