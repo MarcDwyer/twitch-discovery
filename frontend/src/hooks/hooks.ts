@@ -12,40 +12,39 @@ export type Time = {
   seconds: number;
 };
 
-export const useTimer = (futureTime: number): ITimer => {
+const getTime = (futureTime: number): Time | null => {
+  const now = new Date().getTime();
+  if (now >= futureTime) {
+    return null;
+  }
+  const distance = futureTime - now;
+
+  let hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    ),
+    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  return { hours, minutes, seconds }
+};
+
+export const useTimer = (futureTime: number) => {
   const [timer, setTimer] = useState<Time | null>(null);
-  const [waiting, setWaiting] = useState<boolean>(false);
+
+  let interval: number | undefined;
 
   useEffect(() => {
-    let interval;
-
-    const getTime = () => {
-      const now = new Date().getTime();
-      if (now >= futureTime) {
-        setWaiting(true);
-        return;
-      }
-      const distance = futureTime - now;
-
-      let hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        ),
-        minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      setWaiting(false);
-      setTimer({ hours, minutes, seconds });
-    };
-    getTime();
+    setTimer(getTime(futureTime));
 
     interval = setInterval(getTime, 1000);
 
     return function() {
-      setWaiting(false);
-      clearInterval(interval);
+      if (interval) {
+        clearInterval(interval);
+      }
     };
   }, [futureTime]);
 
-  return [timer, waiting];
+  return timer;
 };
 
 export const useSocket = (url: string): WebSocket | null => {
@@ -80,7 +79,7 @@ export const useAverage = (data: ParentData) => {
       setAvg(() =>
         Math.round(
           online.reduce(
-            (num, stream) => (num += stream.streamData.viewers),
+            (num, stream) => stream && stream.streamData ? num += stream.streamData.viewers : 1337,
             0
           ) / online.length
         )
