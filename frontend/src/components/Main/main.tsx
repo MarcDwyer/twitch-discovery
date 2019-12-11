@@ -37,7 +37,6 @@ const Main = () => {
             socket.addEventListener('message', (payload: any) => {
                 const data = JSON.parse(payload.data)
                 if (!data['type']) {
-                    console.log(data)
                     dispatchApp({ type: APP_INIT, payload: data })
                     return
                 }
@@ -61,6 +60,7 @@ const Main = () => {
             document.removeEventListener('keydown', removeView)
         }
     }, [appData])
+    console.log(appData)
     return (
         <div className="main">
             {appData && appData.streams && (
