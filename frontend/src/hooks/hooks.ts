@@ -31,7 +31,7 @@ export const useTimer = (futureTime: number) => {
   const [timer, setTimer] = useState<Time | null>(null);
 
   let interval: number | undefined;
-
+  console.log(futureTime)
   useEffect(() => {
     setTimer(getTime(futureTime));
     //@ts-ignore
