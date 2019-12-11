@@ -37,6 +37,7 @@ const Main = () => {
             socket.addEventListener('message', (payload: any) => {
                 const data = JSON.parse(payload.data)
                 if (!data['type']) {
+                    console.log(data)
                     dispatchApp({ type: APP_INIT, payload: data })
                     return
                 }
