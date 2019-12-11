@@ -10,6 +10,8 @@ interface Props {
 
 const Timer = (props: Props) => {
     const [timer, waiting] = useTimer(props.nextRefresh)
+
+    console.log({timer, waiting})
     return (
         <div className="timer-parent">
             {timer && (
