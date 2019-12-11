@@ -1,4 +1,4 @@
-import { SubStream, ParentData } from "../../data_types/data_types";
+import { SubStream, ParentData } from "../data_types/data_types";
 
 export type IDiag = {
   offset: number;

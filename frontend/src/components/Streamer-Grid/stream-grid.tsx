@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { IDiag } from '../Main/main';
+import { IDiag } from '../../reducers/reducer';
 import { SET_VIEW } from '../../reducers/reducer'
 import { usePercentage } from '../../hooks/hooks'
 import StreamCard from '../StreamCard/stream-card'

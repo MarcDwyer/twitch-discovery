@@ -12,8 +12,6 @@ import StreamerGrid from "../Streamer-Grid/stream-grid";
 import Navbar from "../Navbar/navbar";
 import ViewStream from "../View-Stream/view_stream";
 
-import { Payload } from "../../reducers/reducer";
-
 import "./main.scss";
 
 const isDev = (): string =>

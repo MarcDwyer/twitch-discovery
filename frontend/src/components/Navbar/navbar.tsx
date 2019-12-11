@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Payload } from '../Main/main'
-import { useTimer } from '../../hooks/hooks'
+import { Payload } from '../../reducers/reducer'
 import { FaMoon, FaHamburger } from 'react-icons/fa'
 import { SubStream } from '../../data_types/data_types';
 
