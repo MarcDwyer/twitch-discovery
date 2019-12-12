@@ -9,10 +9,13 @@ const getTime = (futureTime: number): Time | null => {
   }
   const distance = futureTime - now;
 
-  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    ),
+    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  return { hours, minutes };
+  return { hours, minutes, seconds };
 };
 
 export const useTimer = (futureTime: number) => {
@@ -22,7 +25,7 @@ export const useTimer = (futureTime: number) => {
   useEffect(() => {
     setTimer(getTime(futureTime));
     //@ts-ignore
-    interval = setInterval(() => setTimer(getTime(futureTime)), 60000);
+    interval = setInterval(() => setTimer(getTime(futureTime)), 1000);
 
     return function() {
       if (interval) {
@@ -32,16 +35,6 @@ export const useTimer = (futureTime: number) => {
   }, [futureTime]);
 
   return timer;
-};
-
-export const useSocket = (url: string): WebSocket | null => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  useEffect(() => {
-    if (!socket) {
-      setSocket(new WebSocket(url));
-    }
-  }, [url]);
-  return socket;
 };
 
 export const usePercentage = (num: number) => {

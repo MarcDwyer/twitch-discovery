@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { BounceLoader } from "react-spinners";
-import { useSocket } from "../../hooks/hooks";
 import {
   APP_INIT,
   APP_UPDATE,
@@ -16,6 +15,7 @@ import "./main.scss";
 import { setStreamData } from "../../actions/stream_actions";
 import { ReduxStore } from "../../reducers/reducer";
 import { setTimer } from "../../actions/timer_actions";
+import { setSocket } from "../../actions/socket_actions";
 
 const isDev = (): string =>
   document.location.hostname.startsWith("local")
@@ -23,27 +23,13 @@ const isDev = (): string =>
     : `wss://${document.location.hostname}/ws`;
 
 const Main = () => {
-  const socket = useSocket(isDev());
+  // make useSocket return data as well
+
   // Handles websocket messages
   const state = useSelector((state: ReduxStore) => state);
-  const { streamData, timer } = state;
+  const { streamData, timer, socket } = state;
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (socket) {
-      socket.addEventListener("message", (payload: any) => {
-        const data = JSON.parse(payload.data);
-        if (!data["type"]) {
-          dispatch(setStreamData(data));
-          //   dispatchApp({ type: APP_INIT, payload: data });
-          return;
-        }
-        switch (data.type) {
-          case "updated-data":
-          // dispatchApp({ type: APP_UPDATE, payload: data });
-        }
-      });
-    }
-  }, [socket]);
+
   console.log(state);
   // Sets View to null if escape key is pressed
   const removeView = (e: KeyboardEvent) => {
@@ -60,33 +46,19 @@ const Main = () => {
     };
   }, [streamData]);
   useEffect(() => {
-    let interval: any;
-    if (streamData) {
-      changeTimer();
-      interval = setInterval(changeTimer, 10000);
+    if (!socket) {
+      dispatch(setSocket(isDev()));
     }
-    return function() {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [streamData]);
+  }, [socket]);
   return (
     <div className="main">
       {timer && <span>{timer.minutes}</span>}
-      {/* {streamData && (
+      {streamData && (
         <React.Fragment>
-          <Navbar appData={streamData} view={streamData.view} />
+          <Navbar />
           <div className="loaded">
-            <StreamerGrid
-              streams={streamData.streams}
-              dispatchApp={() => console.log("yeet")}
-              diag={streamData.diagnostic}
-            />
-            <ViewStream
-              stream={streamData.view}
-              dispatchApp={() => console.log("dispath something")}
-            />
+            <StreamerGrid />
+            <ViewStream />
           </div>
         </React.Fragment>
       )}
@@ -95,7 +67,7 @@ const Main = () => {
           <h1>Looking for streams...</h1>
           <BounceLoader color="#eee" />
         </div>
-      )} */}
+      )}
     </div>
   );
 };

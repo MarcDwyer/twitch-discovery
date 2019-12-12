@@ -23,10 +23,9 @@ export const APP_INIT = Symbol(),
 function AppReducer(state: Payload | null = null, { type, payload }: Action) {
   switch (type) {
     case APP_INIT:
-      return payload;
+      return { ...payload, view: null };
     case APP_UPDATE:
-      const { streams } = payload;
-      return { ...state, streams };
+      return { ...state, streams: payload };
     case SET_VIEW:
       return { ...state, view: payload };
     case REMOVE_VIEW:

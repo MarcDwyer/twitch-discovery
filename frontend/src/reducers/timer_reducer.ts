@@ -8,6 +8,7 @@ export interface ITimer extends Array<Time | null | boolean> {
 export type Time = {
   hours: number;
   minutes: number;
+  seconds: number;
 };
 
 export const UPDATE_TIME = Symbol();

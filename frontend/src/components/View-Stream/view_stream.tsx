@@ -1,53 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { SubStream } from "../../data_types/data_types";
+import React from "react";
 import { MdClose } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
-import { REMOVE_VIEW } from "../../reducers/streams_reducer";
+import { setView } from "../../actions/stream_actions";
 import "./view_stream.scss";
+import { ReduxStore } from "../../reducers/reducer";
+import { useSelector, useDispatch } from "react-redux";
 
-type Props = {
-  stream: SubStream | null;
-  dispatchApp: Function;
-};
-const ViewStream = (props: Props) => {
-  const { stream } = props;
-  const [showVideo, setShowVideo] = useState<boolean>(false);
-
+const ViewStream = () => {
+  const view = useSelector((state: ReduxStore) => state.streamData.view);
+  const dispatch = useDispatch();
   const videoAnim = useSpring({
     from: { opacity: 0, transform: "translateY(100%)" },
     transform: "translateY(0%)",
     opacity: 1,
-    reverse: props.stream ? false : true
+    reverse: view ? false : true
   });
-
-  useEffect(() => {
-    if (props.stream) {
-      setTimeout(() => {
-        if (props.stream) {
-          setShowVideo(true);
-        }
-      }, 550);
-    } else {
-      setShowVideo(false);
-    }
-  }, [props.stream]);
-
   return (
     <animated.div className="video" style={videoAnim}>
       <div className="sub-video">
-        {props.stream && (
+        {view && (
           <React.Fragment>
-            <div
-              className="close-div"
-              onClick={() => props.dispatchApp({ type: REMOVE_VIEW })}
-            >
+            <div className="close-div" onClick={() => dispatch(setView(null))}>
               <MdClose />
             </div>
             <div className="video-container">
-              {showVideo && (
+              {view && (
                 <iframe
                   allowFullScreen={true}
-                  src={`https://player.twitch.tv/?channel=${props.stream.channel.display_name}&autoplay=true`}
+                  src={`https://player.twitch.tv/?channel=${view.channel.display_name}&autoplay=true`}
                   frameBorder="0"
                 />
               )}
@@ -55,23 +35,21 @@ const ViewStream = (props: Props) => {
 
             <a
               target="_blank"
-              href={
-                props.stream ? props.stream.channel.url : "https://twitch.tv"
-              }
+              href={view ? view.channel.url : "https://twitch.tv"}
               rel="noopener noreferrer"
               className="twitch-button btn"
             >
               Visit Twitch Channel
             </a>
-            <span className="viewer-count">{props.stream.viewers} viewers</span>
+            <span className="viewer-count">{view.viewers} viewers</span>
           </React.Fragment>
         )}
       </div>
-      {window.innerWidth >= 1000 && props.stream && (
+      {window.innerWidth >= 1000 && view && (
         <div className="chat">
           <iframe
             className="chat"
-            src={`https://www.twitch.tv/embed/${props.stream.channel.display_name}/chat?darkpopout`}
+            src={`https://www.twitch.tv/embed/${view.channel.display_name}/chat?darkpopout`}
           />
         </div>
       )}
