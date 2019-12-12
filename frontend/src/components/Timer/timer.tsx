@@ -6,10 +6,10 @@ import { ReduxStore } from "../../reducers/reducer";
 import "./timer.scss";
 
 const Timer = () => {
-  const nextRefresh = useSelector(
-    (store: ReduxStore) => store.streamData.nextRefresh
+  const timer = useSelector(
+    (store: ReduxStore) => store.timer
   );
-  const timer = useTimer(nextRefresh);
+  // const timer = useTimer(nextRefresh);
   if (!timer) return null;
   return (
     <div className="timer-parent">

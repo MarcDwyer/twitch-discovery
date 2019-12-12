@@ -1,20 +1,19 @@
 import React, { useCallback } from "react";
-import { IDiag } from "../../reducers/streams_reducer";
-import { SET_VIEW } from "../../reducers/streams_reducer";
 import { usePercentage } from "../../hooks/hooks";
 import StreamCard from "../StreamCard/stream-card";
-import { useSelector, useDispatch } from "react-redux";
-import "./stream-grid.scss";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import { SubStream } from "../../data_types/data_types";
 import { ReduxStore } from "../../reducers/reducer";
 import { setView } from "../../actions/stream_actions";
 
-const StreamerGrid = () => {
+import "./stream-grid.scss";
+
+const StreamerGrid = React.memo(() => {
   const [streams, diag] = useSelector((state: ReduxStore) => [
     state.streamData.streams,
     state.streamData.diagnostic
-  ]);
+  ], shallowEqual);
   const dispatch = useDispatch();
   const updateFeatured = useCallback(
     (payload: SubStream) => {
@@ -22,7 +21,7 @@ const StreamerGrid = () => {
     },
     [streams]
   );
-
+  console.log("grid rendered")
   const top = usePercentage(diag.offset);
 
   return (
@@ -39,6 +38,6 @@ const StreamerGrid = () => {
       </div>
     </div>
   );
-};
+});
 
 export default StreamerGrid;

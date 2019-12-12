@@ -21,8 +21,8 @@ const getTime = (futureTime: number): Time | null => {
 export const useTimer = (futureTime: number) => {
   const [timer, setTimer] = useState<Time | null>(null);
 
-  let interval: number | undefined;
   useEffect(() => {
+    let interval: number | undefined;
     setTimer(getTime(futureTime));
     //@ts-ignore
     interval = setInterval(() => setTimer(getTime(futureTime)), 1000);

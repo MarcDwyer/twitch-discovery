@@ -2,13 +2,16 @@ import React from "react";
 import { MdClose } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
 import { setView } from "../../actions/stream_actions";
-import "./view_stream.scss";
+
 import { ReduxStore } from "../../reducers/reducer";
 import { useSelector, useDispatch } from "react-redux";
 
-const ViewStream = () => {
+import "./view_stream.scss";
+
+const ViewStream = React.memo(() => {
   const view = useSelector((state: ReduxStore) => state.streamData.view);
   const dispatch = useDispatch();
+  console.log("video rerendered")
   const videoAnim = useSpring({
     from: { opacity: 0, transform: "translateY(100%)" },
     transform: "translateY(0%)",
@@ -55,6 +58,6 @@ const ViewStream = () => {
       )}
     </animated.div>
   );
-};
+});
 
 export default ViewStream;

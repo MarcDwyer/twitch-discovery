@@ -13,8 +13,8 @@ const getTime = (futureTime: number): Time | null => {
   const distance = futureTime - now;
 
   const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    ),
+    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  ),
     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
     seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -22,10 +22,8 @@ const getTime = (futureTime: number): Time | null => {
 };
 
 export const setTimer = (futureTime: number) => (
-  dispatch: Dispatch,
-  getState: GetState
+  dispatch: Dispatch
 ) => {
-  console.log("timer ran");
   // const newTime = getTime(futureTime);
   // const timer = getState().timer;
   dispatch({ type: UPDATE_TIME, payload: getTime(futureTime) });

@@ -1,24 +1,23 @@
 import React, { useState } from "react";
-import { Payload } from "../../reducers/streams_reducer";
 import { FaMoon, FaHamburger } from "react-icons/fa";
-import { SubStream } from "../../data_types/data_types";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 import Modal from "../Modal/modal";
 import CreateOffset from "../Offset-Change/change-offset";
 import Timer from "../Timer/timer";
 import Diagnostic from "../Diagnostic/diag";
 
-import "./navbar.scss";
 import { ReduxStore } from "../../reducers/reducer";
 
-const Navbar = () => {
-  const [view, nextRefresh] = useSelector((state: ReduxStore) => [
-    state.streamData.view,
-    state.streamData.nextRefresh
-  ]);
+import "./navbar.scss";
+
+const Navbar = React.memo(() => {
+  const view = useSelector((state: ReduxStore) =>
+    state.streamData.view
+    , shallowEqual);
   const [showOffset, setShowOffset] = useState<boolean>(false);
   const [showDiag, setShowDiag] = useState<boolean>(false);
+  console.log("navbar ran")
   return (
     <div
       className="navbar"
@@ -51,6 +50,6 @@ const Navbar = () => {
       />
     </div>
   );
-};
+});
 
 export default Navbar;

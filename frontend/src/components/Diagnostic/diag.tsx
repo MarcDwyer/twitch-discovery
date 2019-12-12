@@ -15,11 +15,11 @@ interface Props {
 const Diag = (props: Props) => {
   const [
     streams,
-    nextRefresh,
+    timer,
     { total, offset, skippedOver }
   ] = useSelector((state: ReduxStore) => [
     state.streamData.streams,
-    state.streamData.nextRefresh,
+    state.timer,
     state.streamData.diagnostic
   ]);
   const diagAnim = useSpring({
@@ -30,7 +30,7 @@ const Diag = (props: Props) => {
   });
   const average = useAverage(streams);
   const top = usePercentage(offset);
-  const timer = useTimer(nextRefresh);
+  // const timer = useTimer(nextRefresh);
 
   return (
     <React.Fragment>
