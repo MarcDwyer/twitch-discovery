@@ -1,32 +1,36 @@
 import express from "express";
 import http from "http";
 import ioSetup from "socket.io";
-import dotenv from "dotenv";
-import TwitchDiscovery, { TwitchDisc } from "./twitch_discovery";
-import { handleOffset } from "./offset-change";
+import TwitchDiscovery from "./twitch-discovery/twitch-data";
 
 import bodyParser from "body-parser";
 import cors from "cors";
-
-dotenv.config();
+import { BPAYLOAD } from "./data_types/socket_cases";
 
 const app = express(),
-  port = 5005,
+  PORT = 5010,
   server = new http.Server(app),
   io = ioSetup(server);
 
 app.use(bodyParser.json());
 app.use(cors());
 
-(async () => {
-  const streams: TwitchDisc = new TwitchDiscovery(io);
-  await streams.populateRandom();
+async function main() {
+  const minutes = 60000;
+  const streams = new TwitchDiscovery(io, {
+    skipOver: 0,
+    refreshEvery: minutes * 1,
+    getListEvery: minutes * 45
+  });
+  await streams.getNewPayload();
 
-  io.on("connection", socket => socket.emit("init-data", streams.data));
+  io.on("connection", socket => socket.emit(BPAYLOAD, streams.payload));
 
-  app.use("/test", (req, res) => res.send(JSON.stringify(streams.data)));
+  app.post("/set-offset/", async (req, res) =>
+    console.log("under construction")
+  );
 
-  app.post("/set-offset/", async (req, res) => handleOffset(req, res, streams));
+  server.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+}
 
-  server.listen(port);
-})();
+main().catch(err => console.log(`Error: ${err}`));
