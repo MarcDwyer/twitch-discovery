@@ -1,38 +1,30 @@
-
-export interface ITimer {
-    interval: number;
-    func: Function;
-    time: number;
-    start(): ITimer;
-    stop(): ITimer;
-    reset(param: number): void;
-}
- function Timer(this: ITimer, func: Function, time: number) {
-    this.func = func
-    this.time = time
-    this.interval = setInterval(this.func, this.time)
-}
-
-
-Timer.prototype.start = function () {
+class Timer {
+  time: number;
+  interval: number;
+  func: Function;
+  constructor(func: Function, time: number) {
+    this.time = time;
+    this.func = func;
+    this.interval = setInterval(func, time);
+  }
+  start() {
     if (!this.interval) {
-        this.stop()
-        this.interval = setInterval(this.func, this.time)
+      this.stop();
+      this.interval = setInterval(this.func, this.time);
     }
-    return this
-}
-
-Timer.prototype.stop = function () {
+    return this;
+  }
+  stop() {
     if (this.interval) {
-        clearInterval(this.interval)
-        this.interval = null
+      clearInterval(this.interval);
+      this.interval = null;
     }
-    return this
+    return this;
+  }
+  reset(time?: number) {
+    time = time || this.time;
+    this.time = time;
+    return this.stop().start();
+  }
 }
-
-Timer.prototype.reset = function (time) {
-    this.time = time
-    return this.stop().start()
-}
-
-export default Timer
+export default Timer;

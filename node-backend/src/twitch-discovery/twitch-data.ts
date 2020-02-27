@@ -2,8 +2,9 @@ import { Server } from "socket.io";
 import { SubStream } from "../data_types/stream_responses";
 import { V5TwitchAPI } from "twitch-getter";
 import { IStreamers } from "../data_types/td_types";
+import Timer from "../timers";
 
-import { structureResp, incSkipped } from "./td_utils";
+import { structureResp, incSkipped, getIds, getStreams } from "./td_utils";
 import { BPAYLOAD } from "../data_types/socket_cases";
 
 import dotenv from "dotenv";
@@ -25,7 +26,7 @@ type TDConfig = {
   getListEvery: number;
   refreshEvery: number;
 };
-const tfetcher = new V5TwitchAPI(process.env.TWITCH);
+export const tfetcher = new V5TwitchAPI(process.env.TWITCH);
 
 class TwitchDiscovery {
   config: TDConfig;
@@ -36,20 +37,20 @@ class TwitchDiscovery {
     this.payload = null;
     this.wss = io;
   }
-  async getNewPayload() {
-    const { payload, config } = this;
+  getNewPayload = async () => {
+    const { payload } = this;
     if (payload) {
-      this.config.skipOver = incSkipped(config.skipOver);
+      this.config.skipOver = incSkipped(this.config.skipOver);
     }
-    const nextRefresh = new Date().getTime() + config.refreshEvery;
+    const nextRefresh = new Date().getTime() + this.config.refreshEvery;
     const response = await tfetcher.GetV5Streams({
-      offset: config.skipOver,
+      offset: this.config.skipOver,
       limit: 10,
       language: "en"
     });
     const streams = structureResp(response);
     const diagnostic: Diag = {
-      skippedOver: config.skipOver
+      skippedOver: this.config.skipOver
     };
 
     this.payload = {
@@ -59,6 +60,27 @@ class TwitchDiscovery {
       diagnostic
     };
     this.wss.emit(BPAYLOAD, this.payload);
+  };
+  refresh = async () => {
+    if (!this.payload) return;
+    const { streams } = this.payload;
+    console.log(streams);
+    const ids = getIds(streams);
+    const [newStreams, online] = await getStreams(ids);
+    this.payload = {
+      ...this.payload,
+      //@ts-ignore
+      streams: structureResp(newStreams),
+      //@ts-ignore
+      online
+    };
+  };
+  setTimers() {
+    const { refreshEvery, getListEvery } = this.config;
+    const newPayload = new Timer(this.getNewPayload, getListEvery);
+    const refreshStreams = new Timer(this.refresh, 10000);
+
+    return [newPayload, refreshStreams];
   }
 }
 

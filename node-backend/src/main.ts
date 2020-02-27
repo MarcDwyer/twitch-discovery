@@ -16,13 +16,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 async function main() {
-  const minutes = 60000;
+  const minutes = 60000 * 60;
   const streams = new TwitchDiscovery(io, {
     skipOver: 0,
     refreshEvery: minutes * 1,
     getListEvery: minutes * 45
   });
   await streams.getNewPayload();
+  streams.setTimers();
 
   io.on("connection", socket => socket.emit(BPAYLOAD, streams.payload));
 
