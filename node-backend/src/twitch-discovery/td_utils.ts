@@ -20,10 +20,10 @@ export const getStreams = async (ids: number[]) => {
     const newStreams = await Promise.all(
       ids.map(async id => {
         console.log(id);
-        const { streams } = await tfetcher.GetV5Streams({
+        const data = await tfetcher.GetV5Streams({
           channel: String(id)
         });
-        return streams[0];
+        return structureResp(data);
       })
     );
     console.log(newStreams);

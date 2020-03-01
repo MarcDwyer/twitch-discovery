@@ -70,7 +70,7 @@ class TwitchDiscovery {
     this.payload = {
       ...this.payload,
       //@ts-ignore
-      streams: structureResp(newStreams),
+      streams: newStreams,
       //@ts-ignore
       online
     };

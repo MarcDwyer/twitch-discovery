@@ -23,7 +23,7 @@ async function main() {
     getListEvery: minutes * 45
   });
   await streams.getNewPayload();
-  streams.setTimers();
+  // streams.setTimers();
 
   io.on("connection", socket => socket.emit(BPAYLOAD, streams.payload));
 
