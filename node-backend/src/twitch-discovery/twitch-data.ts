@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
-import { SubStream } from "../data_types/stream_responses";
 import { V5TwitchAPI } from "twitch-getter";
-import { IStreamers } from "../data_types/td_types";
+import { TDConfig, Payload, Diag } from "../data_types/td_types";
 import Timer from "../timers";
 
 import { structureResp, incSkipped, getIds, getStreams } from "./td_utils";
@@ -11,21 +10,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export type Payload = {
-  nextRefresh?: number;
-  streams: IStreamers[];
-  diagnostic: Diag;
-  online: SubStream[];
-};
-type Diag = {
-  skippedOver: number;
-};
-
-type TDConfig = {
-  skipOver: number;
-  getListEvery: number;
-  refreshEvery: number;
-};
 export const tfetcher = new V5TwitchAPI(process.env.TWITCH);
 
 class TwitchDiscovery {

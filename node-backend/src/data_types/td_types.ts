@@ -7,6 +7,23 @@ export interface IStreamers {
   id: number;
 }
 
-export type StructureStreams = {
-  [key: string]: IStreamers;
+// export type StructureStreams = {
+//   [key: string]: IStreamers;
+// };
+
+
+export type Payload = {
+  nextRefresh?: number;
+  streams: IStreamers[];
+  diagnostic: Diag;
+  online: SubStream[];
+};
+export type Diag = {
+  skippedOver: number;
+};
+
+export type TDConfig = {
+  skipOver: number;
+  getListEvery: number;
+  refreshEvery: number;
 };
