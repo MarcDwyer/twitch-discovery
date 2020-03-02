@@ -1,11 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-    <span>{{ socket ? "socket" : "no socket" }}</span>
+    <StreamerGrid v-if="twitchData" v-bind:streams="twitchData.streams" />
   </div>
 </template>
 <script lang="ts">
@@ -13,41 +8,55 @@ import Vue from "vue";
 import { Store } from "vuex";
 import { Component, Prop } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
+
+import { socketActions } from "./socket_utils/socket_actions";
+
+import { TwitchPayload } from "./data_types";
 import { MyState } from "./store";
+
+import StreamerGrid from "./components/Streamer_Grid.vue";
 
 import io from "socket.io-client";
 
-@Component
+@Component({
+  components: {
+    StreamerGrid
+  }
+})
 class App extends Vue {
   $store: Store<MyState>;
   @State socket: SocketIOClient.Socket;
+  @State twitchData: TwitchPayload;
   @Mutation setSocket: (socket: SocketIOClient.Socket) => void;
   mounted() {
     const socket = io("http://localhost:5010");
+    socketActions(socket, this.$store);
     this.setSocket(socket);
+  }
+  updated() {
+    console.log(this.twitchData);
   }
 }
 export default App;
 </script>
 <style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+  background-color: black;
+  width: 100%;
+  height: 100vh;
 }
 </style>

@@ -69,13 +69,19 @@ interface ChannelData {
   views: number;
 }
 
-export type StructurcedStreams = {
-  id: number;
-  channelData: ChannelData;
-  streamName: string;
+export interface IStreamers {
   streamData: SubStream | null;
-};
+  streamName: string;
+  channelData: Channel;
+  id: number;
+}
 
-export type ParentData = {
-  [key: string]: StructurcedStreams;
+export type TwitchPayload = {
+  nextRefresh?: number;
+  streams: IStreamers[];
+  diagnostic: Diag;
+  online: SubStream[];
+};
+type Diag = {
+  skippedOver: number;
 };
