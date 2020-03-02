@@ -20,10 +20,17 @@ export default StreamerGrid;
 
 <style lang="scss">
 .streamer-grid {
-  color: white;
+  margin: auto;
+  width: 100%;
+
   .inner-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    width: 100%;
+    grid-auto-rows: 1fr;
+    margin: auto;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 25px;
+    row-gap: 25px;
   }
 }
 </style>
