@@ -1,7 +1,7 @@
 version: "3"
 services:
-  backend:
-    build: backend
+  node-backend:
+    build: node-backend
     ports:
       - "5010:5010"
     container_name: td_backend
