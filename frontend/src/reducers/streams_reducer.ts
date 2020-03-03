@@ -1,13 +1,11 @@
 import { Action } from "./reducer";
-import { ParentData, SubStream } from "../data_types/data_types";
+import { StreamData, SubStream } from "../data_types/data_types";
 export type IDiag = {
-  offset: number;
-  total: number;
   skippedOver: number;
 };
 export type Payload = {
   nextRefresh: number;
-  streams: ParentData;
+  streams: StreamData;
   diagnostic: IDiag;
   online: SubStream[];
   view: SubStream | null;

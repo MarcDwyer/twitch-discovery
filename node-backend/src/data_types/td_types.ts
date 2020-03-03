@@ -1,22 +1,21 @@
 import { Channel, SubStream } from "../data_types/stream_responses";
+import { StreamData } from "twitch-getter/lib/v5_twitch_api/v5_types";
+import Timer from "../timers";
 
 export interface IStreamers {
-  streamData: SubStream | null;
+  streamData: StreamData | null;
   streamName: string;
   channelData: Channel;
   id: number;
 }
-
-// export type StructureStreams = {
-//   [key: string]: IStreamers;
-// };
-
-
 export type Payload = {
   nextRefresh?: number;
-  streams: IStreamers[];
+  streams: Streams;
   diagnostic: Diag;
   online: SubStream[];
+};
+export type Streams = {
+  [channel_id: string]: IStreamers;
 };
 export type Diag = {
   skippedOver: number;
@@ -24,6 +23,21 @@ export type Diag = {
 
 export type TDConfig = {
   skipOver: number;
+  incBy: number;
   getListEvery: number;
   refreshEvery: number;
+};
+export type V5StreamsConfig = {
+  [key: string]: any;
+  channel?: string;
+  game?: string;
+  language?: string;
+  stream_type?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export type MyTimers = {
+  refresh: Timer;
+  newPayload: Timer;
 };

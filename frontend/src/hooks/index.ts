@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
-import { ParentData } from "../data_types/data_types";
-import { Time } from "../reducers/timer_reducer";
+import { StreamData } from "../data_types/data_types";
 
-const getTime = (futureTime: number): Time | null => {
+export type PTime = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+const getTime = (futureTime: number): PTime | null => {
   const now = new Date().getTime();
   if (now >= futureTime) {
     return null;
@@ -19,10 +24,10 @@ const getTime = (futureTime: number): Time | null => {
 };
 
 export const useTimer = (futureTime: number) => {
-  const [timer, setTimer] = useState<Time | null>(null);
+  const [timer, setTimer] = useState<PTime | null>(null);
 
   useEffect(() => {
-    let interval: number | undefined;
+    let interval: number;
     setTimer(getTime(futureTime));
     //@ts-ignore
     interval = setInterval(() => setTimer(getTime(futureTime)), 1000);
@@ -50,7 +55,7 @@ export const usePercentage = (num: number) => {
   return top;
 };
 
-export const useAverage = (data: ParentData) => {
+export const useAverage = (data: StreamData) => {
   const [avg, setAvg] = useState<number>(0);
 
   useEffect(() => {

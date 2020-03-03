@@ -1,23 +1,19 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { useTimer } from "../../hooks/hooks";
-import { ReduxStore } from "../../reducers/reducer";
 
 import "./timer.scss";
 
-const Timer = () => {
-  const timer = useSelector(
-    (store: ReduxStore) => store.timer
-  );
-  // const timer = useTimer(nextRefresh);
-  if (!timer) return null;
+type Props = {
+  minutes: number;
+  seconds: number;
+  headline: string;
+};
+
+const Timer = (props: Props) => {
+  const { minutes, seconds, headline } = props;
   return (
     <div className="timer-parent">
       <React.Fragment>
-        {timer && (
-          <span>{`Next update in ${timer.minutes} minutes and ${timer.seconds} seconds`}</span>
-        )}
-        {!timer && <span>Fetching new streams...</span>}
+        <span>{`${headline} ${minutes} minutes and ${seconds} seconds`}</span>
       </React.Fragment>
     </div>
   );

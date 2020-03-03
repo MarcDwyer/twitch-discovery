@@ -9,7 +9,6 @@ import ViewStream from "../View-Stream/view_stream";
 
 import { ReduxStore } from "../../reducers/reducer";
 import { setSocket } from "../../actions/socket_actions";
-import { setTimer } from "../../actions/timer_actions";
 
 import "./main.scss";
 
@@ -32,20 +31,6 @@ const Main = React.memo(() => {
     }
   }, [socket]);
 
-  console.log(streamData);
-  useEffect(() => {
-    let interval: any;
-    if (streamData) {
-      dispatch(setTimer(streamData.nextRefresh));
-      interval = setInterval(
-        () => dispatch(setTimer(streamData.nextRefresh)),
-        1000
-      );
-    }
-    return function() {
-      if (interval) clearInterval(interval);
-    };
-  }, [streamData]);
   return (
     <div className="main">
       {streamData && (

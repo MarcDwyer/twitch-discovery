@@ -6,15 +6,16 @@ import { FPAYLOAD, FREFRESH } from "../data_types/socket_cases";
 
 const attachListeners = (socket: SocketIOClient.Socket, dispatch: Dispatch) => {
   socket.on(FPAYLOAD, (payload: any) => {
+    console.log(payload);
     dispatch({
       type: APP_INIT,
       payload
     });
   });
-  socket.on(FREFRESH, (data: any) => {
+  socket.on(FREFRESH, (updatedStreams: any) => {
     dispatch({
       type: APP_UPDATE,
-      payload: data.streams
+      payload: updatedStreams
     });
   });
 };

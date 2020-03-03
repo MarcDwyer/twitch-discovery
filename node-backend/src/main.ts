@@ -16,16 +16,19 @@ app.use(bodyParser.json());
 app.use(cors());
 
 async function main() {
-  const minutes = 60000 * 60;
-  const streams = new TwitchDiscovery(io, {
+  const minute = 60000;
+  const td = new TwitchDiscovery(io, {
     skipOver: 0,
-    refreshEvery: minutes * 1,
-    getListEvery: minutes * 45
+    incBy: 10,
+    refreshEvery: minute * 5,
+    getListEvery: minute * 45
   });
-  await streams.getNewPayload();
-  // streams.setTimers();
+  await td.getNewPayload({
+    language: "en"
+  });
+  td.setTimers();
 
-  io.on("connection", socket => socket.emit(BPAYLOAD, streams.payload));
+  io.on("connection", socket => socket.emit(BPAYLOAD, td.payload));
 
   app.post("/set-offset/", async (req, res) =>
     console.log("under construction")

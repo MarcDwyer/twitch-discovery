@@ -2,26 +2,27 @@ import React from "react";
 import { useSpring, animated } from "react-spring";
 import { FaGithub } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import { usePercentage, useAverage, useTimer } from "../../hooks/hooks";
+import { useAverage } from "../../hooks";
 import { useSelector } from "react-redux";
+import { PTime } from "../../hooks";
 
-import "./diag.scss";
+import Timer from "../Timer/timer";
+
 import { ReduxStore } from "../../reducers/reducer";
 
+import "./diag.scss";
+
 interface Props {
+  timer: PTime | null;
   showDiag: boolean;
   setShowDiag(p: boolean): void;
 }
 const Diag = (props: Props) => {
-  const [
-    streams,
-    timer,
-    { total, offset, skippedOver }
-  ] = useSelector((state: ReduxStore) => [
+  const [streams, { skippedOver }] = useSelector((state: ReduxStore) => [
     state.streamData.streams,
-    state.timer,
     state.streamData.diagnostic
   ]);
+  const { timer } = props;
   const diagAnim = useSpring({
     opacity: 1,
     transform: "translateX(0)",
@@ -29,21 +30,20 @@ const Diag = (props: Props) => {
     reverse: !props.showDiag
   });
   const average = useAverage(streams);
-  const top = usePercentage(offset);
-  // const timer = useTimer(nextRefresh);
 
   return (
     <React.Fragment>
       <animated.div className="innertext" style={diagAnim}>
         <MdClose onClick={() => props.setShowDiag(false)} />
         <h2>Twitch Data</h2>
-        <span className="top">Top {top} of streamers</span>
-        <span>Total Streams: {total}</span>
         <span>Average viewership: {average}</span>
         <span>Skipped over streams: {skippedOver}</span>
-        <span>Streamers left: {total - skippedOver}</span>
         {timer && (
-          <span>{`Next refresh: ${timer.minutes} mins and ${timer.seconds} sec`}</span>
+          <Timer
+            headline="Next refresh in:"
+            minutes={timer.minutes}
+            seconds={timer.seconds}
+          />
         )}
         <div className="links">
           <a

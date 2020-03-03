@@ -1,18 +1,18 @@
 import { V5StreamersPayload } from "twitch-getter/lib/v5_twitch_api/v5_types";
-import { IStreamers } from "../data_types/td_types";
-import { SubStream } from "../data_types/stream_responses";
+import { IStreamers, Streams } from "../data_types/td_types";
 import { tfetcher } from "./twitch-data";
+import { StreamData } from "twitch-getter/lib/v5_twitch_api/v5_types";
 
-export const structureResp = (data: V5StreamersPayload): IStreamers[] => {
-  //@ts-ignore
-  return data.streams.map(stream => {
-    return {
+export const structureResp = (streams: StreamData[]): Streams => {
+  return streams.reduce((obj, stream) => {
+    obj[stream.channel._id] = {
       streamData: stream,
-      streamName: stream.channel.display_name,
+      id: stream.channel._id,
       channelData: stream.channel,
-      id: stream._id
+      streamName: stream.channel.name
     };
-  });
+    return obj;
+  }, {});
 };
 
 export const getStreams = async (ids: number[]) => {
@@ -21,9 +21,10 @@ export const getStreams = async (ids: number[]) => {
       ids.map(async id => {
         console.log(id);
         const data = await tfetcher.GetV5Streams({
-          channel: String(id)
+          channel: String(id),
+          language: "en"
         });
-        return structureResp(data);
+        return structureResp(data.streams);
       })
     );
     console.log(newStreams);
@@ -39,7 +40,7 @@ export const getIds = (streamData: IStreamers[]) => {
   return streamData.map(stream => stream.channelData._id);
 };
 
-export const incSkipped = (curr: number) => {
+export const incSkipped = (curr: number, incBy: number) => {
   if (curr > 10000) return 0;
-  return curr + 25;
+  return curr + incBy;
 };

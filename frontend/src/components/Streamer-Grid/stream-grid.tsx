@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { usePercentage } from "../../hooks/hooks";
+import { usePercentage } from "../../hooks";
 import StreamCard from "../StreamCard/stream-card";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
@@ -10,10 +10,13 @@ import { setView } from "../../actions/stream_actions";
 import "./stream-grid.scss";
 
 const StreamerGrid = React.memo(() => {
-  const [streams, diag] = useSelector((state: ReduxStore) => [
-    state.streamData.streams,
-    state.streamData.diagnostic
-  ], shallowEqual);
+  const [streams, diag] = useSelector(
+    (state: ReduxStore) => [
+      state.streamData.streams,
+      state.streamData.diagnostic
+    ],
+    shallowEqual
+  );
   const dispatch = useDispatch();
   const updateFeatured = useCallback(
     (payload: SubStream) => {
@@ -21,12 +24,11 @@ const StreamerGrid = React.memo(() => {
     },
     [streams]
   );
-  console.log("grid rendered")
-  const top = usePercentage(diag.offset);
+  console.log("grid rendered");
 
   return (
     <div className="grid-parent">
-      <h1>{`Top ${top} of streamers`}</h1>
+      <h2>Skipped the first {diag.skippedOver} streams</h2>
       <div className="streamer-grid">
         {Object.values(streams).map(stream => (
           <StreamCard

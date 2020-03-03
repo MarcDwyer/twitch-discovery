@@ -9,15 +9,22 @@ import Diagnostic from "../Diagnostic/diag";
 
 import { ReduxStore } from "../../reducers/reducer";
 
+import { useTimer } from "../../hooks";
+
 import "./navbar.scss";
 
 const Navbar = React.memo(() => {
-  const view = useSelector((state: ReduxStore) =>
-    state.streamData.view
-    , shallowEqual);
+  const [view, nextRefresh] = useSelector(
+    (state: ReduxStore) => [
+      state.streamData.view,
+      state.streamData.nextRefresh
+    ],
+    shallowEqual
+  );
   const [showOffset, setShowOffset] = useState<boolean>(false);
   const [showDiag, setShowDiag] = useState<boolean>(false);
-  console.log("navbar ran")
+
+  const timer = useTimer(nextRefresh);
   return (
     <div
       className="navbar"
@@ -30,12 +37,21 @@ const Navbar = React.memo(() => {
         onClick={() => setShowDiag(!showDiag)}
       />
       <Modal
-        children={<Diagnostic showDiag={showDiag} setShowDiag={setShowDiag} />}
+        children={
+          <Diagnostic
+            timer={timer}
+            showDiag={showDiag}
+            setShowDiag={setShowDiag}
+          />
+        }
         shouldOpen={showDiag}
         close={setShowDiag}
       />
       <div className="timer-or-viewing">
-        {view ? <span>Currently viewing {view.channel.name}</span> : <Timer />}
+        {!view && timer && (
+          <Timer headline="Next update in:" minutes={timer.minutes} seconds={timer.seconds} />
+        )}
+        {view && <span>Currently viewing {view.channel.name}</span>}
       </div>
       <FaMoon
         className="offset-trigger buttons"
