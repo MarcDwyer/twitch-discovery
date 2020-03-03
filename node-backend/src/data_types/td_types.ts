@@ -1,9 +1,9 @@
 import { Channel, SubStream } from "../data_types/stream_responses";
-import { StreamData } from "twitch-getter/lib/v5_twitch_api/v5_types";
+import { V5Types } from "twitch-getter";
 import Timer from "../timers";
 
 export interface IStreamers {
-  streamData: StreamData | null;
+  streamData: V5Types.StreamData | null;
   streamName: string;
   channelData: Channel;
   id: number;

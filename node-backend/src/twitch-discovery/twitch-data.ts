@@ -1,19 +1,13 @@
 import { Server } from "socket.io";
-import { V5TwitchAPI } from "twitch-getter";
-import {
-  TDConfig,
-  Payload,
-  Diag,
-  V5StreamsConfig,
-  MyTimers
-} from "../data_types/td_types";
+import { V5TwitchAPI, V5Types } from "twitch-getter";
+import { diffStreams } from "./diffing";
+import { TDConfig, Payload, Diag, MyTimers } from "../data_types/td_types";
 import Timer from "../timers";
 
 import { structureResp, incSkipped } from "./td_utils";
 import { BPAYLOAD, BREFRESH } from "../data_types/socket_cases";
 
 import dotenv from "dotenv";
-import { diffStreams } from "./diffing";
 
 dotenv.config();
 
@@ -30,7 +24,7 @@ class TwitchDiscovery {
     this.timers = null;
     this.wss = io;
   }
-  getNewPayload = async (tdConfig?: V5StreamsConfig) => {
+  getNewPayload = async (tdConfig?: V5Types.V5StreamsConfig) => {
     if (this.payload) {
       this.config.skipOver = incSkipped(
         this.config.skipOver,

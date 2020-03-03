@@ -10,14 +10,10 @@ export const diffStreams = async (twitchStreams: Streams): Promise<Streams> => {
         channel: String(stream.id)
       });
       const streamResp = response.streams[0];
-      if (!streamResp) {
-        result[stream.id] = { ...stream, streamData: null };
-      } else {
-        result[stream.id] = {
-          ...stream,
-          streamData: streamResp
-        };
-      }
+      result[stream.id] = {
+        ...stream,
+        streamData: streamResp ? streamResp : null
+      };
     }
     return result;
   } catch (err) {
