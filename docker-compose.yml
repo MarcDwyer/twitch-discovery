@@ -1,0 +1,10 @@
+version: "3"
+services:
+  backend:
+    build: backend
+    ports:
+      - "5010:5010"
+    container_name: td_backend
+    restart: always
+    environment:
+      - TWITCH=6urve0388wq48aqtm4lobjmq7zllvy
