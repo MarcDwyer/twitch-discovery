@@ -1,5 +1,5 @@
 import { Streams } from "../data_types/td_types";
-import { tfetcher } from "./twitch-data";
+import { tfetcher } from "../main";
 
 export const diffStreams = async (twitchStreams: Streams): Promise<Streams> => {
   try {

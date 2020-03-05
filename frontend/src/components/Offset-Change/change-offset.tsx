@@ -20,7 +20,6 @@ const URL = () =>
 const ChangeOffset = React.memo((props: Props) => {
   const [secret, setSecret] = useState<string>("");
   const [offset, setOffset] = useState<string>("");
-  const [count, setCount] = useState<number>(0);
 
   const offsetAnim = useSpring({
     opacity: 1,
@@ -28,43 +27,15 @@ const ChangeOffset = React.memo((props: Props) => {
     from: { opacity: 0, transform: "translateX(100%)" },
     reverse: !props.showOffset
   });
-  useEffect(() => {
-    if (count >= 3) {
-      props.setShowOffset(false);
-    }
-  }, [count]);
+
   return createPortal(
     <animated.div className="offset" style={offsetAnim}>
       <form
         className="inner-offset"
         onSubmit={async e => {
           e.preventDefault();
-          if (
-            offset.length < 1 ||
-            secret.length < 1 ||
-            isNaN(parseFloat(offset)) ||
-            count >= 3
-          ) {
-            setCount(count + 1);
-            return;
-          } else {
-            try {
-              const payload = { secret, offset };
 
-              const sendThis = await fetch(`${URL()}/set-offset/`, {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-              });
-              if (!sendThis.ok) setCount(count + 1);
-            } catch (err) {
-              console.log(err);
-              setCount(count + 1);
-            }
-          }
+          const sendThis = await fetch(`${URL()}/set-offset/${offset}`, {});
         }}
       >
         <input

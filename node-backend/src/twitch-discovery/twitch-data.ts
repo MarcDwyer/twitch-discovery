@@ -1,48 +1,49 @@
 import { Server } from "socket.io";
-import { V5TwitchAPI, V5Types } from "twitch-getter";
+import { V5Types } from "twitch-getter";
 import { diffStreams } from "./diffing";
 import { TDConfig, Payload, Diag, MyTimers } from "../data_types/td_types";
 import Timer from "../timers";
+import { tfetcher } from "../main";
 
 import { structureResp, incSkipped } from "./td_utils";
 import { BPAYLOAD, BREFRESH } from "../data_types/socket_cases";
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
-export const tfetcher = new V5TwitchAPI(process.env.TWITCH);
-
 class TwitchDiscovery {
   payload: Payload | null;
   timers: MyTimers | null;
-  wss: Server;
-  private config: TDConfig;
-  constructor(io: Server, config: TDConfig) {
-    this.config = config;
+  tdConfig: TDConfig;
+  twitchConfig: V5Types.V5StreamsConfig | undefined;
+  private wss: Server;
+  constructor(
+    io: Server,
+    tdConfig: TDConfig,
+    twitchConfig?: V5Types.V5StreamsConfig
+  ) {
+    this.tdConfig = tdConfig;
+    this.twitchConfig = twitchConfig;
     this.payload = null;
     this.timers = null;
     this.wss = io;
   }
   getNewPayload = async (tdConfig?: V5Types.V5StreamsConfig) => {
     if (this.payload) {
-      this.config.skipOver = incSkipped(
-        this.config.skipOver,
-        this.config.incBy
+      this.tdConfig.skipOver = incSkipped(
+        this.tdConfig.skipOver,
+        this.tdConfig.incBy
       );
     }
     if (this.timers) {
       this.timers.refresh.reset();
     }
-    const nextRefresh = new Date().getTime() + this.config.getListEvery;
+    const nextRefresh = new Date().getTime() + this.tdConfig.getListEvery;
     const response = await tfetcher.GetV5Streams({
-      offset: this.config.skipOver,
-      limit: this.config.incBy,
+      offset: this.tdConfig.skipOver,
+      limit: this.tdConfig.incBy,
       ...tdConfig
     });
     const streams = structureResp(response.streams);
     const diagnostic: Diag = {
-      skippedOver: this.config.skipOver
+      skippedOver: this.tdConfig.skipOver
     };
     this.payload = {
       ...this.payload,
@@ -58,7 +59,7 @@ class TwitchDiscovery {
     this.wss.emit(BREFRESH, this.payload.streams);
   };
   setTimers() {
-    const { refreshEvery, getListEvery } = this.config;
+    const { refreshEvery, getListEvery } = this.tdConfig;
     const newPayload = new Timer(this.getNewPayload, getListEvery);
     const refresh = new Timer(this.refresh, refreshEvery);
     this.timers = {
