@@ -4,49 +4,44 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"runtime"
 
-	"github.com/MarcDwyer/twitchgo"
-	"github.com/joho/godotenv"
+	socketio "github.com/googollee/go-socket.io"
 	"github.com/rs/cors"
 )
 
-var t *twitchgo.Twitch
+// export const BPAYLOAD = "payload",
+//   BREFRESH = "refresh";
 
-func init() {
-	fmt.Println(runtime.NumCPU())
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+var (
+	bPayload = "payload"
+	bRefresh = "refresh"
+)
+
+func (s *customServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	origin := r.Header.Get("Origin")
+	w.Header().Set("Access-Control-Allow-Origin", origin)
+	s.Server.ServeHTTP(w, r)
 }
 
 func main() {
-	mux := http.NewServeMux()
 
-	t = twitchgo.NewTwitchInstance(os.Getenv("TWITCH"))
-	// TwitchData converted to bytes
-	var payload []byte
-	// Create webscoket hub
-	hub := newHub()
-	// create new instance of TwitchData and pass hub & payload to broadcast to clients
-	td := newTwitchData(hub, &payload)
+	server, err := socketio.NewServer(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	go server.Serve()
 
-	go hub.run()
-
-	// build up the TwitchData
-	go td.populateTwitchData()
-
-	//Sets timers to update data
-	go td.setTimes()
-
-	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r, &payload)
+	server.OnConnect("/", func(s socketio.Conn) error {
+		s.SetContext("")
+		fmt.Println("connected:", s.ID())
+		s.Emit(bPayload, "hello world")
+		return nil
 	})
-	mux.HandleFunc("/set-offset/", func(w http.ResponseWriter, r *http.Request) {
-		td.setOffset(w, r)
-	})
-	handler := cors.Default().Handler(mux)
-	http.ListenAndServe(":5010", handler)
+	handle := http.Handler{}
+	c := cors.AllowAll().Handler()
+	defer server.Close()
+
+	http.Handle("/socket.io/", server)
+	log.Fatal(http.ListenAndServe(":5010", null))
 }

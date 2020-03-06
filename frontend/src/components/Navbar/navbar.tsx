@@ -3,7 +3,6 @@ import { FaMoon, FaHamburger } from "react-icons/fa";
 import { useSelector, shallowEqual } from "react-redux";
 
 import Modal from "../Modal/modal";
-import CreateOffset from "../Offset-Change/change-offset";
 import Timer from "../Timer/timer";
 import Diagnostic from "../Diagnostic/diag";
 
@@ -57,13 +56,13 @@ const Navbar = React.memo(() => {
         className="offset-trigger buttons"
         onClick={() => setShowOffset(!showOffset)}
       />
-      <Modal
+      {/* <Modal
         children={
           <CreateOffset showOffset={showOffset} setShowOffset={setShowOffset} />
         }
         shouldOpen={showOffset}
         close={setShowOffset}
-      />
+      /> */}
     </div>
   );
 });
