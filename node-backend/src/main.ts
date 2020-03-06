@@ -21,31 +21,30 @@ app.use(cors());
 
 export const tfetcher = new V5TwitchAPI(process.env.TWITCH);
 
-async function main() {
-  const minute = 60000;
-  const tdConfig = {
-    skipOver: 0,
-    incBy: 10,
-    refreshEvery: minute * 5,
-    getListEvery: minute * 45
-  };
+const minute = 60000;
 
-  const td = new TwitchDiscovery(io, tdConfig);
-  await td.getNewPayload({
-    language: "en"
-  });
-  td.setTimers();
+const tdConfig = {
+  skipOver: 0,
+  incBy: 20,
+  refreshEvery: minute * 5,
+  getListEvery: minute * 33
+};
+const twitchConfig: V5Types.V5StreamsConfig = {
+  limit: 20,
+  language: "en"
+};
+async function main() {
+  const td = new TwitchDiscovery(io, tdConfig, twitchConfig);
+  (await td.getNewPayload()).setTimers();
 
   io.on("connection", socket => socket.emit(BPAYLOAD, td.payload));
 
   app.get("/set-offset/:offset", async (req, res, next) => {
     const offset = parseInt(req.params.offset);
-    if (!isNaN(offset)) {
-      td.tdConfig.skipOver = offset;
-      await td.getNewPayload({
-        language: "en"
-      });
-      res.send(200);
+    const { skipOver } = td.tdConfig;
+    if (!isNaN(offset) && offset !== skipOver) {
+      await td.changeSkip(offset).getNewPayload(true);
+      res.sendStatus(200);
     } else {
       next("Data entered is not a number");
     }

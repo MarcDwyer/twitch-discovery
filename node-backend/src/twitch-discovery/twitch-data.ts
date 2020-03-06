@@ -25,21 +25,18 @@ class TwitchDiscovery {
     this.timers = null;
     this.wss = io;
   }
-  getNewPayload = async (tdConfig?: V5Types.V5StreamsConfig) => {
-    if (this.payload) {
-      this.tdConfig.skipOver = incSkipped(
-        this.tdConfig.skipOver,
-        this.tdConfig.incBy
-      );
+  getNewPayload = async (dontInc?: boolean): Promise<TwitchDiscovery> => {
+    if (this.payload && !dontInc) {
+      const { skipOver, incBy } = this.tdConfig;
+      this.tdConfig.skipOver = incSkipped(skipOver, incBy);
     }
     if (this.timers) {
       this.timers.refresh.reset();
     }
     const nextRefresh = new Date().getTime() + this.tdConfig.getListEvery;
     const response = await tfetcher.GetV5Streams({
-      offset: this.tdConfig.skipOver,
-      limit: this.tdConfig.incBy,
-      ...tdConfig
+      ...this.twitchConfig,
+      offset: this.tdConfig.skipOver
     });
     const streams = structureResp(response.streams);
     const diagnostic: Diag = {
@@ -52,6 +49,7 @@ class TwitchDiscovery {
       diagnostic
     };
     this.wss.emit(BPAYLOAD, this.payload);
+    return this;
   };
   refresh = async () => {
     const updatedPayload = await diffStreams(this.payload.streams);
@@ -66,6 +64,10 @@ class TwitchDiscovery {
       newPayload,
       refresh
     };
+  }
+  changeSkip(skip: number): TwitchDiscovery {
+    this.tdConfig.skipOver = skip;
+    return this;
   }
 }
 
