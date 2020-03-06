@@ -29,7 +29,7 @@ const tdConfig: TDConfig = {
   skipOver: 0,
   incBy: 20,
   refreshEvery: minute * 5,
-  getListEvery: minute * 1
+  getListEvery: minute * 33
 };
 const twitchConfig: V5Types.V5StreamsConfig = {
   limit: 20,
