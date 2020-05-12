@@ -24,7 +24,7 @@ const Main = React.memo(() => {
   useEffect(() => {
     if (!socket) {
       const url = isDev
-        ? "http://localhost:5010"
+        ? "ws://localhost:5010"
         : `https://${document.location.hostname}`;
 
       dispatch(setSocket(url));
