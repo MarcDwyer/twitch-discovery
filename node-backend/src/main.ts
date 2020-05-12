@@ -4,7 +4,10 @@ import {
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
 } from "https://deno.land/std@v0.50.0/ws/mod.ts";
+// import { FPAYLOAD } from "./ws_cases.ts";
+import TwitchDiscovery from "./twitch_discovery.ts";
 
+const td = new TwitchDiscovery(15);
 const s = serve({ port: 5010 });
 
 for await (const req of s) {

@@ -5,18 +5,19 @@ import { FPAYLOAD, FREFRESH } from "../data_types/socket_cases";
 
 const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
   socket.addEventListener("message", ({ data }) => {
-    console.log("from actions", data);
+    if (!("type" in data)) {
+      throw "No type in payload";
+    }
+    switch (data.type) {
+      default:
+        console.log("No case found");
+    }
   });
 };
 
 export const setSocket = (url: string) => (dispatch: Dispatch) => {
   console.log(url);
   const ws = new WebSocket(url);
-  ws.onopen = function () {
-    console.log("this thing is on");
-    console.log(this);
-    this.send("hello we are totally connected and stuff");
-  };
   attachListeners(ws, dispatch);
   dispatch({
     type: SET_SOCKET,
