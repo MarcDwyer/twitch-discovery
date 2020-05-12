@@ -1,6 +1,6 @@
 import TwitchMethods from "./twitch_methods.ts";
 import { Types } from "./twitch_types.ts";
-
+import { WebSocket } from "https://deno.land/std@v0.50.0/ws/mod.ts";
 type Config = {
   limit: number;
   offset: number;
@@ -10,7 +10,7 @@ export default class TwitchDiscovery {
   private tm = new TwitchMethods();
   private config: Config;
   public streams: Types.Streams | null = null;
-  constructor(limit: number) {
+  constructor(limit: number, public hub: Map<string, WebSocket>) {
     this.config = {
       limit,
       offset: 0,

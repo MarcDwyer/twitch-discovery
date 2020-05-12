@@ -3,12 +3,13 @@ import {
   acceptWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
+  WebSocket,
 } from "https://deno.land/std@v0.50.0/ws/mod.ts";
-// import { FPAYLOAD } from "./ws_cases.ts";
 import TwitchDiscovery from "./twitch_discovery.ts";
 
-const td = new TwitchDiscovery(15);
 const s = serve({ port: 5010 });
+const hub = new Map<string, WebSocket>();
+const td = new TwitchDiscovery(15, hub);
 
 for await (const req of s) {
   const { conn, r: bufReader, w: bufWriter, headers } = req;
@@ -20,7 +21,6 @@ for await (const req of s) {
       bufWriter,
       headers,
     });
-
     console.log("socket connected!");
     try {
       for await (const ev of sock) {
