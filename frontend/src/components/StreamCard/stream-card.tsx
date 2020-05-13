@@ -1,48 +1,45 @@
 import React, { useState } from "react";
 import { FaTwitch } from "react-icons/fa";
-import { SubStream, Stream } from "../../data_types/data_types";
+import { FTypes } from "../../data_types/data_types";
 
 import "./stream-card.scss";
 
 interface Props {
-  streamer: Stream;
-  updateFeatured(feat: SubStream): void;
+  streamer: FTypes.Stream;
+  updateFeatured(feat: FTypes.Stream): void;
 }
 const twitchColor = "#9147ff";
 
 const StreamCard = React.memo((props: Props) => {
-  const { streamData, channelData } = props.streamer;
+  const { channel } = props.streamer;
   const [hover, setHover] = useState<boolean>(false);
 
   const getStyles = () => {
     let styles = {};
-    if (hover && streamData) {
+    if (hover) {
       styles = {
         ...styles,
-        border: "3px solid #9147ff"
+        border: "3px solid #9147ff",
       };
-    } else if (!streamData && !hover) {
+    } else if (!hover) {
       styles = {
         ...styles,
-        opacity: ".55"
+        opacity: ".75",
       };
-    } else if (hover && !streamData) {
+    } else if (hover) {
       styles = {
         ...styles,
-        opacity: ".75"
+        opacity: "1",
       };
     }
     return styles;
   };
+
   return (
     <div
       className="stream-card"
       onClick={() => {
-        if (!streamData) {
-          window.open(channelData.url);
-          return;
-        }
-        props.updateFeatured(streamData);
+        props.updateFeatured(props.streamer);
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -50,39 +47,27 @@ const StreamCard = React.memo((props: Props) => {
     >
       <div
         className="center-image"
-        style={
-          channelData.profile_banner
-            ? { backgroundImage: `url(${channelData.profile_banner})` }
-            : { backgroundColor: "#eee" }
-        }
-      ></div>
+        style={channel.profile_banner
+          ? { backgroundImage: `url(${channel.profile_banner})` }
+          : { backgroundColor: "#eee" }}
+      >
+      </div>
       <div className="center">
         <img
-          style={
-            streamData
-              ? {
-                  border: `4px solid ${twitchColor}`,
-                  cursor: "pointer",
-                  boxShadow: `15px ${twitchColor}`
-                }
-              : { border: "4px solid #eee" }
-          }
-          src={channelData.logo}
+          style={{
+            border: `4px solid ${twitchColor}`,
+            cursor: "pointer",
+            boxShadow: `15px ${twitchColor}`,
+          }}
+          src={channel.logo}
         />
         <div className="text-info">
-          <span>{channelData.display_name}</span>
-          {streamData ? (
-            <React.Fragment>
-              <span>Live</span>
-              <span>Is playing {streamData.game}</span>
-              <span>{streamData.viewers} viewers</span>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <span>was Playing {channelData.game}</span>
-              <span>Offline</span>
-            </React.Fragment>
-          )}
+          <span>{channel.display_name}</span>
+          <React.Fragment>
+            <span>Live</span>
+            <span>Is playing {props.streamer.game}</span>
+            <span>{props.streamer.viewers} viewers</span>
+          </React.Fragment>
         </div>
       </div>
       <FaTwitch />

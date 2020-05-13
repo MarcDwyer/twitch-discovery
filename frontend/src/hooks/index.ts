@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StreamData } from "../data_types/data_types";
+import { FTypes } from "../data_types/data_types";
 
 export type PTime = {
   hours: number;
@@ -15,7 +15,7 @@ const getTime = (futureTime: number): PTime | null => {
   const distance = futureTime - now;
 
   const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     ),
     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
     seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -32,7 +32,7 @@ export const useTimer = (futureTime: number) => {
     //@ts-ignore
     interval = setInterval(() => setTimer(getTime(futureTime)), 1000);
 
-    return function() {
+    return function () {
       if (interval) {
         clearInterval(interval);
       }
@@ -53,26 +53,4 @@ export const usePercentage = (num: number) => {
     setTop(top);
   }, [num]);
   return top;
-};
-
-export const useAverage = (data: StreamData) => {
-  const [avg, setAvg] = useState<number>(0);
-
-  useEffect(() => {
-    if (data) {
-      const online = Object.values(data).filter(stream => stream.streamData);
-      setAvg(() =>
-        Math.round(
-          online.reduce(
-            (num, stream) =>
-              stream && stream.streamData
-                ? (num += stream.streamData.viewers)
-                : 1337,
-            0
-          ) / online.length
-        )
-      );
-    }
-  }, [data]);
-  return avg;
 };

@@ -4,23 +4,36 @@ import { SET_SOCKET } from "../reducers/socket_reducer";
 import { FPAYLOAD, FREFRESH } from "../data_types/socket_cases";
 
 const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
+  socket.onopen = () => console.log("connected");
+
   socket.addEventListener("message", ({ data }) => {
-    if (!("type" in data)) {
-      throw "No type in payload";
-    }
-    switch (data.type) {
-      default:
-        console.log("No case found");
+    try {
+      const parsed = JSON.parse(data);
+      if ("type" in parsed) {
+        console.log(parsed);
+        const { type, payload } = parsed;
+        switch (type) {
+          case FPAYLOAD:
+            dispatch({
+              type: APP_INIT,
+              payload,
+            });
+            break;
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
   });
 };
 
-export const setSocket = (url: string) => (dispatch: Dispatch) => {
-  console.log(url);
-  const ws = new WebSocket(url);
-  attachListeners(ws, dispatch);
-  dispatch({
-    type: SET_SOCKET,
-    payload: ws,
-  });
-};
+export const setSocket = (url: string) =>
+  (dispatch: Dispatch) => {
+    console.log(url);
+    const ws = new WebSocket(url);
+    attachListeners(ws, dispatch);
+    dispatch({
+      type: SET_SOCKET,
+      payload: ws,
+    });
+  };

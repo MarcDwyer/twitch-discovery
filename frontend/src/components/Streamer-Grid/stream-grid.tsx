@@ -1,9 +1,8 @@
 import React, { useCallback } from "react";
-import { usePercentage } from "../../hooks";
 import StreamCard from "../StreamCard/stream-card";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
-import { SubStream } from "../../data_types/data_types";
+import { FTypes } from "../../data_types/data_types";
 import { ReduxStore } from "../../reducers/reducer";
 import { setView } from "../../actions/stream_actions";
 
@@ -13,27 +12,27 @@ const StreamerGrid = React.memo(() => {
   const [streams, diag] = useSelector(
     (state: ReduxStore) => [
       state.streamData.streams,
-      state.streamData.diagnostic
+      state.streamData.config,
     ],
-    shallowEqual
+    shallowEqual,
   );
   const dispatch = useDispatch();
   const updateFeatured = useCallback(
-    (payload: SubStream) => {
+    (payload: FTypes.Stream) => {
       dispatch(setView(payload));
     },
-    [streams]
+    [streams],
   );
   console.log("grid rendered");
-
+  console.log(diag);
   return (
     <div className="grid-parent">
-      <h2>Skipped the first {diag.skippedOver} streams</h2>
+      <h2>Skipped the first {diag.offset} streams</h2>
       <div className="streamer-grid">
-        {Object.values(streams).map(stream => (
+        {streams.map((stream) => (
           <StreamCard
             streamer={stream}
-            key={stream.id}
+            key={stream._id}
             updateFeatured={updateFeatured}
           />
         ))}

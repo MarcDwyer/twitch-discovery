@@ -12,20 +12,20 @@ import { setSocket } from "../../actions/socket_actions";
 
 import "./main.scss";
 
-export const isDev =
-  !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+export const isDev = !process.env.NODE_ENV ||
+  process.env.NODE_ENV === "development";
 
 const Main = React.memo(() => {
   const [streamData, socket] = useSelector(
     (state: ReduxStore) => [state.streamData, state.socket],
-    shallowEqual
+    shallowEqual,
   );
   const dispatch = useDispatch();
   useEffect(() => {
     if (!socket) {
       const url = isDev
         ? "ws://localhost:5010"
-        : `https://${document.location.hostname}`;
+        : `wss://${document.location.hostname}`;
 
       dispatch(setSocket(url));
     }

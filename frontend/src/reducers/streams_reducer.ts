@@ -1,14 +1,17 @@
 import { Action } from "./reducer";
-import { StreamData, SubStream } from "../data_types/data_types";
+import { FTypes } from "../data_types/data_types";
 export type IDiag = {
   skippedOver: number;
 };
+export type Config = {
+  offset: number;
+  limit: number;
+};
 export type Payload = {
+  streams: FTypes.Stream[];
+  view: FTypes.Stream | null;
   nextRefresh: number;
-  streams: StreamData;
-  diagnostic: IDiag;
-  online: SubStream[];
-  view: SubStream | null;
+  config: Config;
 };
 export const INC_KEY = Symbol(),
   RESET_FEATURED = Symbol(),
@@ -21,7 +24,7 @@ export const APP_INIT = Symbol(),
 function AppReducer(state: Payload | null = null, { type, payload }: Action) {
   switch (type) {
     case APP_INIT:
-      return { ...payload, view: null };
+      return { ...payload, view: state?.view || null };
     case APP_UPDATE:
       return { ...state, streams: payload };
     case SET_VIEW:
