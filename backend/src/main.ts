@@ -38,7 +38,6 @@ for await (const req of s) {
 async function handleWs(ws: WebSocket) {
   const id = v4.generate();
   hub.clients.set(id, ws);
-  console.log(hub.clients);
   ws.send(JSON.stringify({ payload: td.payload, type: FPAYLOAD }));
   try {
     for await (const ev of ws) {
@@ -57,16 +56,16 @@ async function handleWs(ws: WebSocket) {
         // close
         // const { code, reason } = ev;
         hub.clients.delete(id);
-        console.log(hub.clients);
         console.log(`closed: ${id}`);
       }
     }
   } catch (err) {
     console.error(`failed to receive frame: ${err}`);
     if (!ws.isClosed) {
-      await ws.close(1000).catch(console.error).finally(() =>
-        hub.clients.delete(id)
-      );
+      await ws.close(1000).catch(console.error).finally(() => {
+        console.log(`ws.isClosed: ${id}`);
+        hub.clients.delete(id);
+      });
     }
   }
 }
