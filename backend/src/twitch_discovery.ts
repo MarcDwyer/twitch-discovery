@@ -39,9 +39,9 @@ export default class TwitchDiscovery {
       const streams = await this.tm.getStreams(limit, offset);
       this.streams = streams;
       offset += limit;
-      this.nextRefresh = futureTime(1);
+      this.nextRefresh = futureTime(5);
       this.config = { limit, offset };
-      await this.hub.broadCast(
+      await this.hub.broadcast(
         JSON.stringify(
           { type: FPAYLOAD, payload: this.payload },
         ),
