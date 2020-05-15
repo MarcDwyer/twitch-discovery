@@ -1,16 +1,17 @@
-import { serve } from "https://deno.land/std/http/server.ts";
+import { serve } from "https://deno.land/std@v0.50.0/http/server.ts";
 import {
   acceptWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   WebSocket,
-} from "https://deno.land/std/ws/mod.ts";
-import { v4 } from "https://deno.land/std/uuid/mod.ts";
+} from "https://deno.land/std@v0.50.0/ws/mod.ts";
+import { v4 } from "https://deno.land/std@v0.50.0/uuid/mod.ts";
 import TwitchDiscovery from "./twitch_discovery.ts";
 import Hub from "./hub.ts";
 
 import { FPAYLOAD } from "./ws_cases.ts";
 
+// deno run --allow-net --allow-env main.ts
 const hub = new Hub();
 const td = new TwitchDiscovery(15, hub);
 await td.fetchNewPayload();
@@ -41,6 +42,7 @@ async function handleWs(ws: WebSocket) {
   ws.send(JSON.stringify({ payload: td.payload, type: FPAYLOAD }));
   try {
     for await (const ev of ws) {
+      console.log(ev);
       if (typeof ev === "string") {
         // text message
         console.log("ws:Text", ev);

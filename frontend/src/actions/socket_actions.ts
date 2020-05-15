@@ -31,6 +31,9 @@ export const setSocket = (url: string) =>
   (dispatch: Dispatch) => {
     console.log(url);
     const ws = new WebSocket(url);
+    ws.onclose = () => {
+      console.log("connection closed");
+    };
     attachListeners(ws, dispatch);
     dispatch({
       type: SET_SOCKET,
