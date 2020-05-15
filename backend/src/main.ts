@@ -27,15 +27,44 @@ for await (const req of s) {
       headers,
     });
     console.log("connected");
-    sock.send(JSON.stringify({ payload: td.payload, type: FPAYLOAD }));
-    listenWs(sock);
+
+    handleWs(sock);
   } catch (err) {
-    console.error(err);
+    console.log(err);
+    await req.respond({ status: 400 });
   }
 }
 
-async function listenWs(ws: WebSocket) {
-  for await (const ev of ws) {
-    console.log(ev);
+async function handleWs(ws: WebSocket) {
+  const id = v4.generate();
+  hub.clients.set(id, ws);
+  ws.send(JSON.stringify({ payload: td.payload, type: FPAYLOAD }));
+  try {
+    for await (const ev of ws) {
+      console.log(ev);
+      if (typeof ev === "string") {
+        // text message
+        console.log("ws:Text", ev);
+        await ws.send(ev);
+      } else if (ev instanceof Uint8Array) {
+        // binary message
+        console.log("ws:Binary", ev);
+      } else if (isWebSocketPingEvent(ev)) {
+        const [, body] = ev;
+        // ping
+        console.log("ws:Ping", body);
+      } else if (isWebSocketCloseEvent(ev)) {
+        // close
+        const { code, reason } = ev;
+        hub.clients.delete(id);
+        console.log("ws:Close", code, reason);
+      }
+    }
+  } catch (err) {
+    console.error(`failed to receive frame: ${err}`);
+    if (!ws.isClosed) {
+      hub.clients.delete(id);
+      await ws.close(1000).catch(console.error);
+    }
   }
 }
