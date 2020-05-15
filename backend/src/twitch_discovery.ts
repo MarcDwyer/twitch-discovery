@@ -2,7 +2,7 @@ import TwitchMethods from "./twitch_methods.ts";
 import { Types } from "./twitch_types.ts";
 import { futureTime } from "./time.ts";
 import Hub from "./hub.ts";
-import { FREFRESH, FPAYLOAD } from "./ws_cases.ts";
+import { FPAYLOAD } from "./ws_cases.ts";
 
 type Config = {
   limit: number;
@@ -39,7 +39,7 @@ export default class TwitchDiscovery {
       const streams = await this.tm.getStreams(limit, offset);
       this.streams = streams;
       offset += limit;
-      this.nextRefresh = futureTime(15);
+      this.nextRefresh = futureTime(1);
       this.config = { limit, offset };
       await this.hub.broadcast(
         JSON.stringify(
@@ -52,7 +52,7 @@ export default class TwitchDiscovery {
       console.error(err);
     }
   }
-  public get payload() {
+  get payload() {
     const payload = {
       streams: this.streams?.streams,
       nextRefresh: this.nextRefresh,

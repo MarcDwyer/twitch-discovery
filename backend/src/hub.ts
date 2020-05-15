@@ -8,7 +8,7 @@ export default class Hub {
       try {
         await ws.send(data);
       } catch (err) {
-        console.error(err);
+        console.error(`Error sending to: ${key}`);
         this.clients.delete(key);
       }
     }

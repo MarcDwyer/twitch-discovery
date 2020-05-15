@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
-import { APP_INIT, APP_UPDATE } from "../reducers/streams_reducer";
+import { APP_INIT } from "../reducers/streams_reducer";
 import { SET_SOCKET } from "../reducers/socket_reducer";
-import { FPAYLOAD, FREFRESH } from "../data_types/socket_cases";
+import { FPAYLOAD } from "../data_types/socket_cases";
 
 const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
   socket.onopen = () => console.log("connected");
@@ -9,8 +9,8 @@ const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
   socket.addEventListener("message", ({ data }) => {
     try {
       const parsed = JSON.parse(data);
+      console.log(parsed);
       if ("type" in parsed) {
-        console.log(parsed);
         const { type, payload } = parsed;
         switch (type) {
           case FPAYLOAD:

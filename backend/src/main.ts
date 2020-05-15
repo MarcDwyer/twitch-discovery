@@ -20,7 +20,7 @@ for await (const req of s) {
   const { conn, r: bufReader, w: bufWriter, headers } = req;
 
   try {
-    const sock = await acceptWebSocket({
+    const ws = await acceptWebSocket({
       conn,
       bufReader,
       bufWriter,
@@ -28,7 +28,7 @@ for await (const req of s) {
     });
     console.log("connected");
 
-    handleWs(sock);
+    handleWs(ws);
   } catch (err) {
     console.log(err);
     await req.respond({ status: 400 });
@@ -38,10 +38,10 @@ for await (const req of s) {
 async function handleWs(ws: WebSocket) {
   const id = v4.generate();
   hub.clients.set(id, ws);
+  console.log(hub.clients);
   ws.send(JSON.stringify({ payload: td.payload, type: FPAYLOAD }));
   try {
     for await (const ev of ws) {
-      console.log(ev);
       if (typeof ev === "string") {
         // text message
         console.log("ws:Text", ev);
@@ -55,16 +55,18 @@ async function handleWs(ws: WebSocket) {
         console.log("ws:Ping", body);
       } else if (isWebSocketCloseEvent(ev)) {
         // close
-        const { code, reason } = ev;
+        // const { code, reason } = ev;
         hub.clients.delete(id);
-        console.log("ws:Close", code, reason);
+        console.log(hub.clients);
+        console.log(`closed: ${id}`);
       }
     }
   } catch (err) {
     console.error(`failed to receive frame: ${err}`);
     if (!ws.isClosed) {
-      hub.clients.delete(id);
-      await ws.close(1000).catch(console.error);
+      await ws.close(1000).catch(console.error).finally(() =>
+        hub.clients.delete(id)
+      );
     }
   }
 }

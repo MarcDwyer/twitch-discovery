@@ -23,8 +23,7 @@ const StreamerGrid = React.memo(() => {
     },
     [streams],
   );
-  console.log("grid rendered");
-  console.log(diag);
+
   return (
     <div className="grid-parent">
       <h2>Skipped the first {diag.offset} streams</h2>

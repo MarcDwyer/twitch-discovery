@@ -11,12 +11,11 @@ import "./view_stream.scss";
 const ViewStream = React.memo(() => {
   const view = useSelector((state: ReduxStore) => state.streamData.view);
   const dispatch = useDispatch();
-  console.log("video rerendered")
   const videoAnim = useSpring({
     from: { opacity: 0, transform: "translateY(100%)" },
     transform: "translateY(0%)",
     opacity: 1,
-    reverse: view ? false : true
+    reverse: view ? false : true,
   });
   return (
     <animated.div className="video" style={videoAnim}>
