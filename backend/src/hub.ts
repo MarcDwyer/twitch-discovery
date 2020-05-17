@@ -5,7 +5,6 @@ export default class Hub {
 
   async broadcast(data: string) {
     for (const [key, ws] of this.clients.entries()) {
-      console.log(ws.isClosed);
       try {
         await ws.send(data);
       } catch (err) {

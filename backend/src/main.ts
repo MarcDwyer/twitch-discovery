@@ -14,7 +14,7 @@ import { FPAYLOAD } from "./ws_cases.ts";
 // deno run --allow-net --allow-env main.ts
 const hub = new Hub();
 const td = new TwitchDiscovery(15, hub);
-await td.fetchNewPayload();
+await td.fetchNewPayload(true);
 
 const s = serve({ port: 5010 });
 for await (const req of s) {

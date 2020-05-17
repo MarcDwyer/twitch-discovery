@@ -15,6 +15,7 @@ export default class TwitchMethods {
   async getStreams(limit: number = 5, offset: number) {
     const url =
       `https://api.twitch.tv/kraken/streams/?limit=${limit}&offset=${offset}`;
+    console.log(url);
     const streamData: Types.Streams = await fetchTwitch(url, this.key);
     return streamData;
   }

@@ -17,7 +17,6 @@ export type Payload = {
 export default class TwitchDiscovery {
   private tm = new TwitchMethods();
   private config: Config;
-  private oldConf: Config;
   private nextRefresh: number | null = null;
   public streams: Types.Streams | null = null;
 
@@ -27,20 +26,18 @@ export default class TwitchDiscovery {
       offset: 0,
     };
     this.config = config;
-    this.oldConf = config;
   }
-  async fetchNewPayload() {
+  async fetchNewPayload(init?: boolean) {
     const { config } = this;
     try {
       console.log("fetching new payload...");
-      this.oldConf = config;
       let limit = config.limit,
-        offset = config.offset > 25000 ? 0 : config.offset;
+        offset = config.offset > 1000 ? 0 : config.offset;
       const streams = await this.tm.getStreams(limit, offset);
       this.streams = streams;
       offset += limit;
       this.nextRefresh = futureTime(15);
-      this.config = { limit, offset };
+      this.config = { limit, offset: init ? 0 : offset };
       await this.hub.broadcast(
         JSON.stringify(
           { type: FPAYLOAD, payload: this.payload },
@@ -56,7 +53,7 @@ export default class TwitchDiscovery {
     const payload = {
       streams: this.streams?.streams,
       nextRefresh: this.nextRefresh,
-      config: this.oldConf,
+      config: this.config,
     };
     return payload;
   }
