@@ -36,30 +36,28 @@ const Diag = (props: Props) => {
     return Math.round(total / streams.length);
   };
   return (
-    <React.Fragment>
-      <animated.div className="innertext" style={diagAnim}>
-        <MdClose onClick={() => props.setShowDiag(false)} />
-        <h2>Twitch Data</h2>
-        <span>Average viewership: {average()}</span>
-        <span>Skipped over streams: {offset}</span>
-        {timer && (
-          <Timer
-            headline="Next refresh in:"
-            minutes={timer.minutes}
-            seconds={timer.seconds}
-          />
-        )}
-        <div className="links">
-          <a
-            href="https://github.com/MarcDwyer/twitch-discovery"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaGithub />
-          </a>
-        </div>
-      </animated.div>
-    </React.Fragment>
+    <animated.div className="diagnostic-modal" style={diagAnim}>
+      <MdClose onClick={() => props.setShowDiag(false)} />
+      <h2>Twitch Data</h2>
+      <span>Average viewership: {average()}</span>
+      <span>Skipped over streams: {offset}</span>
+      {timer && (
+        <Timer
+          headline="Next refresh in:"
+          minutes={timer.minutes}
+          seconds={timer.seconds}
+        />
+      )}
+      <div className="links">
+        <a
+          href="https://github.com/MarcDwyer/twitch-discovery"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaGithub />
+        </a>
+      </div>
+    </animated.div>
   );
 };
 export default Diag;

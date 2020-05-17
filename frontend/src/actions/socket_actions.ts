@@ -9,16 +9,17 @@ const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
   socket.addEventListener("message", ({ data }) => {
     try {
       const parsed = JSON.parse(data);
-      console.log(parsed);
-      if ("type" in parsed) {
-        const { type, payload } = parsed;
-        switch (type) {
-          case FPAYLOAD:
-            dispatch({
-              type: APP_INIT,
-              payload,
-            });
-            break;
+      if (parsed instanceof Object) {
+        if ("type" in parsed) {
+          const { type, payload } = parsed;
+          switch (type) {
+            case FPAYLOAD:
+              dispatch({
+                type: APP_INIT,
+                payload,
+              });
+              break;
+          }
         }
       }
     } catch (err) {
@@ -27,16 +28,15 @@ const attachListeners = (socket: WebSocket, dispatch: Dispatch) => {
   });
 };
 
-export const setSocket = (url: string) =>
-  (dispatch: Dispatch) => {
-    console.log(url);
-    const ws = new WebSocket(url);
-    ws.onclose = () => {
-      console.log("connection closed");
-    };
-    attachListeners(ws, dispatch);
-    dispatch({
-      type: SET_SOCKET,
-      payload: ws,
-    });
+export const setSocket = (url: string) => (dispatch: Dispatch) => {
+  console.log(url);
+  const ws = new WebSocket(url);
+  ws.onclose = () => {
+    console.log("connection closed");
   };
+  attachListeners(ws, dispatch);
+  dispatch({
+    type: SET_SOCKET,
+    payload: ws,
+  });
+};

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaMoon, FaHamburger } from "react-icons/fa";
+import { FaHamburger } from "react-icons/fa";
 import { useSelector, shallowEqual } from "react-redux";
 
 import Modal from "../Modal/modal";
@@ -16,11 +16,10 @@ const Navbar = React.memo(() => {
   const [view, nextRefresh] = useSelector(
     (state: ReduxStore) => [
       state.streamData.view,
-      state.streamData.nextRefresh
+      state.streamData.nextRefresh,
     ],
     shallowEqual
   );
-  const [showOffset, setShowOffset] = useState<boolean>(false);
   const [showDiag, setShowDiag] = useState<boolean>(false);
 
   const timer = useTimer(nextRefresh);
@@ -28,7 +27,7 @@ const Navbar = React.memo(() => {
     <div
       className="navbar"
       style={
-        view ? { backgroundColor: "black" } : { backgroundColor: "#262626" }
+        view ? { backgroundColor: "black" } : { backgroundColor: "#6441a5" }
       }
     >
       <FaHamburger
@@ -48,21 +47,14 @@ const Navbar = React.memo(() => {
       />
       <div className="timer-or-viewing">
         {!view && timer && (
-          <Timer headline="Next update in:" minutes={timer.minutes} seconds={timer.seconds} />
+          <Timer
+            headline="Next update in:"
+            minutes={timer.minutes}
+            seconds={timer.seconds}
+          />
         )}
         {view && <span>Currently viewing {view.channel.name}</span>}
       </div>
-      <FaMoon
-        className="offset-trigger buttons"
-        onClick={() => setShowOffset(!showOffset)}
-      />
-      {/* <Modal
-        children={
-          <CreateOffset showOffset={showOffset} setShowOffset={setShowOffset} />
-        }
-        shouldOpen={showOffset}
-        close={setShowOffset}
-      /> */}
     </div>
   );
 });
